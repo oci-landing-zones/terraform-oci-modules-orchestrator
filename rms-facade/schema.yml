@@ -1,0 +1,220 @@
+# ####################################################################################################### #
+# Copyright (c) 2024 Oracle and/or its affiliates,  All rights reserved.                                  #
+# Licensed under the Universal Permissive License v 1.0 as shown at https: //oss.oracle.com/licenses/upl. #
+# Author: Cosmin Tudor                                                                                    #
+# Author email: cosmin.tudor@oracle.com                                                                   #
+# Last Modified: Thu Feb 21, 2023                                                                         #
+# Modified by: andre.correa@oracle.com                                                                    #
+# ####################################################################################################### #
+
+
+title: "OCI Landing Zone Modules Orchestrator"
+stackDescription: "Generic module that orchestrates Landing Zone configuration variables expressed in JSON or YAML that are read via HTTP."
+description: "Generic module that orchestrates Landing Zone configuration variables expressed in JSON or YAML that are read via HTTP."
+schemaVersion: 1.1.0
+version: "0.0.1"
+locale: "en"
+
+# URL of CIS Landing Zone logo icon used on Application Information tab.
+logoUrl: "https://objectstorage.us-ashburn-1.oraclecloud.com/p/taf6kC9fSJyQDNSYbxvqxS_JsdnSu56oFZ3-1h5vI7-WfJUv77mplChopLxZPePW/n/ociateam/b/cis-landing-zone/o/landing_zone_130.png"
+
+variableGroups:
+  - title: "Environment"
+    visible: true
+    variables:
+      - region
+  - title: "URLs to JSON/YAML Configuration Files"
+    visible: true
+    variables:
+      - input_config_files_urls
+  - title: "URLs to JSON Dependency Files"
+    visible: true
+    variables:
+      - dependency_files_urls
+  - title: "Output"
+    visible: true
+    variables:
+      - save_output
+      - output_location
+      - oci_bucket_name
+      - oci_object_prefix
+      - github_token
+      - github_repository_name
+      - github_branch_name    
+      - github_file_prefix
+
+  - title: "Hidden Variables"
+    visible: false
+    variables:
+      - tenancy_ocid
+      - user_ocid
+      - fingerprint
+      - private_key_path
+      - private_key_password
+      - region
+    
+variables:
+  region:
+    type: oci:identity:region:name
+    title: "Region"
+    description: "The region for deployment of regional resources. IAM resources (global) are always transparently deployed in the tenancy home region."
+    required: true
+
+  input_config_files_urls:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "List of URLs to the JSON or YAML configuration files (Type or Paste the URLs)"
+    additionalProps:
+        allowMultiple: true
+    description: "Only JSON or YAML files are supported."
+    required: false
+
+  dependency_files_urls:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "List of URLs to JSON files containing dependencies expressed in the configuration files (Type or Paste the URLs)"
+    additionalProps:
+        allowMultiple: true
+    description: "Only JSON files are supported."
+    required: false  
+
+  save_output:
+    type: boolean
+    title: "Save Output?"
+    description: "Whether to save the module output. This is typically done when the output is used as the input to another module."
+    default: true
+    visible: true
+
+  output_location:
+    type: enum 
+    title: "Output Location Type"
+    description: "The location type where the output is saved."
+    enum:
+      - "ocibucket"
+      - "github"
+    visible: save_output  
+     
+  oci_bucket_name:
+    type: string
+    title: "OCI Bucket Name"
+    description : "The OCI bucket name. The executing user MUST have write permissions on the bucket."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "ocibucket"
+
+  oci_object_prefix:
+    type: string
+    title: "OCI Object Prefix"
+    description : "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci_object_prefix/object_name."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "ocibucket"     
+
+  github_token:
+    type: string
+    title: "GitHub Token"
+    description : "The token that allows write access to the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to write to the repository."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "github"
+
+  github_repository_name:
+    type: string
+    title: "GitHub Repository Name"
+    description : "The GitHub repository name where the output is committed to."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "github"   
+
+  github_branch_name:
+    type: string
+    title: "GitHub Branch Name"
+    description : "The GitHub branch name where the output is committed to."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "github"   
+
+  github_file_prefix:
+    type: string
+    title: "GitHub File Prefix"
+    description : "The GitHub file prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The file name is appended to the provided prefix, like github_file_prefix/file_name."
+    visible:
+      and:
+        - ${save_output}
+        - eq:
+          - output_location
+          - "github"                
+
+
+  # Hidden variables
+  user_ocid:
+    type: string
+
+  fingerprint:
+    type: string
+
+  private_key_path:
+    type: string
+
+  private_key_password:
+    type: password
+
+outputs:
+  region:
+    type: string
+    title: Region
+
+  # provisioned_identity_resources:
+  #   type: json
+  #   title: Provisioned Identity Resources
+
+  # provisioned_networking_resources:
+  #   type: json
+  #   title: Provisioned Networking Resources 
+
+  compartments_output:
+    type: copyableString
+    title: Compartments
+
+  networking_output:
+    type: copyableString
+    title: Networking
+
+outputGroups:
+  - title: Environment
+    outputs:
+      - ${region}
+
+  - title: Outputs 
+    outputs:
+      - ${compartments_output}
+      - ${networking_output}
+
+  # - title: Identity Resources
+  #   outputs:
+  #     - ${provisioned_identity_resources}    
+
+  # - title: Networking Resources
+  #   outputs:
+  #     - ${provisioned_networking_resources}    
