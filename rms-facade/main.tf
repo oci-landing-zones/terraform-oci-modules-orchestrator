@@ -30,6 +30,9 @@ module "oci_orchestrator_http_facade" {
   service_connectors_configuration = local.service_connectors_configuration_from_input_json_yaml_file
   logging_configuration            = local.logging_configuration_from_input_json_yaml_file
   notifications_configuration      = local.notifications_configuration_from_input_json_yaml_file
+  events_configuration             = local.events_configuration_from_input_json_yaml_file
+  home_region_events_configuration = local.home_region_events_configuration_from_input_json_yaml_file
+  alarms_configuration             = local.alarms_configuration_from_input_json_yaml_file
 
   # Dependencies
   compartments_dependency      = local.compartments_dependency

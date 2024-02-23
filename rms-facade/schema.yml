@@ -185,14 +185,6 @@ outputs:
     type: string
     title: Region
 
-  # provisioned_identity_resources:
-  #   type: json
-  #   title: Provisioned Identity Resources
-
-  # provisioned_networking_resources:
-  #   type: json
-  #   title: Provisioned Networking Resources 
-
   compartments_output:
     type: copyableString
     title: Compartments
@@ -200,6 +192,14 @@ outputs:
   networking_output:
     type: copyableString
     title: Networking
+
+  topics_output:
+    type: copyableString
+    title: Topics
+
+  streams_output:
+    type: copyableString
+    title: Streams  
 
 outputGroups:
   - title: Environment
@@ -210,11 +210,5 @@ outputGroups:
     outputs:
       - ${compartments_output}
       - ${networking_output}
-
-  # - title: Identity Resources
-  #   outputs:
-  #     - ${provisioned_identity_resources}    
-
-  # - title: Networking Resources
-  #   outputs:
-  #     - ${provisioned_networking_resources}    
+      - ${topics_output}
+      - ${streams_output}

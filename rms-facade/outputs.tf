@@ -23,9 +23,17 @@ locals {
             "network_security_groups" : {for k, v in module.oci_orchestrator_http_facade.provisioned_networking_resources.network_security_groups : k => {"id" : v.id}}
         }    
     } : null
+    topics_output = length(module.oci_orchestrator_http_facade.provisioned_observability_resources.notifications_topics) > 0 ? {
+        "topics" : {for k, v in module.oci_orchestrator_http_facade.provisioned_observability_resources.notifications_topics : k => {"id" : v.id}}
+    } : null
+    streams_output = length(module.oci_orchestrator_http_facade.provisioned_observability_resources.streams) > 0 ? {
+        "topics" : {for k, v in module.oci_orchestrator_http_facade.provisioned_observability_resources.streams : k => {"id" : v.id}}
+    } : null
 
     compartments_output_file_name = "compartments_output.json"
     networking_output_file_name   = "networking_output.json"
+    topics_output_file_name       = "topics_output.json"
+    streams_output_file_name      = "streams_output.json"
 }
 
 ### Writing compartments output to bucket
@@ -44,6 +52,24 @@ resource "oci_objectstorage_object" "networking" {
   content   = jsonencode(local.networking_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = "${var.oci_object_prefix}/${local.networking_output_file_name}"
+}
+
+### Writing notifications topics output to OCI bucket
+resource "oci_objectstorage_object" "topics" {
+  count = var.save_output && lower(var.output_location) == "ocibucket" && local.topics_output != null ? 1 : 0
+  bucket    = var.oci_bucket_name
+  content   = jsonencode(local.topics_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = "${var.oci_object_prefix}/${local.topics_output_file_name}"
+}
+
+### Writing streams output to OCI bucket
+resource "oci_objectstorage_object" "streams" {
+  count = var.save_output && lower(var.output_location) == "ocibucket" && local.streams_output != null ? 1 : 0
+  bucket    = var.oci_bucket_name
+  content   = jsonencode(local.streams_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = "${var.oci_object_prefix}/${local.streams_output_file_name}"
 }
 
 ### Writing compartments output to GitHub repository
@@ -72,6 +98,32 @@ resource "github_repository_file" "networking" {
   overwrite_on_create = true
 }
 
+### Writing notification topics output to GitHub repository
+resource "github_repository_file" "topics" {
+  count = var.save_output && lower(var.output_location) == "github" && local.topics_output != null ? 1 : 0
+  repository          = var.github_repository_name
+  branch              = var.github_branch_name
+  file                = "${var.github_file_prefix}/${local.topics_output_file_name}"
+  content             = jsonencode(local.topics_output)
+  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
+### Writing streams output to GitHub repository
+resource "github_repository_file" "streams" {
+  count = var.save_output && lower(var.output_location) == "github" && local.streams_output != null ? 1 : 0
+  repository          = var.github_repository_name
+  branch              = var.github_branch_name
+  file                = "${var.github_file_prefix}/${local.streams_output_file_name}"
+  content             = jsonencode(local.streams_output)
+  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 data "github_repository" "this" {
   count = var.save_output && lower(var.output_location) == "github" ? 1 : 0
   name = var.github_repository_name
@@ -83,6 +135,14 @@ output "compartments_output" {
 
 output "networking_output" {
   value = length(oci_objectstorage_object.networking) > 0 ? "Bucket: '${oci_objectstorage_object.networking[0].bucket}', File: '${var.oci_object_prefix}/${local.networking_output_file_name}'" : length(github_repository_file.networking) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_branch_name}/${var.github_file_prefix}/${local.networking_output_file_name}" : null
+} 
+
+output "topics_output" {
+  value = length(oci_objectstorage_object.topics) > 0 ? "Bucket: '${oci_objectstorage_object.topics[0].bucket}', File: '${var.oci_object_prefix}/${local.topics_output_file_name}'" : length(github_repository_file.topics) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_branch_name}/${var.github_file_prefix}/${local.topics_output_file_name}" : null
+} 
+
+output "streams_output" {
+  value = length(oci_objectstorage_object.streams) > 0 ? "Bucket: '${oci_objectstorage_object.streams[0].bucket}', File: '${var.oci_object_prefix}/${local.streams_output_file_name}'" : length(github_repository_file.streams) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_branch_name}/${var.github_file_prefix}/${local.streams_output_file_name}" : null
 } 
 
 # output "provisioned_identity_resources" {

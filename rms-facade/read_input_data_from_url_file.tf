@@ -79,4 +79,7 @@ locals {
   service_connectors_configuration_from_input_json_yaml_file = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "service_connectors_configuration") ? local.merged_input_config_files.service_connectors_configuration : null : null
   logging_configuration_from_input_json_yaml_file            = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "logging_configuration") ? local.merged_input_config_files.logging_configuration : null : null
   notifications_configuration_from_input_json_yaml_file      = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "notifications_configuration") ? local.merged_input_config_files.notifications_configuration : null : null
+  events_configuration_from_input_json_yaml_file             = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "events_configuration") ? local.merged_input_config_files.events_configuration : null : null
+  home_region_events_configuration_from_input_json_yaml_file = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "home_region_events_configuration") ? local.merged_input_config_files.home_region_events_configuration : null : null
+  alarms_configuration_from_input_json_yaml_file             = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "alarms_configuration") ? local.merged_input_config_files.alarms_configuration : null : null
 }

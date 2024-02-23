@@ -68,6 +68,21 @@ variable "notifications_configuration" {
   default = null
 }
 
+variable "events_configuration" {
+  type    = any
+  default = null
+}
+
+variable "home_region_events_configuration" {
+  type    = any
+  default = null
+}
+
+variable "alarms_configuration" {
+  type    = any
+  default = null
+}
+
 variable "service_connectors_configuration" {
   type    = any
   default = null

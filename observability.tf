@@ -23,6 +23,36 @@ module "oci_orchestrator_notifications" {
   compartments_dependency     = local.compartments_dependency
 }
 
+module "oci_orchestrator_events" {
+  count                   = var.events_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability.git//events?ref=v0.1.3"
+  events_configuration    = var.events_configuration
+  compartments_dependency = local.compartments_dependency
+  streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_streams) > 0 ? module.oci_orchestrator_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+  topics_dependency       = merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_notifications) > 0 ? module.oci_orchestrator_notifications[0].topics : {}) : k => {"id" : v.id}})
+  functions_dependency    = var.functions_dependency
+}
+
+module "oci_orchestrator_home_region_events" {
+  count                   = var.home_region_events_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability.git//events?ref=v0.1.3"
+  providers               = { oci = oci.home }
+  events_configuration    = var.home_region_events_configuration
+  compartments_dependency = local.compartments_dependency
+  streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_streams) > 0 ? module.oci_orchestrator_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+  topics_dependency       = merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_notifications) > 0 ? module.oci_orchestrator_notifications[0].topics : {}) : k => {"id" : v.id}})
+  functions_dependency    = var.functions_dependency
+}
+
+module "oci_orchestrator_alarms" {
+  count                   = var.alarms_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability.git//alarms?ref=v0.1.3"
+  alarms_configuration    = var.alarms_configuration
+  compartments_dependency = local.compartments_dependency
+  streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_streams) > 0 ? module.oci_orchestrator_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+  topics_dependency       = merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_notifications) > 0 ? module.oci_orchestrator_notifications[0].topics : {}) : k => {"id" : v.id}})
+}
+
 module "oci_orchestrator_logging" {
   count                   = var.logging_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability.git//logging?ref=v0.1.3"
@@ -42,7 +72,7 @@ module "oci_orchestrator_service_connectors" {
   compartments_dependency = local.compartments_dependency
   streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_streams) > 0 ? module.oci_orchestrator_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
   topics_dependency       = merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_notifications) > 0 ? module.oci_orchestrator_notifications[0].topics : {}) : k => {"id" : v.id}})
-  logs_dependency         = merge({for k, v in coalesce(var.logging_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_logging) > 0 ? merge(coalesce(module.oci_orchestrator_logging[0].service_logs,{}), coalesce(module.oci_orchestrator_logging[0].custom_logs,{})): {}) : k => {"id" : v.id}})
+  logs_dependency         = merge({for k, v in coalesce(var.logging_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_orchestrator_logging) > 0 ? merge(coalesce(module.oci_orchestrator_logging[0].service_logs,{}), coalesce(module.oci_orchestrator_logging[0].custom_logs,{})): {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
   kms_dependency          = var.kms_dependency
   functions_dependency    = var.functions_dependency
 }
