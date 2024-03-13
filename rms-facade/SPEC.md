@@ -17,7 +17,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_oci_orchestrator_http_facade"></a> [oci\_orchestrator\_http\_facade](#module\_oci\_orchestrator\_http\_facade) | ../ | n/a |
+| <a name="module_oci_lz_orchestrator"></a> [oci\_lz\_orchestrator](#module\_oci\_lz\_orchestrator) | ../ | n/a |
 
 ## Resources
 
@@ -25,8 +25,12 @@
 |------|------|
 | [github_repository_file.compartments](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.networking](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.streams](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.topics](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [oci_objectstorage_object.compartments](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.networking](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.streams](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.topics](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [github_repository.this](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/repository) | data source |
 | [http_http.dependency_files_urls](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 | [http_http.input_config_files_urls](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
@@ -60,3 +64,5 @@
 | <a name="output_compartments_output"></a> [compartments\_output](#output\_compartments\_output) | n/a |
 | <a name="output_networking_output"></a> [networking\_output](#output\_networking\_output) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
+| <a name="output_streams_output"></a> [streams\_output](#output\_streams\_output) | n/a |
+| <a name="output_topics_output"></a> [topics\_output](#output\_topics\_output) | n/a |

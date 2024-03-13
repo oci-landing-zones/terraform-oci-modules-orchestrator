@@ -7,21 +7,21 @@ data "oci_objectstorage_namespace" "this" {
 }
 
 locals {
-    compartments_output = length(module.oci_orchestrator_http_facade.provisioned_identity_resources.compartments) > 0 ? {
-        "compartments" : {for k, v in module.oci_orchestrator_http_facade.provisioned_identity_resources.compartments : k => {"id" : v.id}}
+    compartments_output = length(module.oci_lz_orchestrator.provisioned_identity_resources.compartments) > 0 ? {
+        "compartments" : {for k, v in module.oci_lz_orchestrator.provisioned_identity_resources.compartments : k => {"id" : v.id}}
     } : null
-    networking_output = module.oci_orchestrator_http_facade.provisioned_networking_resources != null ? {
+    networking_output = module.oci_lz_orchestrator.provisioned_networking_resources != null ? {
         "provisioned_networking_resources" : {
-            "vcns" : {for k, v in module.oci_orchestrator_http_facade.provisioned_networking_resources.vcns : k => {"id" : v.id}},
-            "subnets" : {for k, v in module.oci_orchestrator_http_facade.provisioned_networking_resources.subnets : k => {"id" : v.id}},
-            "network_security_groups" : {for k, v in module.oci_orchestrator_http_facade.provisioned_networking_resources.network_security_groups : k => {"id" : v.id}}
+            "vcns" : {for k, v in module.oci_lz_orchestrator.provisioned_networking_resources.vcns : k => {"id" : v.id}},
+            "subnets" : {for k, v in module.oci_lz_orchestrator.provisioned_networking_resources.subnets : k => {"id" : v.id}},
+            "network_security_groups" : {for k, v in module.oci_lz_orchestrator.provisioned_networking_resources.network_security_groups : k => {"id" : v.id}}
         }    
     } : null
-    topics_output = length(module.oci_orchestrator_http_facade.provisioned_observability_resources.notifications_topics) > 0 ? {
-        "topics" : {for k, v in module.oci_orchestrator_http_facade.provisioned_observability_resources.notifications_topics : k => {"id" : v.id}}
+    topics_output = length(module.oci_lz_orchestrator.provisioned_observability_resources.notifications_topics) > 0 ? {
+        "topics" : {for k, v in module.oci_lz_orchestrator.provisioned_observability_resources.notifications_topics : k => {"id" : v.id}}
     } : null
-    streams_output = length(module.oci_orchestrator_http_facade.provisioned_observability_resources.streams) > 0 ? {
-        "topics" : {for k, v in module.oci_orchestrator_http_facade.provisioned_observability_resources.streams : k => {"id" : v.id}}
+    streams_output = length(module.oci_lz_orchestrator.provisioned_observability_resources.streams) > 0 ? {
+        "topics" : {for k, v in module.oci_lz_orchestrator.provisioned_observability_resources.streams : k => {"id" : v.id}}
     } : null
 
     compartments_output_file_name = "compartments_output.json"
@@ -141,16 +141,16 @@ output "streams_output" {
 
 # output "provisioned_identity_resources" {
 #   description = "Provisioned identity resources"
-#   value       = length(module.oci_orchestrator_http_facade.provisioned_identity_resources) > 0 ? module.oci_orchestrator_http_facade.provisioned_identity_resources : null
+#   value       = length(module.oci_lz_orchestrator.provisioned_identity_resources) > 0 ? module.oci_lz_orchestrator.provisioned_identity_resources : null
 # }
 
 # output "provisioned_networking_resources" {
 #   description = "Provisioned networking resources"
-#   value       = module.oci_orchestrator_http_facade.provisioned_networking_resources
+#   value       = module.oci_lz_orchestrator.provisioned_networking_resources
 # }
 
 # output "provisioned_streaming_resources" {
-#   value = module.oci_orchestrator_http_facade.provisioned_streaming_resources
+#   value = module.oci_lz_orchestrator.provisioned_streaming_resources
 # }
 
 output "region" {
