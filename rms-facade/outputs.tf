@@ -1,11 +1,5 @@
-# ####################################################################################################### #
-# Copyright (c) 2024 Oracle and/or its affiliates,  All rights reserved.                                  #
-# Licensed under the Universal Permissive License v 1.0 as shown at https: //oss.oracle.com/licenses/upl. #
-# Author: Cosmin Tudor                                                                                    #
-# Author email: cosmin.tudor@oracle.com                                                                   #
-# Last Modified: Thu Feb 21, 2023                                                                         #
-# Modified by: andre.correa@oracle.com                                                                    #
-# ####################################################################################################### #
+# Copyright (c) 2024 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 data "oci_objectstorage_namespace" "this" {
   count = var.save_output && lower(var.output_location) == "ocibucket" ? 1 : 0
