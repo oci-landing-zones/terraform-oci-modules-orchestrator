@@ -1,11 +1,5 @@
-# ####################################################################################################### #
-# Copyright (c) 2024 Oracle and/or its affiliates,  All rights reserved.                                  #
-# Licensed under the Universal Permissive License v 1.0 as shown at https: //oss.oracle.com/licenses/upl. #
-# Author: Cosmin Tudor                                                                                    #
-# Author email: cosmin.tudor@oracle.com                                                                   #
-# Last Modified: Tue Feb 20, 2024                                                                         #
-# Modified by: andre.correa@oracle.com                                                                    #
-# ####################################################################################################### #
+# Copyright (c) 2024 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 # User Credentials 
 variable "tenancy_ocid" {
@@ -93,6 +87,26 @@ variable "logging_configuration" {
   default = null
 }
 
+variable "scanning_configuration" {
+  type    = any
+  default = null
+}
+
+variable "cloud_guard_configuration" {
+  type    = any
+  default = null
+}
+
+variable "security_zones_configuration" {
+  type    = any
+  default = null
+}
+
+variable "vaults_configuration" {
+  type    = any
+  default = null
+}
+
 variable "compartments_dependency" {
   type    = map(any)
   default = null
@@ -129,6 +143,11 @@ variable "topics_dependency" {
 }
 
 variable "functions_dependency" {
+  type    = map(any)
+  default = null
+}
+
+variable "vaults_dependency" {
   type    = map(any)
   default = null
 }
