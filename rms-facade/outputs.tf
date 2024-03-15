@@ -5,11 +5,11 @@ locals {
     compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
         "compartments" : {for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => {"id" : v.id}}
     } : null
-    networking_output = module.oci_lz_orchestrator.networking_resources != null ? {
-        "networking_resources" : {
-            "vcns" : {for k, v in module.oci_lz_orchestrator.networking_resources.vcns : k => {"id" : v.id}},
-            "subnets" : {for k, v in module.oci_lz_orchestrator.networking_resources.subnets : k => {"id" : v.id}},
-            "network_security_groups" : {for k, v in module.oci_lz_orchestrator.networking_resources.network_security_groups : k => {"id" : v.id}}
+    network_output = module.oci_lz_orchestrator.network_resources != null ? {
+        "network_resources" : {
+            "vcns" : {for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => {"id" : v.id}},
+            "subnets" : {for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => {"id" : v.id}},
+            "network_security_groups" : {for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => {"id" : v.id}}
         }    
     } : null
     topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
@@ -52,9 +52,9 @@ resource "oci_objectstorage_object" "compartments" {
 
 ### Writing networking output to OCI bucket
 resource "oci_objectstorage_object" "networking" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.networking_output != null ? 1 : 0
+  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.network_output != null ? 1 : 0
   bucket    = var.oci_configuration_bucket
-  content   = jsonencode(local.networking_output)
+  content   = jsonencode(local.network_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = "${var.oci_object_prefix}/${local.networking_output_file_name}"
 }
@@ -128,11 +128,11 @@ resource "github_repository_file" "compartments" {
 
 ### Writing networking output to GitHub repository
 resource "github_repository_file" "networking" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.networking_output != null ? 1 : 0
+  count = var.save_output && lower(var.configuration_source) == "github" && local.network_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.networking_output_file_name}"
-  content             = jsonencode(local.networking_output)
+  content             = jsonencode(local.network_output)
   commit_message      = "Managed by OCI Landing Zone modules orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"

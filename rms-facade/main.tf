@@ -37,7 +37,7 @@ module "oci_lz_orchestrator" {
 
   # Dependencies
   compartments_dependency = local.compartments_dependency
-  networks_dependency     = local.networks_dependency
+  network_dependency      = local.network_dependency
   tags_dependency         = local.tags_dependency
   kms_dependency          = local.kms_dependency
   streams_dependency      = local.streams_dependency
