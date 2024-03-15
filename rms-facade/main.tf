@@ -13,29 +13,37 @@ module "oci_lz_orchestrator" {
 
   # Configurations
   # IAM
-  compartments_configuration   = local.compartments_configuration_from_input_json_yaml_file
-  groups_configuration         = local.groups_configuration_from_input_json_yaml_file
-  dynamic_groups_configuration = local.dynamic_groups_configuration_from_input_json_yaml_file
-  policies_configuration       = local.policies_configuration_from_input_json_yaml_file
+  compartments_configuration   = local.compartments_configuration
+  groups_configuration         = local.groups_configuration
+  dynamic_groups_configuration = local.dynamic_groups_configuration
+  policies_configuration       = local.policies_configuration
   # Networking
-  network_configuration        = local.network_configuration_from_input_json_yaml_file
+  network_configuration = local.network_configuration
   # Observability
-  streams_configuration            = local.streams_configuration_from_input_json_yaml_file
-  service_connectors_configuration = local.service_connectors_configuration_from_input_json_yaml_file
-  logging_configuration            = local.logging_configuration_from_input_json_yaml_file
-  notifications_configuration      = local.notifications_configuration_from_input_json_yaml_file
-  events_configuration             = local.events_configuration_from_input_json_yaml_file
-  home_region_events_configuration = local.home_region_events_configuration_from_input_json_yaml_file
-  alarms_configuration             = local.alarms_configuration_from_input_json_yaml_file
+  streams_configuration            = local.streams_configuration
+  service_connectors_configuration = local.service_connectors_configuration
+  logging_configuration            = local.logging_configuration
+  notifications_configuration      = local.notifications_configuration
+  events_configuration             = local.events_configuration
+  home_region_events_configuration = local.home_region_events_configuration
+  alarms_configuration             = local.alarms_configuration
+  # Security
+  scanning_configuration           = local.scanning_configuration
+  cloud_guard_configuration        = local.cloud_guard_configuration
+  security_zones_configuration     = local.security_zones_configuration
+  vaults_configuration             = local.vaults_configuration
+  # Object Storage
+  object_storage_configuration = local.object_storage_configuration
 
   # Dependencies
-  compartments_dependency      = local.compartments_dependency
-  networks_dependency          = local.networks_dependency
-  tags_dependency              = local.tags_dependency
-  kms_dependency               = local.kms_dependency
-  streams_dependency           = local.streams_dependency
-  topics_dependency            = local.topics_dependency
-  logging_dependency           = local.logging_dependency
-  functions_dependency         = local.functions_dependency
+  compartments_dependency = local.compartments_dependency
+  networks_dependency     = local.networks_dependency
+  tags_dependency         = local.tags_dependency
+  kms_dependency          = local.kms_dependency
+  streams_dependency      = local.streams_dependency
+  topics_dependency       = local.topics_dependency
+  logging_dependency      = local.logging_dependency
+  functions_dependency    = local.functions_dependency
+  vaults_dependency       = local.vaults_dependency 
 
 }

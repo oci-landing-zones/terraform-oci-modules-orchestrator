@@ -1,9 +1,9 @@
 # Copyright (c) 2024 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-title: "OCI Landing Zone Modules Orchestrator"
-stackDescription: "Generic module that orchestrates Landing Zone configuration variables expressed in JSON or YAML that are read via HTTP."
-description: "Generic module that orchestrates Landing Zone configuration variables expressed in JSON or YAML that are read via HTTP."
+title: "OCI Landing Zones Orchestrator"
+stackDescription: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
+description: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
 schemaVersion: 1.1.0
 version: "0.0.1"
 locale: "en"
@@ -12,28 +12,54 @@ locale: "en"
 logoUrl: "https://objectstorage.us-ashburn-1.oraclecloud.com/p/taf6kC9fSJyQDNSYbxvqxS_JsdnSu56oFZ3-1h5vI7-WfJUv77mplChopLxZPePW/n/ociateam/b/cis-landing-zone/o/landing_zone_130.png"
 
 variableGroups:
-  - title: "Environment"
+  - title: "Region"
     visible: true
     variables:
       - region
-  - title: "URLs to JSON/YAML Configuration Files"
+  - title: "Configuration Source"
     visible: true
+    variables: 
+      - configuration_source
+  - title: "OCI Object Storage Source"
+    visible:
+      eq:
+        - configuration_source
+        - "ocibucket"
+    variables:
+      - oci_configuration_bucket
+      - oci_configuration_objects
+      - oci_dependency_objects  
+  - title: "GitHub Source"
+    visible:
+      eq:
+        - configuration_source
+        - "github"
+    variables:
+      - github_token
+      - github_configuration_repo
+      - github_configuration_branch
+      - github_configuration_files   
+      - github_dependency_files       
+  - title: "URL Sources"
+    visible: 
+      eq:
+        - configuration_source
+        - "url"
     variables:
       - input_config_files_urls
-  - title: "URLs to JSON Dependency Files"
-    visible: true
-    variables:
       - dependency_files_urls
-  - title: "Output"
-    visible: true
+  - title: "Save Output?"
+    visible:
+      or:
+        - eq:
+          - configuration_source
+          - "ocibucket"  
+        - eq:
+          - configuration_source
+          - "github"
     variables:
       - save_output
-      - output_location
-      - oci_bucket_name
       - oci_object_prefix
-      - github_token
-      - github_repository_name
-      - github_branch_name    
       - github_file_prefix
 
   - title: "Hidden Variables"
@@ -53,16 +79,94 @@ variables:
     description: "The region for deployment of regional resources. IAM resources (global) are always transparently deployed in the tenancy home region."
     required: true
 
+  configuration_source:
+    type: enum 
+    title: "Configuration Source"
+    description: "Select the source where configuration files are pulled from. Supported sources are OCI Object Storage buckets, GitHub repositories and URLs."
+    required: true
+    enum:
+      - "ocibucket"
+      - "github"
+      - "url"
+  
+  oci_configuration_bucket:
+    type: string
+    title: "OCI Bucket Name"
+    description : "The OCI Object Storage bucket name with Landing Zone configuration files. The executing user MUST have read permissions on the bucket."
+    
+  oci_configuration_objects:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "Configuration Files"
+    additionalProps:
+        allowMultiple: true
+    description: "The Landing Zone configuration files in OCI Object Storage. Only JSON or YAML files are supported."
+    required: false
+
+  oci_dependency_objects:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "Dependency Files"
+    additionalProps:
+        allowMultiple: true
+    description: "The stack dependency files in OCI Object Storage. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    required: false  
+
+  github_token:
+    type: password
+    title: "GitHub Token"
+    description : "The token that allows working with the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to read (and write if you save the stack output back to GitHub) the repository."
+    
+  github_configuration_repo:
+    type: string
+    title: "GitHub Repository"
+    description : "The GitHub repository with Landing Zone configurations. A GitHub token with read permissions is required."
+
+  github_configuration_branch:
+    type: string
+    title: "GitHub Branch"
+    description : "The GitHub branch with Landing Zone configurations. A GitHub token with read permissions is required."  
+
+  github_configuration_files:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "Configuration Files"
+    additionalProps:
+        allowMultiple: true
+    description: "The Landing Zone configuration files in GitHub. Only JSON or YAML files are supported."
+    required: false
+
+  github_dependency_files:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "Dependency Files"
+    additionalProps:
+        allowMultiple: true
+    description: "The stack dependency files in GitHub. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    required: false
+
   input_config_files_urls:
     type: array
     items:
       type: string
     multiline: true
     uniqueItems: true
-    title: "List of URLs to the JSON or YAML configuration files (Type or Paste the URLs)"
+    title: "Configuration Files"
     additionalProps:
         allowMultiple: true
-    description: "Only JSON or YAML files are supported."
+    description: "The URLs to Landing Zone configuration files. Only JSON or YAML files are supported."
     required: false
 
   dependency_files_urls:
@@ -71,38 +175,18 @@ variables:
       type: string
     multiline: true
     uniqueItems: true
-    title: "List of URLs to JSON files containing dependencies expressed in the configuration files (Type or Paste the URLs)"
+    title: "Dependency Files"
     additionalProps:
         allowMultiple: true
-    description: "Only JSON files are supported."
+    description: "The URLs to stack dependency files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
     required: false  
 
   save_output:
     type: boolean
     title: "Save Output?"
-    description: "Whether to save the module output. This is typically done when the output is used as the input to another module."
+    description: "Whether to save the stack output, that can be used as a dependency input on another stack."
     default: true
     visible: true
-
-  output_location:
-    type: enum 
-    title: "Output Location Type"
-    description: "The location type where the output is saved."
-    enum:
-      - "ocibucket"
-      - "github"
-    visible: save_output  
-     
-  oci_bucket_name:
-    type: string
-    title: "OCI Bucket Name"
-    description : "The OCI bucket name. The executing user MUST have write permissions on the bucket."
-    visible:
-      and:
-        - ${save_output}
-        - eq:
-          - output_location
-          - "ocibucket"
 
   oci_object_prefix:
     type: string
@@ -112,42 +196,9 @@ variables:
       and:
         - ${save_output}
         - eq:
-          - output_location
-          - "ocibucket"     
-
-  github_token:
-    type: string
-    title: "GitHub Token"
-    description : "The token that allows write access to the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to write to the repository."
-    visible:
-      and:
-        - ${save_output}
-        - eq:
-          - output_location
-          - "github"
-
-  github_repository_name:
-    type: string
-    title: "GitHub Repository Name"
-    description : "The GitHub repository name where the output is committed to."
-    visible:
-      and:
-        - ${save_output}
-        - eq:
-          - output_location
-          - "github"   
-
-  github_branch_name:
-    type: string
-    title: "GitHub Branch Name"
-    description : "The GitHub branch name where the output is committed to."
-    visible:
-      and:
-        - ${save_output}
-        - eq:
-          - output_location
-          - "github"   
-
+          - configuration_source
+          - "ocibucket"  
+        
   github_file_prefix:
     type: string
     title: "GitHub File Prefix"
@@ -156,10 +207,9 @@ variables:
       and:
         - ${save_output}
         - eq:
-          - output_location
-          - "github"                
-
-
+          - configuration_source
+          - "github"  
+          
   # Hidden variables
   user_ocid:
     type: string
