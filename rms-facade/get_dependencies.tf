@@ -60,13 +60,13 @@ locals {
     ][0]
   } : null : null
 
-  compartments_dependency = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "compartments") ? local.merged_dependency_files.compartments : null : null
-  tags_dependency         = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "tags") ? local.merged_dependency_files.tags : null : null
-  networks_dependency     = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "networking_resources") ? local.merged_dependency_files.provisioned_networking_resources : null : null
-  kms_dependency          = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "keys") ? local.merged_dependency_files.keys : null : null
-  streams_dependency      = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "streams") ? local.merged_dependency_files.streams : null : null
-  topics_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "topics") ? local.merged_dependency_files.topics : null : null
-  logging_dependency      = local.merged_dependency_files != null ? merge(contains(keys(local.merged_dependency_files), "service_logs") ? local.merged_dependency_files.service_logs : {}, contains(keys(local.merged_dependency_files), "custom_logs") ? local.merged_dependency_files.custom_logs : {}) : null
-  functions_dependency    = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "functions") ? local.merged_dependency_files.functions : null : null
-  vaults_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "vaults") ? local.merged_dependency_files.vaults : null : null
+  compartments_dependency = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "compartments") ? {"compartments" : local.merged_dependency_files.compartments}: null : null
+  tags_dependency         = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "tags") ? {"tags" : local.merged_dependency_files.tags} : null : null
+  network_dependency      = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "network_resources") ? {"network_resources" : local.merged_dependency_files.network_resources} : null : null
+  kms_dependency          = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "keys") ? {"keys" : local.merged_dependency_files.keys} : null : null
+  streams_dependency      = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "streams") ? {"streams" : local.merged_dependency_files.streams} : null : null
+  topics_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "topics") ? {"topics" : local.merged_dependency_files.topics} : null : null
+  logging_dependency      = local.merged_dependency_files != null ? merge(contains(keys(local.merged_dependency_files), "service_logs") ? {"service_logs" : local.merged_dependency_files.service_logs} : {}, contains(keys(local.merged_dependency_files), "custom_logs") ? {"custom_logs" : local.merged_dependency_files.custom_logs} : {}) : null
+  functions_dependency    = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "functions") ? {"functions" : local.merged_dependency_files.functions} : null : null
+  vaults_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "vaults") ? {"vaults" : local.merged_dependency_files.vaults} : null : null
 }

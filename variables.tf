@@ -113,46 +113,51 @@ variable "object_storage_configuration" {
 }
 
 variable "compartments_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "tags_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
-variable "networks_dependency" {
-  type    = map(any)
+variable "network_dependency" {
+  type    = any
   default = null
 }
 
 variable "kms_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "logging_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "streams_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "topics_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "functions_dependency" {
-  type    = map(any)
+  type    = any
   default = null
 }
 
 variable "vaults_dependency" {
-  type    = map(any)
+  type    = any
+  default = null
+}
+
+variable "output_path" {
+  type = string
   default = null
 }
