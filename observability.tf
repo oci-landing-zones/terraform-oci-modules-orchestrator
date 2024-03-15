@@ -64,9 +64,9 @@ module "oci_lz_service_connectors" {
   tenancy_ocid            = var.tenancy_ocid
   service_connectors_configuration = var.service_connectors_configuration
   compartments_dependency = local.compartments_dependency
-  streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+  streams_dependency      = merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
   topics_dependency       = merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
-  logs_dependency         = merge({for k, v in coalesce(var.logging_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_logging) > 0 ? merge(coalesce(module.oci_lz_logging[0].service_logs,{}), coalesce(module.oci_lz_logging[0].custom_logs,{})): {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+  logs_dependency         = merge({for k, v in coalesce(var.logging_dependency,{}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}}, {for k, v in (length(module.oci_lz_logging) > 0 ? merge(coalesce(module.oci_lz_logging[0].service_logs,{}), coalesce(module.oci_lz_logging[0].custom_logs,{})): {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
   kms_dependency          = var.kms_dependency
   functions_dependency    = var.functions_dependency
 }

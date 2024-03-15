@@ -107,6 +107,11 @@ variable "vaults_configuration" {
   default = null
 }
 
+variable "object_storage_configuration" {
+  type    = any
+  default = null
+}
+
 variable "compartments_dependency" {
   type    = map(any)
   default = null

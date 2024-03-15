@@ -31,5 +31,5 @@ module "oci_lz_vaults" {
   }
   vaults_configuration    = var.vaults_configuration
   compartments_dependency = local.compartments_dependency
-  vaults_dependency       = var.vaults_dependency
+  vaults_dependency       = var.vaults_dependency #merge({for k, v in coalesce(var.vaults_dependency,{}) : k => {"management_endpoint" : v.management_endpoint}}, {for k, v in (length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => {"management_endpoint" : v.management_endpoint}})
 }

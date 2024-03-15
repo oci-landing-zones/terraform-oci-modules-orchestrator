@@ -29,14 +29,6 @@ variable "github_token" {
   type = string
   default = null
 }
-variable "github_repository_name" {
-  type = string
-  default = null
-}
-variable "github_branch_name" {
-  type = string
-  default = null
-}
 variable "github_file_prefix" {
   type = string
   default = null
@@ -60,20 +52,47 @@ variable "save_output" {
   description = "Whether to save the module output. This is typically done when the output is used as the input to another module."
 }
 
-variable "output_location" {
-  type = string
-  default = "ocibucket"
-  description = "The location type where the output is saved. Valid values are ocibucket or github."
-}
-
-variable "oci_bucket_name" {
-  type = string
-  default = null
-  description = "The OCI bucket name. The executing user MUST have write permissions on the bucket."
-}
-
 variable "oci_object_prefix" {
   type = string
   default = null
   description = "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci_object_prefix/object_name."
+}
+
+variable "configuration_source" {
+  type        = string
+  default     = "url"
+  description = "The source where configuration files are pulled from."
+}
+variable "oci_configuration_bucket" {
+  type        = string
+  default     = null
+  description = "The OCI Object Storage bucket where Landing Zone configuration files are kept."
+}
+variable "oci_configuration_objects" {
+  type        = list(string)
+  default     = null
+  description = "The OCI Object Storage objects containing the Landing Zone configurations."
+}
+variable "oci_dependency_objects" {
+  type        = list(string)
+  default     = null
+  description = "The OCI Object Storage objects containing stack dependencies."
+}
+
+variable "github_configuration_repo" {
+  type = string
+  default = null
+}
+variable "github_configuration_branch" {
+  type = string
+  default = null
+}
+variable "github_configuration_files" {
+  type = list(string)
+  default = null
+}
+variable "github_dependency_files" {
+  type        = list(string)
+  default     = null
+  description = "The GitHub files containing stack dependencies."
 }

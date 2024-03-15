@@ -1,7 +1,7 @@
 # Copyright (c) 2024 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-output "provisioned_identity_resources" {
+output "iam_resources" {
   description = "Provisioned identity resources"
   value = {
     compartments   = length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {},
@@ -12,12 +12,12 @@ output "provisioned_identity_resources" {
   }
 }
 
-output "provisioned_networking_resources" {
+output "networking_resources" {
   description = "Provisioned networking resources"
   value       = length(module.oci_lz_networking) > 0 ? module.oci_lz_networking[0].provisioned_networking_resources : null
 }
 
-output "provisioned_observability_resources" {
+output "observability_resources" {
   description = "Provisioned streaming resources"
   value = {
     # streams module
@@ -49,6 +49,14 @@ output "provisioned_observability_resources" {
     service_connector_topics  = length(module.oci_lz_service_connectors) > 0 ? module.oci_lz_service_connectors[0].service_connector_topics : {}
     service_connector_policies = length(module.oci_lz_service_connectors) > 0 ? module.oci_lz_service_connectors[0].service_connector_policies : {}
   }  
+}
+
+output "security_resources" {
+  description = "Provisioned security resources"
+  value = {
+    keys = length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].keys : {}
+    vaults = length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}
+  }
 }
 
 # output "provisioned_streaming_resources" {
