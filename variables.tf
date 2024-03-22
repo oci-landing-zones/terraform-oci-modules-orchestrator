@@ -107,6 +107,16 @@ variable "vaults_configuration" {
   default = null
 }
 
+variable "budgets_configuration" {
+  type    = any
+  default = null
+}
+
+variable "tags_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null

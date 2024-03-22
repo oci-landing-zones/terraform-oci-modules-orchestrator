@@ -15,13 +15,28 @@ locals {
         "network_security_groups" : merge({for k, v in (local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map),"network_security_groups") ? local.ext_dep_network_map["network_security_groups"] : {}) : {}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_network) > 0 ? (contains(keys(module.oci_lz_network[0].network_resources,"network_security_groups")) ? module.oci_lz_network[0].network_resources["network_security_groups"] : {}) : {}) : k => {"id" : v.id}})
     } : null
 
+    # var.streams_dependency
     ext_dep_streams_map = var.streams_dependency != null ? try(var.streams_dependency.streams, jsondecode(file(var.streams_dependency)).streams, null) : null
     streams_dependency = merge({for k, v in coalesce(local.ext_dep_streams_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
 
+    # var.topics_dependency
     ext_dep_topics_map = var.topics_dependency != null ? try(var.topics_dependency.topics, jsondecode(file(var.topics_dependency)).topics, null) : null
     topics_dependency  = merge({for k, v in coalesce(local.ext_dep_topics_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
 
+    # var.logs_dependency
     ext_dep_service_logs_map = var.logging_dependency != null ? try(var.logging_dependency.service_logs, jsondecode(file(var.logging_dependency)).service_logs, null) : null
     ext_dep_custom_logs_map = var.logging_dependency != null ? try(var.logging_dependency.custom_logs, jsondecode(file(var.logging_dependency)).custom_logs, null) : null
     logs_dependency = merge({for k, v in merge(coalesce(local.ext_dep_service_logs_map,{}), coalesce(local.ext_dep_custom_logs_map,{})) : k => {"id" : v.id, "compartment_id" : v.compartment_id}}, {for k, v in (length(module.oci_lz_logging) > 0 ? merge(coalesce(module.oci_lz_logging[0].service_logs,{}), coalesce(module.oci_lz_logging[0].custom_logs,{})): {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
+
+    # var.kms_dependency
+    ext_dep_kms_map = var.kms_dependency != null ? try(var.kms_dependency.keys, jsondecode(file(var.kms_dependency)).keys, null) : null
+    kms_dependency  = merge({for k, v in coalesce(local.ext_dep_kms_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].keys : {}) : k => {"id" : v.id}})
+
+    # var.vaults_dependency
+    ext_dep_vaults_map = var.vaults_dependency != null ? try(var.vaults_dependency.vaults, jsondecode(file(var.vaults_dependency)).vaults, null) : null
+    vaults_dependency  = merge({for k, v in coalesce(local.ext_dep_vaults_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => {"management_endpoint" : v.management_endpoint}})
+
+    # var.tags_dependency
+    ext_dep_tags_map = var.tags_dependency != null ? try(var.tags_dependency.tags, jsondecode(file(var.tags_dependency)).tags, null) : null
+    tags_dependency  = merge({for k, v in coalesce(local.ext_dep_tags_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_tags) > 0 ? module.oci_lz_tags[0].tags : {}) : k => {"id" : v.id}})
 }

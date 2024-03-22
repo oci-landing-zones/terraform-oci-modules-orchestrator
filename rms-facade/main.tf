@@ -32,6 +32,9 @@ module "oci_lz_orchestrator" {
   cloud_guard_configuration        = local.cloud_guard_configuration
   security_zones_configuration     = local.security_zones_configuration
   vaults_configuration             = local.vaults_configuration
+  # Governance
+  budgets_configuration = local.budgets_configuration
+  tags_configuration    = local.tags_configuration
   # Object Storage
   object_storage_configuration = local.object_storage_configuration
 

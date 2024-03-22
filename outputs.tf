@@ -59,6 +59,14 @@ output "security_resources" {
   }
 }
 
+output "governance_resources" {
+  description = "Provisioned governance resources"
+  value = {
+    budgets = length(module.oci_lz_budgets) > 0 ? module.oci_lz_budgets[0].budgets : {}
+    tags = length(module.oci_lz_tags) > 0 ? module.oci_lz_tags[0].tags : {}
+  }
+}
+
 resource "local_file" "compartments_output" {
   lifecycle {
     prevent_destroy = true

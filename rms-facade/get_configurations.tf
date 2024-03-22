@@ -122,6 +122,10 @@ locals {
   security_zones_configuration = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "security_zones_configuration") ? local.merged_input_config_files.security_zones_configuration : null : null
   vaults_configuration         = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "vaults_configuration") ? local.merged_input_config_files.vaults_configuration : null : null
 
+  # Governance
+  tags_configuration    = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "tags_configuration") ? local.merged_input_config_files.tags_configuration : null : null
+  budgets_configuration = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "budgets_configuration") ? local.merged_input_config_files.budgets_configuration : null : null
+
   # Object Storage
   object_storage_configuration = local.merged_input_config_files != null ? contains(keys(local.merged_input_config_files), "object_storage_configuration") ? local.merged_input_config_files.object_storage_configuration : null : null
 }
