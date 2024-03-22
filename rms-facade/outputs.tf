@@ -30,6 +30,9 @@ locals {
     keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
         "keys" : {for k, v in module.oci_lz_orchestrator.security_resources.keys : k => {"id" : v.id}}
     } : null
+    tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
+        "tags" : {for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => {"id" : v.id}}
+    } : null
 
     compartments_output_file_name = "compartments_output.json"
     networking_output_file_name   = "networking_output.json"
@@ -39,6 +42,7 @@ locals {
     custom_logs_output_file_name  = "custom_logs_output.json"
     vaults_output_file_name       = "vaults_output.json"
     keys_output_file_name         = "keys_output.json"
+    tags_output_file_name         = "tags_output.json"
 }
 
 ### Writing compartments output to bucket
@@ -111,6 +115,15 @@ resource "oci_objectstorage_object" "keys" {
   content   = jsonencode(local.keys_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = "${var.oci_object_prefix}/${local.keys_output_file_name}"
+}
+
+### Writing tags output to OCI bucket
+resource "oci_objectstorage_object" "tags" {
+  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.tags_output != null ? 1 : 0
+  bucket    = var.oci_configuration_bucket
+  content   = jsonencode(local.tags_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = "${var.oci_object_prefix}/${local.tags_output_file_name}"
 }
 
 ### Writing compartments output to GitHub repository
@@ -217,43 +230,34 @@ resource "github_repository_file" "keys" {
   overwrite_on_create = true
 }
 
+### Writing tags output to GitHub repository
+resource "github_repository_file" "tags" {
+  count = var.save_output && lower(var.configuration_source) == "github" && local.tags_output != null ? 1 : 0
+  repository          = var.github_configuration_repo
+  branch              = var.github_configuration_branch
+  file                = "${var.github_file_prefix}/${local.tags_output_file_name}"
+  content             = jsonencode(local.tags_output)
+  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 data "github_repository" "this" {
   count = var.save_output && lower(var.configuration_source) == "github" ? 1 : 0
   name = var.github_configuration_repo
 }
 
-output "compartments_output" {
-  value = length(oci_objectstorage_object.compartments) > 0 ? "OCI Bucket: '${oci_objectstorage_object.compartments[0].bucket}', OCI Object File: '${oci_objectstorage_object.compartments[0].object}'" : length(github_repository_file.compartments) > 0 ? "GitHub Repo/Branch: '${github_repository_file.compartments[0].repository}/${github_repository_file.compartments[0].branch}', GitHub File: '${github_repository_file.compartments[0].file}'" : null
+locals {
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,"")]))}"
+  github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,"")]))}"
+  output_string = lower(var.configuration_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" ? local.github_output_string : ""
 } 
 
-# output "networking_output" {
-#   value = length(oci_objectstorage_object.networking) > 0 ? "OCI Bucket: '${oci_objectstorage_object.networking[0].bucket}', OCI Object File: '${oci_objectstorage_object.networking[0].object}'" : length(github_repository_file.networking) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_configuration_branch}/${var.github_file_prefix}/${local.networking_output_file_name}" : null
-# } 
-
-# output "topics_output" {
-#   value = length(oci_objectstorage_object.topics) > 0 ? "OCI Bucket: '${oci_objectstorage_object.topics[0].bucket}', OCI Object File: '${oci_objectstorage_object.networking[0].object}'" : length(github_repository_file.topics) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_configuration_branch}/${var.github_file_prefix}/${local.topics_output_file_name}" : null
-# } 
-
-# output "streams_output" {
-#   value = length(oci_objectstorage_object.streams) > 0 ? "OCI Bucket: '${oci_objectstorage_object.streams[0].bucket}', OCI Object File: '${oci_objectstorage_object.networking[0].object}'" : length(github_repository_file.streams) > 0 ? "${replace(data.github_repository.this[0].html_url,"https://github.com/","https://raw.githubusercontent.com/")}/${var.github_configuration_branch}/${var.github_file_prefix}/${local.streams_output_file_name}" : null
-# } 
+output "output_string" {
+  value = local.output_string
+} 
 
 output "region" {
   value = var.region
 }
-
-# output "githubreadtest" {
-#   value = data.github_repository_file.readtest.content
-# }
-
-# output "githubrepo" {
-#   value = local.github_repo_from_url
-# }
-
-# output "githubbranch" {
-#   value = local.github_branch_from_url
-# }
-
-# output "githubfile" {
-#   value = local.github_file_from_url
-# }
