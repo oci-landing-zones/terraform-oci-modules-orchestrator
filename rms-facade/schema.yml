@@ -251,7 +251,4 @@ outputGroups:
 
   - title: Outputs 
     outputs:
-      - ${compartments_output}
-      - ${networking_output}
-      - ${topics_output}
-      - ${streams_output}
+      - ${output_string}
