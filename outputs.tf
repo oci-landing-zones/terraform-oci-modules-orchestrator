@@ -14,7 +14,7 @@ output "iam_resources" {
 
 output "network_resources" {
   description = "Provisioned networking resources"
-  value       = length(module.oci_lz_network) > 0 ? module.oci_lz_network[0].network_resources : null
+  value       = length(module.oci_lz_network) > 0 ? module.oci_lz_network[0].provisioned_networking_resources : null
 }
 
 output "observability_resources" {

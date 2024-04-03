@@ -7,8 +7,8 @@ module "oci_lz_compartments" {
   providers                  = { oci = oci.home }
   tenancy_ocid               = var.tenancy_ocid
   compartments_configuration = var.compartments_configuration
-  compartments_dependency    = var.compartments_dependency
-  tags_dependency            = var.tags_dependency
+  compartments_dependency    = local.ext_dep_compartments_map
+  tags_dependency            = local.tags_dependency
 }
 
 module "oci_lz_groups" {

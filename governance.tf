@@ -14,5 +14,5 @@ module "oci_lz_tags" {
   source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance.git//tags?ref=v0.1.2"
   tenancy_ocid            = var.tenancy_ocid
   tags_configuration      = var.tags_configuration
-  compartments_dependency = local.compartments_dependency
+  compartments_dependency = local.ext_dep_compartments_map
 }

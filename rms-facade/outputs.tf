@@ -251,7 +251,7 @@ data "github_repository" "this" {
 locals {
   object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,"")]))}"
   github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,"")]))}"
-  output_string = lower(var.configuration_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" ? local.github_output_string : ""
+  output_string = var.save_output ? (lower(var.configuration_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" ? local.github_output_string : "") : null
 } 
 
 output "output_string" {
