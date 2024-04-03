@@ -228,21 +228,9 @@ outputs:
     type: string
     title: Region
 
-  compartments_output:
-    type: copyableString
-    title: Compartments
-
-  networking_output:
-    type: copyableString
-    title: Networking
-
-  topics_output:
-    type: copyableString
-    title: Topics
-
-  streams_output:
-    type: copyableString
-    title: Streams  
+  output_string:
+    type: string
+    title: Output Files 
 
 outputGroups:
   - title: Environment

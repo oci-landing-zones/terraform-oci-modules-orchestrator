@@ -23,50 +23,25 @@ data "http" "dependencies" {
   }
 }
 
-# locals {
-#   github_repo_from_url   = [for url in var.dependency_files_urls : regex("^https://raw.githubusercontent.com/andrecorreaneto/(.*)/.*$",url)[0]]
-#   github_branch_from_url = [for url in var.dependency_files_urls : regex("^https://raw.githubusercontent.com/andrecorreaneto/.*/(.*)/.*$",url)[0]]
-#   github_file_from_url   = [for url in var.dependency_files_urls : regex("^https://raw.githubusercontent.com/andrecorreaneto/.*/.*/(.*)$",url)[0]]
-# }
-
-# data "github_repository_file" "readtest" {
-#   repository          = "oci-landing-zone-configuration"
-#   branch              = "test"
-#   file                = "rms-iam/output/compartments_output.json"
-# }
-
 locals {
-  url_json_dependency_files = data.http.dependencies != null ? length(data.http.dependencies) > 0 ? [
-    for element in flatten(data.http.dependencies[*].body) : jsondecode(element) if try(jsondecode(element), null) != null
-  ] : [] : []
-
-  ocibucket_json_dependency_files = data.oci_objectstorage_object.dependencies != null ? length(data.oci_objectstorage_object.dependencies) > 0 ? [
-    for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : jsondecode(element) if try(jsondecode(element), null) != null
-  ] : [] : []
-
-  github_json_dependency_files = data.github_repository_file.dependencies != null ? length(data.github_repository_file.dependencies) > 0 ? [
-    for element in flatten(data.github_repository_file.dependencies[*].content) : jsondecode(element) if try(jsondecode(element), null) != null
-  ] : [] : []
-
-  all_json_dependency_files = concat(local.url_json_dependency_files, local.ocibucket_json_dependency_files, local.github_json_dependency_files)
+  url_json_dependencies = [for element in flatten(data.http.dependencies[*].body) : try(jsondecode(element), "") if length(data.http.dependencies) > 0]
+  ocibucket_json_dependencies = [for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : try(jsondecode(element), "") if length(data.oci_objectstorage_object.dependencies) > 0]
+  github_json_dependencies = [for element in flatten(data.github_repository_file.dependencies[*].content) : try(jsondecode(element), "") if length(data.github_repository_file.dependencies) > 0]
+  all_json_dependencies = concat(local.url_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies)
   
-  all_json_dependency_l1_keys = local.all_json_dependency_files != null ? length(local.all_json_dependency_files) > 0 ? flatten([
-    for value in local.all_json_dependency_files : keys(value) if value != null
-  ]) : null : null
+  all_json_dependencies_keys = flatten([for value in local.all_json_dependencies : keys(value) if length(local.all_json_dependencies) > 0])
 
-  merged_dependency_files = local.all_json_dependency_l1_keys != null ? length(local.all_json_dependency_l1_keys) > 0 ? {
-    for key in local.all_json_dependency_l1_keys : key => [
-      for config in local.all_json_dependency_files : config[key] if contains(keys(config), key) && config != null
-    ][0]
-  } : null : null
+  all_json_dependencies_map = {for key in local.all_json_dependencies_keys : 
+                                        key => [for config in local.all_json_dependencies : config[key] if contains(keys(config), key)][0]
+                                    if length(local.all_json_dependencies_keys) > 0}
 
-  compartments_dependency = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "compartments") ? {"compartments" : local.merged_dependency_files.compartments}: null : null
-  tags_dependency         = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "tags") ? {"tags" : local.merged_dependency_files.tags} : null : null
-  network_dependency      = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "network_resources") ? {"network_resources" : local.merged_dependency_files.network_resources} : null : null
-  kms_dependency          = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "keys") ? {"keys" : local.merged_dependency_files.keys} : null : null
-  streams_dependency      = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "streams") ? {"streams" : local.merged_dependency_files.streams} : null : null
-  topics_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "topics") ? {"topics" : local.merged_dependency_files.topics} : null : null
-  logging_dependency      = local.merged_dependency_files != null ? merge(contains(keys(local.merged_dependency_files), "service_logs") ? {"service_logs" : local.merged_dependency_files.service_logs} : {}, contains(keys(local.merged_dependency_files), "custom_logs") ? {"custom_logs" : local.merged_dependency_files.custom_logs} : {}) : null
-  functions_dependency    = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "functions") ? {"functions" : local.merged_dependency_files.functions} : null : null
-  vaults_dependency       = local.merged_dependency_files != null ? contains(keys(local.merged_dependency_files), "vaults") ? {"vaults" : local.merged_dependency_files.vaults} : null : null
+  compartments_dependency = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "compartments") ? {"compartments" : local.all_json_dependencies_map.compartments}: null : null
+  tags_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "tags") ? {"tags" : local.all_json_dependencies_map.tags} : null : null
+  network_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "network_resources") ? {"network_resources" : local.all_json_dependencies_map.network_resources} : null : null
+  kms_dependency          = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "keys") ? {"keys" : local.all_json_dependencies_map.keys} : null : null
+  streams_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "streams") ? {"streams" : local.all_json_dependencies_map.streams} : null : null
+  topics_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "topics") ? {"topics" : local.all_json_dependencies_map.topics} : null : null
+  logging_dependency      = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "service_logs") ? {"service_logs" : local.all_json_dependencies_map.service_logs} : {}, contains(keys(local.all_json_dependencies_map), "custom_logs") ? {"custom_logs" : local.all_json_dependencies_map.custom_logs} : {}) : null
+  functions_dependency    = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "functions") ? {"functions" : local.all_json_dependencies_map.functions} : null : null
+  vaults_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "vaults") ? {"vaults" : local.all_json_dependencies_map.vaults} : null : null
 }

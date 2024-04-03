@@ -6,5 +6,5 @@ module "oci_lz_network" {
   source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git?ref=v0.6.4"
   network_configuration   = var.network_configuration
   compartments_dependency = local.compartments_dependency
-  network_dependency      = var.network_dependency != null ? var.network_dependency.network_resources : null
+  network_dependency      = local.ext_dep_network_map
 }
