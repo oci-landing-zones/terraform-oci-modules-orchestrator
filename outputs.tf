@@ -67,6 +67,14 @@ output "governance_resources" {
   }
 }
 
+output "compute_resources" {
+  description = "Provisioned compute resources"
+  value = {
+    instances = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}
+    secondary_vnics = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}
+  }
+}
+
 resource "local_file" "compartments_output" {
   lifecycle {
     prevent_destroy = true
@@ -75,3 +83,5 @@ resource "local_file" "compartments_output" {
   content  = jsonencode({"compartments" : {for k, v in module.oci_lz_compartments[0].compartments : k => {"id" : v.id}}})
   filename = "${var.output_path}/compartments_output.json"
 }
+
+# TBD: add the output local files for all other outputs.

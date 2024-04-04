@@ -19,6 +19,7 @@ module "oci_lz_orchestrator" {
   policies_configuration       = local.policies_configuration
   # Networking
   network_configuration = local.network_configuration
+  nlb_configuration     = local.nlb_configuration
   # Observability
   streams_configuration            = local.streams_configuration
   service_connectors_configuration = local.service_connectors_configuration
@@ -37,6 +38,8 @@ module "oci_lz_orchestrator" {
   tags_configuration    = local.tags_configuration
   # Object Storage
   object_storage_configuration = local.object_storage_configuration
+  # Compute
+  instances_configuration = local.instances_configuration
 
   # Dependencies
   compartments_dependency = local.compartments_dependency
@@ -48,5 +51,6 @@ module "oci_lz_orchestrator" {
   logging_dependency      = local.logging_dependency
   functions_dependency    = local.functions_dependency
   vaults_dependency       = local.vaults_dependency 
+  instances_dependency    = local.instances_dependency
 
 }

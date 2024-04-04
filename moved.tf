@@ -23,5 +23,5 @@ moved {
 
 moved {
     from = module.terraform-oci-cis-landing-zone-network
-    to   = module.oci_lz_networking[0]
+    to   = module.oci_lz_network[0]
 }
