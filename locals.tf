@@ -40,4 +40,8 @@ locals {
     # var.tags_dependency
     ext_dep_tags_map = var.tags_dependency != null ? try(var.tags_dependency.tags, jsondecode(file(var.tags_dependency)).tags, null) : null
     tags_dependency  = merge({for k, v in coalesce(local.ext_dep_tags_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_tags) > 0 ? module.oci_lz_tags[0].tags : {}) : k => {"id" : v.id}})
+
+    # var.instances_dependency
+    ext_dep_instances_map = var.instances_dependency != null ? try(var.instances_dependency.instances, jsondecode(file(var.instances_dependency)).instances, null) : null
+    instances_dependency  = merge({for k, v in coalesce(local.ext_dep_instances_map,{}) : k => {"id" : v.id, "private_ip" : v.private_ip}}, {for k, v in (length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}) : k => {"id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip}}, {for k, v in (length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}) : k => {"id" : v.id, "private_ip" : v.private_ip_address}})
 }

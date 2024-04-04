@@ -52,6 +52,11 @@ variable "network_configuration" {
   default = null
 }
 
+variable "nlb_configuration" {
+  type = any
+  default = null
+}
+
 variable "streams_configuration" {
   type    = any
   default = null
@@ -117,6 +122,11 @@ variable "tags_configuration" {
   default = null
 }
 
+variable "instances_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null
@@ -163,6 +173,11 @@ variable "functions_dependency" {
 }
 
 variable "vaults_dependency" {
+  type    = any
+  default = null
+}
+
+variable "instances_dependency" {
   type    = any
   default = null
 }

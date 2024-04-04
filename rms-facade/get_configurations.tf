@@ -61,12 +61,9 @@ locals {
   dynamic_groups_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "dynamic_groups_configuration") ? local.merged_input_configs.dynamic_groups_configuration : null : null
   policies_configuration       = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "policies_configuration") ? local.merged_input_configs.policies_configuration : null : null
 
-  # Networking - core
+  # Networking
   network_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "network_configuration") ? local.merged_input_configs.network_configuration : null : null
-
-  # Networking - firewall
   nlb_configuration       = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "nlb_configuration") ? local.merged_input_configs.nlb_configuration : null : null
-  instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
 
   # Observability
   streams_configuration            = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "streams_configuration") ? local.merged_input_configs.streams_configuration : null : null
@@ -89,4 +86,7 @@ locals {
 
   # Object Storage
   object_storage_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "object_storage_configuration") ? local.merged_input_configs.object_storage_configuration : null : null
+
+  # Compute
+  instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
 }

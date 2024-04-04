@@ -10,13 +10,14 @@ locals {
             "vcns" : {for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => {"id" : v.id}},
             "subnets" : {for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => {"id" : v.id}},
             "network_security_groups" : {for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => {"id" : v.id}}
+            "dynamic_routing_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => {"id" : v.id}}
         }    
     } : null
     topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
         "topics" : {for k, v in module.oci_lz_orchestrator.observability_resources.notifications_topics : k => {"id" : v.id}}
     } : null
     streams_output = length(module.oci_lz_orchestrator.observability_resources.streams) > 0 ? {
-        "topics" : {for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => {"id" : v.id}}
+        "streams" : {for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => {"id" : v.id}}
     } : null
     custom_logs_output = length(module.oci_lz_orchestrator.observability_resources.custom_logs) > 0 ? {
         "custom_logs" : {for k, v in module.oci_lz_orchestrator.observability_resources.custom_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}
@@ -33,6 +34,10 @@ locals {
     tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
         "tags" : {for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => {"id" : v.id}}
     } : null
+    instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
+        "instances" : {for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => {"id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip}},
+        "secondary_vnics" : {for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => {"id" : v.id, "private_ip" : v.private_ip_address}}
+    } : null
 
     compartments_output_file_name = "compartments_output.json"
     networking_output_file_name   = "networking_output.json"
@@ -43,6 +48,7 @@ locals {
     vaults_output_file_name       = "vaults_output.json"
     keys_output_file_name         = "keys_output.json"
     tags_output_file_name         = "tags_output.json"
+    instances_output_file_name    = "instances_output.json"
 }
 
 ### Writing compartments output to bucket
@@ -126,6 +132,15 @@ resource "oci_objectstorage_object" "tags" {
   object    = "${var.oci_object_prefix}/${local.tags_output_file_name}"
 }
 
+### Writing instances output to OCI bucket
+resource "oci_objectstorage_object" "instances" {
+  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.instances_output != null ? 1 : 0
+  bucket    = var.oci_configuration_bucket
+  content   = jsonencode(local.instances_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = "${var.oci_object_prefix}/${local.instances_output_file_name}"
+}
+
 ### Writing compartments output to GitHub repository
 resource "github_repository_file" "compartments" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.compartments_output != null ? 1 : 0
@@ -133,7 +148,7 @@ resource "github_repository_file" "compartments" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.compartments_output_file_name}"
   content             = jsonencode(local.compartments_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -146,7 +161,7 @@ resource "github_repository_file" "networking" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.networking_output_file_name}"
   content             = jsonencode(local.network_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -159,7 +174,7 @@ resource "github_repository_file" "topics" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.topics_output_file_name}"
   content             = jsonencode(local.topics_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -172,7 +187,7 @@ resource "github_repository_file" "streams" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.streams_output_file_name}"
   content             = jsonencode(local.streams_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -185,7 +200,7 @@ resource "github_repository_file" "service_logs" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.service_logs_output_file_name}"
   content             = jsonencode(local.service_logs_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -198,7 +213,7 @@ resource "github_repository_file" "custom_logs" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.custom_logs_output_file_name}"
   content             = jsonencode(local.custom_logs_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -211,7 +226,7 @@ resource "github_repository_file" "vaults" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.vaults_output_file_name}"
   content             = jsonencode(local.vaults_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -224,7 +239,7 @@ resource "github_repository_file" "keys" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.keys_output_file_name}"
   content             = jsonencode(local.keys_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
@@ -237,20 +252,34 @@ resource "github_repository_file" "tags" {
   branch              = var.github_configuration_branch
   file                = "${var.github_file_prefix}/${local.tags_output_file_name}"
   content             = jsonencode(local.tags_output)
-  commit_message      = "Managed by OCI Landing Zone modules orchestrator."
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
   overwrite_on_create = true
 }
 
+### Writing instances output to GitHub repository
+resource "github_repository_file" "instances" {
+  count = var.save_output && lower(var.configuration_source) == "github" && local.instances_output != null ? 1 : 0
+  repository          = var.github_configuration_repo
+  branch              = var.github_configuration_branch
+  file                = "${var.github_file_prefix}/${local.instances_output_file_name}"
+  content             = jsonencode(local.instances_output)
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
+### Writing private_ips output to GitHub repository
 data "github_repository" "this" {
   count = var.save_output && lower(var.configuration_source) == "github" ? 1 : 0
   name = var.github_configuration_repo
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,"")]))}"
-  github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,"")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,""),try(oci_objectstorage_object.instances[0].object,"")]))}"
+  github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,""),try(github_repository_file.instances[0].file,"")]))}"
   output_string = var.save_output ? (lower(var.configuration_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" ? local.github_output_string : "") : null
 } 
 
