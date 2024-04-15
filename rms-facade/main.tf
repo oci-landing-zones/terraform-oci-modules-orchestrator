@@ -52,5 +52,5 @@ module "oci_lz_orchestrator" {
   functions_dependency    = local.functions_dependency
   vaults_dependency       = local.vaults_dependency 
   instances_dependency    = local.instances_dependency
-
+  nlbs_dependency         = local.nlbs_dependency  
 }

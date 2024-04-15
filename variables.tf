@@ -182,6 +182,11 @@ variable "instances_dependency" {
   default = null
 }
 
+variable "nlbs_dependency" {
+  type    = any
+  default = null
+}
+
 variable "output_path" {
   type = string
   default = null

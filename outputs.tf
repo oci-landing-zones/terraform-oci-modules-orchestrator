@@ -75,6 +75,13 @@ output "compute_resources" {
   }
 }
 
+output "nlb_resources" {
+  description = "Provisioned NLB resources"
+  value = {
+    nlbs_private_ips = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_private_ips : {}
+  }
+}
+
 resource "local_file" "compartments_output" {
   lifecycle {
     prevent_destroy = true

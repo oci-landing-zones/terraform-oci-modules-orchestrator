@@ -4,16 +4,19 @@
 # Core networking
 module "oci_lz_network" {
   count                   = var.network_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git?ref=v0.6.5"
+  #source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git?ref=v0.6.5"
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git?ref=release-0.6.6"
   network_configuration   = var.network_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.ext_dep_network_map
+  private_ips_dependency  = local.nlbs_dependency 
 }
 
 # Network Load Balancers
 module "oci_lz_nlb" {
   count                   = var.nlb_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git//modules/nlb?ref=v0.6.5"
+  #source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git//modules/nlb?ref=v0.6.5"
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking.git//modules/nlb?ref=release-0.6.6"
   nlb_configuration       = var.nlb_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
