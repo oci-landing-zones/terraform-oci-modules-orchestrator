@@ -319,7 +319,3 @@ output "output_string" {
 output "region" {
   value = var.region
 }
-
-output "network_dependency" {
-  value = module.oci_lz_orchestrator.network_dependency
-}
