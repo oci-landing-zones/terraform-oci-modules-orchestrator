@@ -1,0 +1,39 @@
+{
+    "compartments_configuration" : {
+        "compartments" : {
+            "NETWORK-CMP" : {
+                "name" : "network-cmp",
+                "description" : "Network compartment."
+            }      
+        }
+    },
+    "groups_configuration" : {
+        "groups" : {
+            "NETWORK-GROUP" : {
+                "name" : "network-admin-grp",
+                "description" : "Network admin group."
+            }
+        }
+    },
+    "policies_configuration" : {
+        "supplied_policies" : {
+            "NETWORK-POLICY" : {
+                "name" : "network-admin-policy",
+                "description" : "Network admin policy.",
+                "compartment_id" : "TENANCY-ROOT",
+                "statements" : [
+                  "allow group network-admin-grp to manage virtual-network-family in compartment network-cmp",
+                  "allow group network-admin-grp to manage drgs in compartment network-cmp",
+                  "allow group network-admin-grp to manage load-balancers in compartment network-cmp",
+                  "allow group network-admin-grp to manage instance-family in compartment network-cmp",
+                  "allow group network-admin-grp to manage instance-agent-plugins in compartment network-cmp",
+                  "allow group network-admin-grp to manage volume-family in compartment network-cmp",
+                  "allow group network-admin-grp to manage file-family in compartment network-cmp",
+                  "allow group network-admin-grp to manage keys in compartment network-cmp",
+                  "allow group network-admin-grp to manage secret-family in compartment network-cmp",
+                  "allow group network-admin-grp to use key-delegate in compartment network-cmp"
+                ]            
+            }   
+        }
+    }             
+}

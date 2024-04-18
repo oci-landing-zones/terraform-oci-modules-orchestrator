@@ -3,7 +3,7 @@
 
 module "oci_lz_compartments" {
   count                      = var.compartments_configuration != null ? 1 : 0
-  source                     = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments?ref=v0.1.9"
+  source                     = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments?ref=v0.2.1"
   providers                  = { oci = oci.home }
   tenancy_ocid               = var.tenancy_ocid
   compartments_configuration = var.compartments_configuration
@@ -13,7 +13,7 @@ module "oci_lz_compartments" {
 
 module "oci_lz_groups" {
   count                = var.groups_configuration != null ? 1 : 0
-  source               = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups?ref=v0.1.9"
+  source               = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups?ref=v0.2.1"
   providers            = { oci = oci.home }
   tenancy_ocid         = var.tenancy_ocid
   groups_configuration = var.groups_configuration
@@ -21,7 +21,7 @@ module "oci_lz_groups" {
 
 module "oci_lz_dynamic_groups" {
   count                        = var.dynamic_groups_configuration != null ? 1 : 0
-  source                       = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups?ref=v0.1.9"
+  source                       = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups?ref=v0.2.1"
   providers                    = { oci = oci.home }
   tenancy_ocid                 = var.tenancy_ocid
   dynamic_groups_configuration = var.dynamic_groups_configuration
@@ -30,8 +30,7 @@ module "oci_lz_dynamic_groups" {
 module "oci_lz_policies" {
   count                 = var.policies_configuration != null ? 1 : 0
   depends_on             = [ module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups ]
-  #source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.1.9"
-  source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=issue-481-root-cmp-dependency"
+  source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.2.1"
   providers              = { oci = oci.home }
   tenancy_ocid           = var.tenancy_ocid
   policies_configuration = var.policies_configuration

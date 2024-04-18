@@ -75,10 +75,17 @@ output "compute_resources" {
   }
 }
 
-resource "local_file" "compartments_output" {
-  lifecycle {
-    prevent_destroy = true
+output "nlb_resources" {
+  description = "Provisioned NLB resources"
+  value = {
+    nlbs_private_ips = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_private_ips : {}
   }
+}
+
+resource "local_file" "compartments_output" {
+  #lifecycle {
+  #  prevent_destroy = true
+  #}
   count = var.output_path != null && length(module.oci_lz_compartments) > 0 ? 1 : 0
   content  = jsonencode({"compartments" : {for k, v in module.oci_lz_compartments[0].compartments : k => {"id" : v.id}}})
   filename = "${var.output_path}/compartments_output.json"
