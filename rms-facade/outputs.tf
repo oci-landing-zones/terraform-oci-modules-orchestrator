@@ -46,7 +46,7 @@ locals {
     } : null
 
     compartments_output_file_name = "compartments_output.json"
-    networking_output_file_name   = "networking_output.json"
+    networking_output_file_name   = "network_output.json"
     topics_output_file_name       = "topics_output.json"
     streams_output_file_name      = "streams_output.json"
     service_logs_output_file_name = "service_logs_output.json"

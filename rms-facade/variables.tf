@@ -31,7 +31,7 @@ variable "github_token" {
 }
 variable "github_file_prefix" {
   type = string
-  default = null
+  default = ""
 }
 
 variable "input_config_files_urls" {
@@ -48,13 +48,13 @@ variable "dependency_files_urls" {
 
 variable "save_output" {
   type = bool
-  default = true
+  default = false
   description = "Whether to save the module output. This is typically done when the output is used as the input to another module."
 }
 
 variable "oci_object_prefix" {
   type = string
-  default = null
+  default = ""
   description = "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci_object_prefix/object_name."
 }
 

@@ -5,7 +5,7 @@ title: "OCI Landing Zones Orchestrator"
 stackDescription: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
 description: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
 schemaVersion: 1.1.0
-version: "0.0.1"
+version: "2.0.0"
 locale: "en"
 
 # URL of CIS Landing Zone logo icon used on Application Information tab.
@@ -103,7 +103,7 @@ variables:
     title: "Configuration Files"
     additionalProps:
         allowMultiple: true
-    description: "The Landing Zone configuration files in OCI Object Storage. Only JSON or YAML files are supported."
+    description: "The Landing Zone configuration files in OCI Object Storage. Both JSON or YAML files are supported."
     required: false
 
   oci_dependency_objects:
@@ -131,7 +131,7 @@ variables:
   github_configuration_branch:
     type: string
     title: "GitHub Branch"
-    description : "The GitHub branch with Landing Zone configurations. A GitHub token with read permissions is required."  
+    description : "The GitHub branch with Landing Zone configurations. A GitHub token with read permissions is required." 
 
   github_configuration_files:
     type: array
@@ -142,7 +142,7 @@ variables:
     title: "Configuration Files"
     additionalProps:
         allowMultiple: true
-    description: "The Landing Zone configuration files in GitHub. Only JSON or YAML files are supported."
+    description: "The Landing Zone configuration files in GitHub. Both JSON or YAML files are supported."
     required: false
 
   github_dependency_files:
@@ -166,7 +166,7 @@ variables:
     title: "Configuration Files"
     additionalProps:
         allowMultiple: true
-    description: "The URLs to Landing Zone configuration files. Only JSON or YAML files are supported."
+    description: "The URLs to Landing Zone configuration files. Both JSON or YAML files are supported."
     required: false
 
   dependency_files_urls:
@@ -185,13 +185,12 @@ variables:
     type: boolean
     title: "Save Output?"
     description: "Whether to save the stack output, that can be used as a dependency input on another stack."
-    default: true
     visible: true
 
   oci_object_prefix:
     type: string
     title: "OCI Object Prefix"
-    description : "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci_object_prefix/object_name."
+    description : "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated object name is appended to the provided prefix, like oci_object_prefix/object_name."
     visible:
       and:
         - ${save_output}
@@ -202,7 +201,7 @@ variables:
   github_file_prefix:
     type: string
     title: "GitHub File Prefix"
-    description : "The GitHub file prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The file name is appended to the provided prefix, like github_file_prefix/file_name."
+    description : "The GitHub file prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated file name is appended to the provided prefix, like github_file_prefix/file_name."
     visible:
       and:
         - ${save_output}
