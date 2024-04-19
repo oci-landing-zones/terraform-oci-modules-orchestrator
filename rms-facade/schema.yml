@@ -190,7 +190,7 @@ variables:
   oci_object_prefix:
     type: string
     title: "OCI Object Prefix"
-    description : "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated object name is appended to the provided prefix, like oci_object_prefix/object_name."
+    description : "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated object name is appended to the provided prefix, like oci_object_prefix/object_name. The executing user must also have write permissions on the bucket."
     visible:
       and:
         - ${save_output}
@@ -201,7 +201,7 @@ variables:
   github_file_prefix:
     type: string
     title: "GitHub File Prefix"
-    description : "The GitHub file prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated file name is appended to the provided prefix, like github_file_prefix/file_name."
+    description : "The GitHub file prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. A generated file name is appended to the provided prefix, like github_file_prefix/file_name. The GitHub token must also have write permissions on the repository."
     visible:
       and:
         - ${save_output}
