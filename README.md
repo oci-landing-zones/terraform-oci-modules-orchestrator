@@ -80,14 +80,18 @@ Follow these steps for deploying with RMS:
 3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator/rms-facade". 
 4. Give the stack a name in the *Name* field.
 5. Set *Terraform version* to 1.2.x. Click *Next*. 
-6. Configure the input variables:
+6. Configure the input variables (see [image below](#rms-stack-input-variables) for an example):
     1. Select the deployment *Region* (IAM resources are always automatically deployed in the home region).
-    2. Select the *Configuration Source*. Each source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional).
-    3. Select *Save Output?* option for saving the stack output. Optionally provide a prefix to the to-be-saved file. This file can be subsequently referred as a dependency in *Dependency Files* in another stack.
+    2. Select the *Configuration Source*. Each source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example shows GitHub as the *Configuration Source*, with two configuration files and two dependency files.
+    3. Select *Save Output?* option for saving the stack output. Optionally provide a prefix to the to-be-saved file. This file can be subsequently referred as a dependency in *Dependency Files* in another stack. The example saves the output to *customers/customer1/output* folder in the GitHub repository.
     4. Click *Next*.
 8. Uncheck *Run apply* option at the bottom of the screen. Click *Create*.
 9. Click the *Plan* button.
 10. Upon a successfully created plan, click the *Apply* button and pick the created plan in the *Apply job plan resolution* drop down.
+
+<a name="rms-stack-input-variables">Input variables example:</a>
+
+![rms-stack-input-variables](images/rms-stack-input-variables.png)
 
 ### Using Terraform CLI
 
