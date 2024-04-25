@@ -40,11 +40,11 @@ variable "input_config_files_urls" {
   description = "List of URLs that point to the JSON configuration files."
 }
 
-variable "dependency_files_urls" {
-  type        = list(string)
-  default     = null
-  description = "List of URLs that point to files containing dependencies expressed in the input config files."
-}
+# variable "dependency_files_urls" {
+#   type        = list(string)
+#   default     = null
+#   description = "List of URLs that point to files containing dependencies expressed in the input config files."
+# }
 
 variable "save_output" {
   type = bool
@@ -96,3 +96,37 @@ variable "github_dependency_files" {
   default     = null
   description = "The GitHub files containing stack dependencies."
 }
+ variable "url_dependency_source" {
+   type = string
+   default = ""
+ }
+
+ variable "url_dependency_source_oci_bucket" {
+   type = string
+   default = null
+ }
+
+ variable "url_dependency_source_oci_objects" {
+   type = list(string)
+   default = null
+ }
+
+ variable "url_dependency_source_github_token" {
+   type = string
+   default = null
+ }
+
+ variable "url_dependency_source_github_repo" {
+   type = string
+   default = null
+ }
+
+ variable "url_dependency_source_github_branch" {
+   type = string
+   default = null
+ }
+
+ variable "url_dependency_source_github_dependency_files" {
+   type = list(string)
+   default = null
+ }
