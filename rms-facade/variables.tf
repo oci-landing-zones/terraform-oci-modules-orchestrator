@@ -31,7 +31,7 @@ variable "github_token" {
 }
 variable "github_file_prefix" {
   type = string
-  default = ""
+  default = null
 }
 
 variable "input_config_files_urls" {
@@ -54,7 +54,7 @@ variable "save_output" {
 
 variable "oci_object_prefix" {
   type = string
-  default = ""
+  default = null
   description = "The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci_object_prefix/object_name."
 }
 

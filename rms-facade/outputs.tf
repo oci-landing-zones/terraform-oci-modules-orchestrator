@@ -64,7 +64,7 @@ resource "oci_objectstorage_object" "compartments" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.compartments_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.compartments_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
 }
 
 ### Writing networking output to OCI bucket
@@ -73,7 +73,7 @@ resource "oci_objectstorage_object" "networking" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.network_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.networking_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
 }
 
 ### Writing notifications topics output to OCI bucket
@@ -82,7 +82,7 @@ resource "oci_objectstorage_object" "topics" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.topics_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.topics_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
 }
 
 ### Writing streams output to OCI bucket
@@ -91,7 +91,7 @@ resource "oci_objectstorage_object" "streams" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.streams_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.streams_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
 }
 
 ### Writing service logs output to OCI bucket
@@ -100,7 +100,7 @@ resource "oci_objectstorage_object" "service_logs" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.service_logs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.service_logs_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
 }
 
 ### Writing custom logs output to OCI bucket
@@ -109,7 +109,7 @@ resource "oci_objectstorage_object" "custom_logs" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.custom_logs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.custom_logs_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
 }
 
 ### Writing vaults output to OCI bucket
@@ -118,7 +118,7 @@ resource "oci_objectstorage_object" "vaults" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.vaults_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.vaults_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
 }
 
 ### Writing keys output to OCI bucket
@@ -127,7 +127,7 @@ resource "oci_objectstorage_object" "keys" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.keys_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.keys_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
 }
 
 ### Writing tags output to OCI bucket
@@ -136,7 +136,7 @@ resource "oci_objectstorage_object" "tags" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.tags_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.tags_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
 }
 
 ### Writing instances output to OCI bucket
@@ -145,7 +145,7 @@ resource "oci_objectstorage_object" "instances" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.instances_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.instances_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
 }
 
 ### Writing NLBs output to OCI bucket
@@ -154,7 +154,7 @@ resource "oci_objectstorage_object" "nlbs" {
   bucket    = var.oci_configuration_bucket
   content   = jsonencode(local.nlbs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
-  object    = "${var.oci_object_prefix}/${local.nlbs_output_file_name}"
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
 }
 
 ### Writing compartments output to GitHub repository
@@ -162,7 +162,7 @@ resource "github_repository_file" "compartments" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.compartments_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.compartments_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
   content             = jsonencode(local.compartments_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -175,7 +175,7 @@ resource "github_repository_file" "networking" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.network_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.networking_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
   content             = jsonencode(local.network_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -188,7 +188,7 @@ resource "github_repository_file" "topics" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.topics_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.topics_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
   content             = jsonencode(local.topics_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -201,7 +201,7 @@ resource "github_repository_file" "streams" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.streams_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.streams_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
   content             = jsonencode(local.streams_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -214,7 +214,7 @@ resource "github_repository_file" "service_logs" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.service_logs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.service_logs_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
   content             = jsonencode(local.service_logs_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -227,7 +227,7 @@ resource "github_repository_file" "custom_logs" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.custom_logs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.custom_logs_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
   content             = jsonencode(local.custom_logs_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -240,7 +240,7 @@ resource "github_repository_file" "vaults" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.vaults_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.vaults_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
   content             = jsonencode(local.vaults_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -253,7 +253,7 @@ resource "github_repository_file" "keys" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.keys_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.keys_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
   content             = jsonencode(local.keys_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -266,7 +266,7 @@ resource "github_repository_file" "tags" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.tags_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.tags_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
   content             = jsonencode(local.tags_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -279,7 +279,7 @@ resource "github_repository_file" "instances" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.instances_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.instances_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
   content             = jsonencode(local.instances_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
@@ -292,7 +292,7 @@ resource "github_repository_file" "nlbs" {
   count = var.save_output && lower(var.configuration_source) == "github" && local.nlbs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
-  file                = "${var.github_file_prefix}/${local.nlbs_output_file_name}"
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
   content             = jsonencode(local.nlbs_output)
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
