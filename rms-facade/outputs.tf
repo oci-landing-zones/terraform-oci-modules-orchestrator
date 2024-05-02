@@ -60,8 +60,8 @@ locals {
 
 ### Writing compartments output to bucket
 resource "oci_objectstorage_object" "compartments" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.compartments_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.compartments_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.compartments_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
@@ -69,8 +69,8 @@ resource "oci_objectstorage_object" "compartments" {
 
 ### Writing networking output to OCI bucket
 resource "oci_objectstorage_object" "networking" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.network_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.network_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.network_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
@@ -78,8 +78,8 @@ resource "oci_objectstorage_object" "networking" {
 
 ### Writing notifications topics output to OCI bucket
 resource "oci_objectstorage_object" "topics" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.topics_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.topics_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.topics_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
@@ -87,8 +87,8 @@ resource "oci_objectstorage_object" "topics" {
 
 ### Writing streams output to OCI bucket
 resource "oci_objectstorage_object" "streams" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.streams_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.streams_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.streams_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
@@ -96,8 +96,8 @@ resource "oci_objectstorage_object" "streams" {
 
 ### Writing service logs output to OCI bucket
 resource "oci_objectstorage_object" "service_logs" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.service_logs_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.service_logs_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.service_logs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
@@ -105,8 +105,8 @@ resource "oci_objectstorage_object" "service_logs" {
 
 ### Writing custom logs output to OCI bucket
 resource "oci_objectstorage_object" "custom_logs" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.custom_logs_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.custom_logs_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.custom_logs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
@@ -114,8 +114,8 @@ resource "oci_objectstorage_object" "custom_logs" {
 
 ### Writing vaults output to OCI bucket
 resource "oci_objectstorage_object" "vaults" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.vaults_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.vaults_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.vaults_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
@@ -123,8 +123,8 @@ resource "oci_objectstorage_object" "vaults" {
 
 ### Writing keys output to OCI bucket
 resource "oci_objectstorage_object" "keys" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.keys_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.keys_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.keys_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
@@ -132,8 +132,8 @@ resource "oci_objectstorage_object" "keys" {
 
 ### Writing tags output to OCI bucket
 resource "oci_objectstorage_object" "tags" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.tags_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.tags_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.tags_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
@@ -141,8 +141,8 @@ resource "oci_objectstorage_object" "tags" {
 
 ### Writing instances output to OCI bucket
 resource "oci_objectstorage_object" "instances" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.instances_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.instances_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.instances_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
@@ -150,8 +150,8 @@ resource "oci_objectstorage_object" "instances" {
 
 ### Writing NLBs output to OCI bucket
 resource "oci_objectstorage_object" "nlbs" {
-  count = var.save_output && lower(var.configuration_source) == "ocibucket" && local.nlbs_output != null ? 1 : 0
-  bucket    = var.oci_configuration_bucket
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.nlbs_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
   content   = jsonencode(local.nlbs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
@@ -159,7 +159,7 @@ resource "oci_objectstorage_object" "nlbs" {
 
 ### Writing compartments output to GitHub repository
 resource "github_repository_file" "compartments" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.compartments_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.compartments_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
@@ -172,7 +172,7 @@ resource "github_repository_file" "compartments" {
 
 ### Writing networking output to GitHub repository
 resource "github_repository_file" "networking" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.network_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.network_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
@@ -185,7 +185,7 @@ resource "github_repository_file" "networking" {
 
 ### Writing notification topics output to GitHub repository
 resource "github_repository_file" "topics" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.topics_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.topics_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
@@ -198,7 +198,7 @@ resource "github_repository_file" "topics" {
 
 ### Writing streams output to GitHub repository
 resource "github_repository_file" "streams" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.streams_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.streams_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
@@ -211,7 +211,7 @@ resource "github_repository_file" "streams" {
 
 ### Writing service logs output to GitHub repository
 resource "github_repository_file" "service_logs" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.service_logs_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.service_logs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
@@ -224,7 +224,7 @@ resource "github_repository_file" "service_logs" {
 
 ### Writing custom logs output to GitHub repository
 resource "github_repository_file" "custom_logs" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.custom_logs_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.custom_logs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
@@ -237,7 +237,7 @@ resource "github_repository_file" "custom_logs" {
 
 ### Writing vaults output to GitHub repository
 resource "github_repository_file" "vaults" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.vaults_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.vaults_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
@@ -250,7 +250,7 @@ resource "github_repository_file" "vaults" {
 
 ### Writing keys output to GitHub repository
 resource "github_repository_file" "keys" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.keys_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.keys_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
@@ -263,7 +263,7 @@ resource "github_repository_file" "keys" {
 
 ### Writing tags output to GitHub repository
 resource "github_repository_file" "tags" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.tags_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.tags_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
@@ -276,7 +276,7 @@ resource "github_repository_file" "tags" {
 
 ### Writing instances output to GitHub repository
 resource "github_repository_file" "instances" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.instances_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.instances_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
@@ -289,7 +289,7 @@ resource "github_repository_file" "instances" {
 
 ### Writing NLBs output to GitHub repository
 resource "github_repository_file" "nlbs" {
-  count = var.save_output && lower(var.configuration_source) == "github" && local.nlbs_output != null ? 1 : 0
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.nlbs_output != null ? 1 : 0
   repository          = var.github_configuration_repo
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
@@ -307,9 +307,9 @@ data "github_repository" "this" {
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,""),try(oci_objectstorage_object.instances[0].object,""),try(oci_objectstorage_object.nlbs[0].object,"")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,""),try(oci_objectstorage_object.instances[0].object,""),try(oci_objectstorage_object.nlbs[0].object,"")]))}"
   github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,""),try(github_repository_file.instances[0].file,""),try(github_repository_file.nlbs[0].file,"")]))}"
-  output_string = var.save_output ? (lower(var.configuration_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" ? local.github_output_string : "") : null
+  output_string = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : "") : null
 } 
 
 output "output_string" {
