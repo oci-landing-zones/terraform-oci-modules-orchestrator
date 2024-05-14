@@ -110,6 +110,26 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack variables lo
 
 <a name="rms-stack-input-variables">![rms-stack-input-variables](images/rms-stack-input-variables.png)</a>
 
+#### Using GitHub Private repositories as configuration source
+
+Here we leave some guidance while using GitHub Private repositories as a configuration and dependencies source.
+
+When you select *github* as Configuration Source for Input Files, you'll see a form with:
+
+* **GitHub Token**: You can use GitHub's Personal Access Token (classic) or Fine-grained personal access tokens (see this [reference](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)). While both are valid, we recommend the use of Fine-grained personal access tokens as, beside giving you the option to fine-tune the operation access to your repo, you can select the repos you want to give access to.
+  
+* **GitHub Repository**: This is the name of your GitHub repository unique in your userorganization. E.g.: *test-orch* (without the .git).
+  
+* **GitHub Branch**: This is your desired branch where/to get/put the input/output information. E.g.: *main*.
+  
+* **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-orch.git/iam/identity.json).
+  
+* **Dependency Files**: The relative reference to where the dependency files (created in a previous operation) are stored in your repository. E.g.: *output/compartments_output.json* and *output/network_output.json*.
+  
+You can see an example of a stack configuration with Input Files from GitHub and dependency files also gathered from the same GitHub's repo:
+
+<a name="rms-stack-input-variables-github">![rms-stack-input-variables-gitub](images/rms-stack-input-variables-github.png)</a>
+
 ### Deploying with Terraform CLI
 
 In this folder, execute the typical Terraform workflow: *terraform init/plan/apply*.
