@@ -8,7 +8,7 @@ You can use this **[OCI Operating Entities Landing Zone Blueprint](https://githu
 
 The **benefit** of this blueprint is that it can be completely **adjusted and easily simplified** into any other type of landing zone, by following the design steps towards your needs.  Using this reference blueprint will help **create a day-two operational model ready to scale**.
 
-You can use the [OCI Operating Entities Landing Zone example](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/examples/oci-open-lz), to **configure** the resources with *JSON/YAML* configurations instead of coding them, and adjusting to your needs (CIDR ranges, routing, FW rules, etc.), so you'll avoid to start from scratch.
+You can use the [**OCI Operating Entities Landing Zone example**](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/examples/oci-open-lz), to **configure** the resources with *JSON/YAML* configurations instead of coding them, and adjusting to your needs (CIDR ranges, routing, FW rules, etc.), so you'll avoid to start from scratch.
 
 The **benefits** of using this approach are: 
 - **Focus on Value**: Focus on configuring the design and resources, instead of coding them. This means shorter time-to-value, lower effort, and lower risk.
