@@ -2,20 +2,22 @@
 
 ![Landing_Zone_Logo](images/landing%20zone_300.png)
 
-[![Deploy_To_OCI](images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/main.zip)<br>
+[![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})<br>
 *If you are logged into your OCI tenancy in the Commercial Realm (OC1), the button will take you directly to OCI Resource Manager where you can proceed to deploy. If you are not logged, the button takes you to Oracle Cloud initial page where you must enter your tenancy name and login to OCI.*
 <br>
 
 ## Introduction
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the following repositories:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
 
-- [Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam)
-- [Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking)
-- [Governance](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance)
-- [Security](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security)
-- [Observability & Monitoring](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability)
-- [Secure Workloads](https://github.com/oracle-quickstart/terraform-oci-secure-workloads)
+Repository | Referenced Tags/Branches
+-----------|--------------------
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.1 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.1)
+[Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking) | [v0.6.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking/releases/tag/v0.6.6)
+[Governance](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance) | [v0.1.2 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance/releases/tag/v0.1.2)
+[Security](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security) | [v0.1.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/releases/tag/v0.1.5)
+[Observability & Monitoring](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability) | [v0.1.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability/releases/tag/v0.1.6)
+[Secure Workloads](https://github.com/oracle-quickstart/terraform-oci-secure-workloads) | [release-0.1.4-rms branch](https://github.com/oracle-quickstart/terraform-oci-secure-workloads/tree/release-0.1.4-rms)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -63,37 +65,74 @@ Before anything, have your configurations (and dependencies, if any) ready and a
 
 An extensive catalog of configurations is available in the [Operating Entities Landing Zones repository](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/examples).
 
-### Using OCI Resource Manager Service (RMS)
+### Deploying with OCI Resource Manager Service (RMS)
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets or plain URLs. Dependencies can also be consumed from GitHub repositories and OCI buckets.
 
-Configuration Source | Configuration Formats | Dependencies Format | Requirements 
----------------------|-----------------------| ------------------- | ------------ 
-GitHub repository    | JSON, YAML            | JSON                | GitHub token with read/write access permissions on the repository. 
-OCI bucket           | JSON, YAML            | JSON                | OCI IAM permissions to read/write to the bucket. 
-Plain URLs           | JSON, YAML            | JSON                | URLs are reachable.
+The table below summarizes the supported combinations of configurations and dependencies sources:
 
-Follow these steps for deploying with RMS:
+Configurations Source         | Configuration Files Formats | Dependencies Sources                          | Dependency Files Formats | Requirements 
+------------------------------|-----------------------------| ----------------------------------------------|------------------------- | ------------ 
+Private GitHub repository     | JSON, YAML                  | Same private GitHub repository                | JSON                     | GitHub token with read/(write, if saving output) access permissions on the private GitHub repository. 
+Private OCI bucket            | JSON, YAML                  | Same private OCI bucket                       | JSON                     | OCI IAM permissions to read/(write, if saving output) to the private OCI bucket. 
+Plain Public URLs             | JSON, YAML                  | Private GitHub repository, private OCI bucket | JSON                     | URLs are reachable. Read/(write, if saving output) access permissions to private GitHub repository or private OCI bucket
 
-1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/main.zip)
+Steps 1-10 below shows how to deploy with RMS. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
+
+**FOR RUNNING THE EXAMPLE AS-IS, A PRE-EXISTING PRIVATE BUCKET NAMED "terraform-runtime-bucket" IS REQUIRED.**
+
+1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+
 2. Accept terms, wait for the configuration to load. 
-3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator/rms-facade". 
+3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade". 
 4. Give the stack a name in the *Name* field.
-5. Set *Terraform version* to 1.2.x. Click *Next*. 
-6. Configure the input variables (see [image below](#rms-stack-input-variables) for an example):
-    1. Select the deployment *Region* (IAM resources are always automatically deployed in the home region).
-    2. Select the *Configuration Source*. Each source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example shows GitHub as the *Configuration Source*, with two configuration files and two dependency files.
-    3. Select *Save Output?* option for saving the stack output. Optionally provide a prefix to the to-be-saved file. This file can be subsequently referred as a dependency in *Dependency Files* in another stack. The example saves the output to *customers/customer1/output* folder in the GitHub repository.
+5. Set *Terraform version* to 1.2.x. Click *Next* button at the bottom of the screen. 
+
+The [screenshot below](#rms-stack-creation) shows how the RMS stack creation screen looks like on step 5.
+
+<a name="rms-stack-creation">![rms-stack-creation](images/rms-stack-creation.png)</a>
+
+6. Upon clicking *Next* button, the *Configure variables* screen is displayed with input variables pre-filled: (see [image below](#rms-stack-input-variables) for an example):
+    1. Select or accept the selected deployment *Region* (IAM resources are always automatically deployed in the home region regardless).
+    2. In *Input Files* section, select the *Configurations Source*. Each supported source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example has the following fields:
+        - *Configurations Source*: "url", which means any URL in the *Configuration Files* field must be publicly available.
+        - *Configuration Files*: "https://raw.githubusercontent.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json", that happens to be available in this public GitHub repository.
+        - *Dependencies Source for URL-based Configurations*: "ocibucket", which means dependency files are read and written to an OCI private bucket.
+        - *OCI Bucket Name*: "terraform-runtime-bucket", the bucket name where dependency files are read and written to. **THE BUCKET IS NOT CREATED BY THE ORCHESTRATOR.**
+        - *Dependency Files*: empty, which means the specified configuration files stack do not rely on any dependencies.
+    3. In *Output Files* section, the following fields are pre-filled:
+        - *Save Output?* option is checked, which means the stack output is saved in the same OCI bucket specified for dependency files. The saved file can be subsequently referred as a dependency in *Dependency Files* in another stack. 
+        - *OCI Object Prefix*: "iam/output", which gets prepended to the generated file name. In this example, the full file path is "iam/output/compartments_output.json".
     4. Click *Next*.
 8. Uncheck *Run apply* option at the bottom of the screen. Click *Create*.
 9. Click the *Plan* button.
 10. Upon a successfully created plan, click the *Apply* button and pick the created plan in the *Apply job plan resolution* drop down.
 
-<a name="rms-stack-input-variables">Input variables example:</a>
+The [screenshot below](#rms-stack-creation) shows how the RMS stack variables look like on step 6.3.
 
-![rms-stack-input-variables](images/rms-stack-input-variables.png)
+<a name="rms-stack-input-variables">![rms-stack-input-variables](images/rms-stack-input-variables.png)</a>
 
-### Using Terraform CLI
+#### Using GitHub Private repositories as configuration source
+
+Here we leave some guidance while using GitHub Private repositories as a configuration and dependencies source.
+
+When you select *github* as Configuration Source for Input Files, you'll see a form with:
+
+* **GitHub Token**: You can use GitHub's Personal Access Token (classic) or Fine-grained personal access tokens (see this [reference](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)). While both are valid, we recommend the use of Fine-grained personal access tokens as, beside giving you the option to fine-tune the operation access to your repo, you can select the repos you want to give access to.
+  
+* **GitHub Repository**: This is the name of your GitHub repository unique in your userorganization. E.g.: *test-orch* (without the .git).
+  
+* **GitHub Branch**: This is your desired branch where/to get/put the input/output information. E.g.: *main*.
+  
+* **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-orch.git/iam/identity.json).
+  
+* **Dependency Files**: The relative reference to where the dependency files (created in a previous operation) are stored in your repository. E.g.: *output/compartments_output.json* and *output/network_output.json*.
+  
+You can see an example of a stack configuration with Input Files from GitHub and dependency files also gathered from the same GitHub's repo:
+
+<a name="rms-stack-input-variables-github">![rms-stack-input-variables-gitub](images/rms-stack-input-variables-github.png)</a>
+
+### Deploying with Terraform CLI
 
 In this folder, execute the typical Terraform workflow: *terraform init/plan/apply*.
 

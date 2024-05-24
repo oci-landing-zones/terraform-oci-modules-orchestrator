@@ -83,12 +83,23 @@ output "nlb_resources" {
 }
 
 resource "local_file" "compartments_output" {
-  #lifecycle {
-  #  prevent_destroy = true
-  #}
   count = var.output_path != null && length(module.oci_lz_compartments) > 0 ? 1 : 0
   content  = jsonencode({"compartments" : {for k, v in module.oci_lz_compartments[0].compartments : k => {"id" : v.id}}})
   filename = "${var.output_path}/compartments_output.json"
+}
+
+resource "local_file" "network_output" {
+  count = var.output_path != null && length(module.oci_lz_network) > 0 ? 1 : 0
+  content  = jsonencode({"network_resources" : {
+                          "vcns" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.vcns : k => {"id" : v.id}},
+                          "subnets" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.subnets : k => {"id" : v.id}},
+                          "network_security_groups" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.network_security_groups : k => {"id" : v.id}}
+                          "dynamic_routing_gateways" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.dynamic_routing_gateways : k => {"id" : v.id}}
+                          "drg_attachments" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_attachments : k => {"id" : v.id}}
+                          "remote_peering_connections" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => {"id" : v.id}}
+                          "local_peering_gateways" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.local_peering_gateways : k => {"id" : v.id}}
+    }})
+  filename = "${var.output_path}/network_output.json"
 }
 
 # TBD: add the output local files for all other outputs.

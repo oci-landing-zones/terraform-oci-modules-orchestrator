@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 data "oci_objectstorage_namespace" "this" {
-  count = (var.save_output && lower(var.configuration_source) == "ocibucket") || lower(var.configuration_source) == "ocibucket" ? 1 : 0
+  count = (var.save_output && lower(var.configuration_source) == "ocibucket") || lower(var.url_dependency_source) == "ocibucket" ? 1 : 0
   compartment_id = var.tenancy_ocid
 }
 

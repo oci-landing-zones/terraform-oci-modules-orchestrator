@@ -2,10 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 title: "OCI Landing Zones Orchestrator"
-stackDescription: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
-description: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files."
+stackDescription: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files, that can reside in private OCI buckets, private GitHub repositories or in plain public URLs."
+description: "Generic module that orchestrates Landing Zone configurations expressed in remote JSON or YAML files, that can reside in private OCI buckets, private GitHub repositories or in plain public URLs."
 schemaVersion: 1.1.0
-version: "2.0.0"
+version: "2.0.1"
 locale: "en"
 
 # URL of CIS Landing Zone logo icon used on Application Information tab.
@@ -16,47 +16,29 @@ variableGroups:
     visible: true
     variables:
       - region
-  - title: "Configuration Source"
+
+  - title: "Input Files"
     visible: true
     variables: 
       - configuration_source
-  - title: "OCI Object Storage Source"
-    visible:
-      eq:
-        - configuration_source
-        - "ocibucket"
-    variables:
       - oci_configuration_bucket
       - oci_configuration_objects
-      - oci_dependency_objects  
-  - title: "GitHub Source"
-    visible:
-      eq:
-        - configuration_source
-        - "github"
-    variables:
+      - oci_dependency_objects
       - github_token
       - github_configuration_repo
       - github_configuration_branch
-      - github_configuration_files   
-      - github_dependency_files       
-  - title: "URL Sources"
-    visible: 
-      eq:
-        - configuration_source
-        - "url"
-    variables:
+      - github_configuration_files
+      - github_dependency_files
       - input_config_files_urls
-      - dependency_files_urls
-  - title: "Save Output?"
-    visible:
-      or:
-        - eq:
-          - configuration_source
-          - "ocibucket"  
-        - eq:
-          - configuration_source
-          - "github"
+      - url_dependency_source
+      - url_dependency_source_oci_bucket
+      - url_dependency_source_oci_objects
+      - url_dependency_source_github_token
+      - url_dependency_source_github_repo
+      - url_dependency_source_github_branch
+      - url_dependency_source_github_dependency_files
+
+  - title: "Output Files"
     variables:
       - save_output
       - oci_object_prefix
@@ -81,7 +63,7 @@ variables:
 
   configuration_source:
     type: enum 
-    title: "Configuration Source"
+    title: "Configurations Source"
     description: "Select the source where configuration files are pulled from. Supported sources are OCI Object Storage buckets, GitHub repositories and URLs."
     required: true
     enum:
@@ -93,6 +75,10 @@ variables:
     type: string
     title: "OCI Bucket Name"
     description : "The OCI Object Storage bucket name with Landing Zone configuration files. The executing user MUST have read permissions on the bucket."
+    visible: 
+      eq:
+        - configuration_source
+        - "ocibucket"
     
   oci_configuration_objects:
     type: array
@@ -103,8 +89,11 @@ variables:
     title: "Configuration Files"
     additionalProps:
         allowMultiple: true
-    description: "The Landing Zone configuration files in OCI Object Storage. Both JSON or YAML files are supported."
-    required: false
+    description: "The Landing Zone configuration files in OCI Object Storage bucket. Both JSON or YAML files are supported."
+    visible: 
+      eq:
+        - configuration_source
+        - "ocibucket"
 
   oci_dependency_objects:
     type: array
@@ -115,23 +104,38 @@ variables:
     title: "Dependency Files"
     additionalProps:
         allowMultiple: true
-    description: "The stack dependency files in OCI Object Storage. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
-    required: false  
+    description: "The dependency files in OCI Object Storage bucket required by the configuration files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    visible: 
+      eq:
+        - configuration_source
+        - "ocibucket"  
 
   github_token:
     type: password
     title: "GitHub Token"
     description : "The token that allows working with the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to read (and write if you save the stack output back to GitHub) the repository."
+    visible: 
+      eq:
+        - configuration_source
+        - "github"
     
   github_configuration_repo:
     type: string
     title: "GitHub Repository"
     description : "The GitHub repository with Landing Zone configurations. A GitHub token with read permissions is required."
+    visible: 
+      eq:
+        - configuration_source
+        - "github"
 
   github_configuration_branch:
     type: string
     title: "GitHub Branch"
     description : "The GitHub branch with Landing Zone configurations. A GitHub token with read permissions is required." 
+    visible: 
+      eq:
+        - configuration_source
+        - "github"
 
   github_configuration_files:
     type: array
@@ -143,7 +147,10 @@ variables:
     additionalProps:
         allowMultiple: true
     description: "The Landing Zone configuration files in GitHub. Both JSON or YAML files are supported."
-    required: false
+    visible: 
+      eq:
+        - configuration_source
+        - "github"
 
   github_dependency_files:
     type: array
@@ -154,8 +161,11 @@ variables:
     title: "Dependency Files"
     additionalProps:
         allowMultiple: true
-    description: "The stack dependency files in GitHub. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
-    required: false
+    description: "The dependency files in GitHub required by the configuration files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    visible: 
+      eq:
+        - configuration_source
+        - "github"
 
   input_config_files_urls:
     type: array
@@ -167,9 +177,97 @@ variables:
     additionalProps:
         allowMultiple: true
     description: "The URLs to Landing Zone configuration files. Both JSON or YAML files are supported."
-    required: false
+    visible: 
+      eq:
+        - configuration_source
+        - "url"
 
-  dependency_files_urls:
+  url_dependency_source:
+    type: enum 
+    title: "Dependencies Source for URL-based Configurations"
+    description: "Select the source where dependency files required by the configuration files are pulled from. Supported sources are OCI Object Storage buckets and GitHub repositories."
+    enum:
+      - "none"
+      - "ocibucket"
+      - "github"
+    visible: 
+      eq:
+        - configuration_source
+        - "url"  
+    
+  url_dependency_source_oci_bucket:
+    type: string
+    title: "OCI Bucket Name"
+    description : "The OCI Object Storage bucket name with dependency files required by the configuration files. The executing user MUST have read permissions on the bucket."
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "ocibucket"
+
+  url_dependency_source_oci_objects:
+    type: array
+    items:
+      type: string
+    multiline: true
+    uniqueItems: true
+    title: "Dependency Files"
+    additionalProps:
+      allowMultiple: true
+    description: "The dependency files in OCI Object Storage bucket required by the configuration files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    required: false
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "ocibucket"
+
+  url_dependency_source_github_token:
+    type: password
+    title: "GitHub Token"
+    description : "The token that allows working with the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to read (and write if you save the stack output back to GitHub) the repository."
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "github"
+    
+  url_dependency_source_github_repo:
+    type: string
+    title: "GitHub Repository"
+    description : "The GitHub repository with dependency files required by the configurations in the URLs. A GitHub token with read permissions is required."
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "github"
+
+  url_dependency_source_github_branch:
+    type: string
+    title: "GitHub Branch"
+    description : "The GitHub branch with dependency files required by the configurations files. A GitHub token with read permissions is required."
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "github" 
+
+  url_dependency_source_github_dependency_files:
     type: array
     items:
       type: string
@@ -178,13 +276,20 @@ variables:
     title: "Dependency Files"
     additionalProps:
         allowMultiple: true
-    description: "The URLs to stack dependency files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
-    required: false  
+    description: "The dependency files required by the configurations files. Dependency files have their contents referred in the configuration files for enhanced automation. Only JSON files are supported."
+    visible: 
+      and:
+        - eq:
+          - configuration_source
+          - "url"
+        - eq:
+          - url_dependency_source
+          - "github"   
 
   save_output:
     type: boolean
     title: "Save Output?"
-    description: "Whether to save the stack output, that can be used as a dependency input on another stack."
+    description: "Whether to save the stack output, that can be used as a dependency input on another stack. The output is saved in the same source defined above for the dependency files."
     visible: true
 
   oci_object_prefix:
@@ -194,9 +299,13 @@ variables:
     visible:
       and:
         - ${save_output}
-        - eq:
-          - configuration_source
-          - "ocibucket"  
+        - or:
+          - eq:
+            - configuration_source
+            - "ocibucket"  
+          - eq:
+            - url_dependency_source
+            - "ocibucket"  
         
   github_file_prefix:
     type: string
@@ -205,9 +314,13 @@ variables:
     visible:
       and:
         - ${save_output}
-        - eq:
-          - configuration_source
-          - "github"  
+        - or:
+          - eq:
+            - configuration_source
+            - "github"  
+          - eq:
+            - url_dependency_source
+            - "github" 
           
   # Hidden variables
   user_ocid:
