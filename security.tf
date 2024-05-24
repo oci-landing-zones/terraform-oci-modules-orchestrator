@@ -19,6 +19,7 @@ module "oci_lz_cloud_guard" {
 module "oci_lz_security_zones" {
   count  = var.security_zones_configuration != null ? 1 : 0
   source = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security.git//security-zones?ref=v0.1.5"
+  tenancy_ocid                 = var.tenancy_ocid
   security_zones_configuration = var.security_zones_configuration
   compartments_dependency      = local.compartments_dependency
 }
