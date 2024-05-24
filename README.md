@@ -8,14 +8,16 @@
 
 ## Introduction
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the following repositories:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
 
-- [Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam)
-- [Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking)
-- [Governance](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance)
-- [Security](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security)
-- [Observability & Monitoring](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability)
-- [Secure Workloads](https://github.com/oracle-quickstart/terraform-oci-secure-workloads)
+Repository | Referenced Tags/Branches
+-----------|--------------------
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.1 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.1)
+[Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking) | [v0.6.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking/releases/tag/v0.6.6)
+[Governance](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance) | [v0.1.2 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance/releases/tag/v0.1.2)
+[Security](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security) | [v0.1.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/releases/tag/v0.1.5)
+[Observability & Monitoring](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability) | [v0.1.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability/releases/tag/v0.1.6)
+[Secure Workloads](https://github.com/oracle-quickstart/terraform-oci-secure-workloads) | [release-0.1.4-rms branch](https://github.com/oracle-quickstart/terraform-oci-secure-workloads/tree/release-0.1.4-rms)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
