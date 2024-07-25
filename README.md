@@ -185,19 +185,26 @@ To destroy the IAM resources:
 terraform apply -destroy -var-file ./examples/vision/iam/config/iam-credentials.json -state ./examples/vision/iam/runtime/terraform.tfstate
 ```
 
-## Contributing
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+## Help
 
-&nbsp; 
+Open an issue in this repository.
+
+## Contributing
+
+This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md).
+
+## Security
+
+Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
 
 ## License
-Copyright (c) 2024, Oracle and/or its affiliates.
 
-Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+Copyright (c) 2023,2024 Oracle and/or its affiliates.
 
-See [LICENSE](./LICENSE) for more details.
+*Replace this statement if your project is not licensed under the UPL*
 
-&nbsp; 
+Released under the Universal Permissive License v1.0 as shown at
+<https://oss.oracle.com/licenses/upl/>.
 
 ## Known Issues
 
