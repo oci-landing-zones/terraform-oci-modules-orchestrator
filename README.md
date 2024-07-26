@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
@@ -185,19 +185,24 @@ To destroy the IAM resources:
 terraform apply -destroy -var-file ./examples/vision/iam/config/iam-credentials.json -state ./examples/vision/iam/runtime/terraform.tfstate
 ```
 
-## Contributing
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+## Help
 
-&nbsp; 
+Open an issue in this repository.
+
+## Contributing
+
+This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md).
+
+## Security
+
+Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process.
 
 ## License
-Copyright (c) 2024, Oracle and/or its affiliates.
 
-Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+Copyright (c) 2023,2024 Oracle and/or its affiliates.
 
-See [LICENSE](./LICENSE) for more details.
-
-&nbsp; 
+Released under the Universal Permissive License v1.0 as shown at
+<https://oss.oracle.com/licenses/upl/>.
 
 ## Known Issues
 
