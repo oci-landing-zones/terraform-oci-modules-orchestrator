@@ -1,3 +1,7 @@
+# July 26, 2024 Release Notes - 2.0.2
+## Updates    
+1. Aligned README.md structure to Oracle's GitHub organizations requirements.
+
 # May 24, 2024 Release Notes - 2.0.1
 ### Updates
 1. Now supporting saving outputs when configuration files are obtained from plain public URLs. The outputs can be saved to private Git Hub repositories or private OCI buckets. The UI has been re-organized.
