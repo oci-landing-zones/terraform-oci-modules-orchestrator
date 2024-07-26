@@ -8,7 +8,7 @@
 
 ## Introduction
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zone core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
