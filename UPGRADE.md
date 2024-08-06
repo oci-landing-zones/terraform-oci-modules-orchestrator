@@ -97,19 +97,19 @@ Clone the new version of the repository, initialize the configuration to downloa
 To clone the repository do:
 
 ```
-git clone git@github.com:oracle-quickstart/terraform-oci-landing-zones-orchestrator.git
+git clone git@github.com:oci-landing-zones/terraform-oci-landing-zones-orchestrator.git
 ```
 
 Cloning the latest version:
 ```
-git clone git@github.com:oracle-quickstart/terraform-oci-landing-zones-orchestrator.git
+git clone git@github.com:oci-landing-zones/terraform-oci-landing-zones-orchestrator.git
 ```
 
 For referring to a specific module version, append *ref=\<version\>* to the *source* attribute value. 
 
 E.g.: 
 ```
-git clone git@github.com:oracle-quickstart/terraform-oci-landing-zones-orchestrator.git?ref=v2.0.0
+git clone git@github.com:oci-landing-zones/terraform-oci-landing-zones-orchestrator.git?ref=v2.0.0
 ```
 
 Initialize:
@@ -172,7 +172,7 @@ Here you have the details to backup the different elements:
 
 To update the configuration, follow these steps:
 
-1. **Download the new orchestrator**. Access [this](https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/main.zip) link and download in the new repository contents in your computer.
+1. **Download the new orchestrator**. Access [this](https://github.com/oci-landing-zones/terraform-oci-landing-zones-orchestrator/archive/refs/heads/main.zip) link and download in the new repository contents in your computer.
    
 2. **Edit the stack**. On your stack, click on the *Edit* button and click on *Edit stack*. 
    * ***Stack information section***:

@@ -2,7 +2,7 @@
 
 ![Landing_Zone_Logo](images/landing%20zone_300.png)
 
-[![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip)<br>
+[![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip)<br>
 *If you are logged into your OCI tenancy in the Commercial Realm (OC1), the button will take you directly to OCI Resource Manager where you can proceed to deploy. If you are not logged, the button takes you to Oracle Cloud initial page where you must enter your tenancy name and login to OCI.*
 <br>
 
@@ -13,11 +13,11 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.1 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.1)
-[Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking) | [v0.6.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking/releases/tag/v0.6.6)
-[Governance](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance) | [v0.1.2 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance/releases/tag/v0.1.2)
-[Security](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security) | [v0.1.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security/releases/tag/v0.1.5)
-[Observability & Monitoring](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability) | [v0.1.6 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability/releases/tag/v0.1.6)
-[Secure Workloads](https://github.com/oracle-quickstart/terraform-oci-secure-workloads) | [release-0.1.4-rms branch](https://github.com/oracle-quickstart/terraform-oci-secure-workloads/tree/release-0.1.4-rms)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.6.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.6.6)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.3)
+[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.1.6)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.1.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.1.7)
+[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [release-0.1.4-rms branch](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/release-0.1.4-rms)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -27,7 +27,7 @@ Such approach allows for the build out of custom Landing Zones in a declarative 
 
 ### IAM Permissions
 
-The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/compartments) and [Networking](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking) modules.
+The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
 
 ### Terraform Version < 1.3.x and Optional Object Type Attributes
 The Orchestrator underlying modules rely on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which is experimental from Terraform 0.14.x to 1.2.x. It shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes. The feature has been promoted and it is no longer experimental in Terraform 1.3.x.
@@ -81,7 +81,7 @@ Steps 1-10 below shows how to deploy with RMS. The stack is one concrete Orchest
 
 **FOR RUNNING THE EXAMPLE AS-IS, A PRE-EXISTING PRIVATE BUCKET NAMED "terraform-runtime-bucket" IS REQUIRED.**
 
-1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-landing-zones-orchestrator/archive/refs/heads/urls-dep-source.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 
 2. Accept terms, wait for the configuration to load. 
 3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade". 
@@ -96,7 +96,7 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack creation scr
     1. Select or accept the selected deployment *Region* (IAM resources are always automatically deployed in the home region regardless).
     2. In *Input Files* section, select the *Configurations Source*. Each supported source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example has the following fields:
         - *Configurations Source*: "url", which means any URL in the *Configuration Files* field must be publicly available.
-        - *Configuration Files*: "https://raw.githubusercontent.com/oracle-quickstart/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json", that happens to be available in this public GitHub repository.
+        - *Configuration Files*: "https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-landing-zones-orchestrator/main/examples/vision/iam/config/iam-config.json", that happens to be available in this public GitHub repository.
         - *Dependencies Source for URL-based Configurations*: "ocibucket", which means dependency files are read and written to an OCI private bucket.
         - *OCI Bucket Name*: "terraform-runtime-bucket", the bucket name where dependency files are read and written to. **THE BUCKET IS NOT CREATED BY THE ORCHESTRATOR.**
         - *Dependency Files*: empty, which means the specified configuration files stack do not rely on any dependencies.
