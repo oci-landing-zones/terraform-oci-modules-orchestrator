@@ -1,6 +1,21 @@
+# August 07, 2024 Release Notes - 2.0.3
+## Updates
+1. This Orchestrator repository has been moved to a new OCI Landing Zones GitHug organization and renamed. It's new location is now  https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator
+2. The following supporting Landing Zone repositories have also been moved and renamed:
+
+Repository       | Old Location                                                                      | New Location                                                            
+-----------------|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------
+Networking       | https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-networking    | https://github.com/oci-landing-zones/terraform-oci-modules-networking   
+Security         | https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-security      | https://github.com/oci-landing-zones/terraform-oci-modules-security     
+Observability    | https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-observability | https://github.com/oci-landing-zones/terraform-oci-modules-observability
+Governance       | https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-governance    | https://github.com/oci-landing-zones/terraform-oci-modules-governance   
+Secure Workloads | https://github.com/oracle-quickstart/terraform-oci-secure-workloads               | https://github.com/oci-landing-zones/terraform-oci-modules-workloads    
+
+
 # July 26, 2024 Release Notes - 2.0.2
 ## Updates    
 1. Aligned README.md structure to Oracle's GitHub organizations requirements.
+
 
 # May 24, 2024 Release Notes - 2.0.1
 ### Updates
