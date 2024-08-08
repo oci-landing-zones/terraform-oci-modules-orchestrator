@@ -64,6 +64,7 @@ module "oci_lz_service_connectors" {
   providers = {
     oci = oci
     oci.home = oci.home
+    oci.secondary_region = oci.secondary_region
   }
   tenancy_ocid            = var.tenancy_ocid
   service_connectors_configuration = var.service_connectors_configuration
