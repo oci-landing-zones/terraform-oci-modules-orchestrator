@@ -1,6 +1,6 @@
 # August 07, 2024 Release Notes - 2.0.3
 ## Updates
-1. This Orchestrator repository has been moved to a new OCI Landing Zones GitHug organization and renamed. It's new location is now  https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator
+1. This repository has been moved to the OCI Landing Zones GitHub organization and renamed. It's new location is now  https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator
 2. The following supporting Landing Zone repositories have also been moved and renamed:
 
 Repository       | Old Location                                                                      | New Location                                                            
