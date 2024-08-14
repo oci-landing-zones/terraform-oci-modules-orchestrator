@@ -43,7 +43,6 @@ locals {
     } : null
     nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
         "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"id" : v.private_ips[0].id}},
-        "nlbs_public_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => {"id" : v.id}}
     } : null
 
     compartments_output_file_name = "compartments_output.json"
