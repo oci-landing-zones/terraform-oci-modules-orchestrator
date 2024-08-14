@@ -79,6 +79,7 @@ output "nlb_resources" {
   description = "Provisioned NLB resources"
   value = {
     nlbs_private_ips = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_private_ips : {}
+    nlbs_public_ips = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_public_ips : {}
   }
 }
 
