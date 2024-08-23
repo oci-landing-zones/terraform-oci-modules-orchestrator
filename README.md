@@ -8,6 +8,8 @@
 
 ## Introduction
 
+Welcome to the [OCI Landing Zones (OLZ) Community](https://github.com/oci-landing-zones)! OCI Landing Zones simplify onboarding and running on OCI by providing design guidance, best practices, and pre-configured Terraform deployment templates for various architectures and use cases. These enable customers to easily provision a secure tenancy foundation in the cloud along with all required services, and reliably scale as workloads expand.
+
 The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
 
 Repository | Referenced Tags/Branches
