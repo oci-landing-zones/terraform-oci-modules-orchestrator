@@ -42,7 +42,8 @@ locals {
         "secondary_vnics" : {for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => {"id" : v.id, "private_ip" : v.private_ip_address}}
     } : null
     nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
-        "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"id" : v.private_ips[0].id}}
+        "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"private_ip_id" : v.private_ips[0].id}},
+        "nlbs_public_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => {"private_ip_id" : v.private_ip_id, "public_ip_id" : v.id}}
     } : null
 
     compartments_output_file_name = "compartments_output.json"
