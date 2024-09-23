@@ -4,11 +4,12 @@
 output "iam_resources" {
   description = "Provisioned identity resources"
   value = {
-    compartments   = length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {},
-    groups         = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].groups : {},
-    memberships    = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].memberships : {},
-    dynamic_groups = length(module.oci_lz_dynamic_groups) > 0 ? module.oci_lz_dynamic_groups[0].dynamic_groups : {},
-    policies       = length(module.oci_lz_policies) > 0 ? module.oci_lz_policies[0].policies : {}
+    compartments     = length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {},
+    groups           = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].groups : {},
+    memberships      = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].memberships : {},
+    dynamic_groups   = length(module.oci_lz_dynamic_groups) > 0 ? module.oci_lz_dynamic_groups[0].dynamic_groups : {},
+    policies         = length(module.oci_lz_policies) > 0 ? module.oci_lz_policies[0].policies : {}
+    identity_domains = length(module.oci_lz_identity_domains) > 0 ? module.oci_lz_identity_domains[0].identity_domains : {}
   }
 }
 

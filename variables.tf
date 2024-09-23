@@ -47,6 +47,30 @@ variable "policies_configuration" {
   default = null
 }
 
+variable "identity_domains_configuration" {
+  type = any
+  default = null
+}
+
+variable "identity_domain_groups_configuration" {
+  type = any
+  default = null
+}
+
+variable "identity_domain_dynamic_groups_configuration" {
+  type = any
+  default = null
+}
+
+variable "identity_domain_identity_providers_configuration" {
+  type = any
+  default = null
+}
+
+variable "identity_domain_applications_configuration" {
+  type = any
+  default = null
+}
 variable "network_configuration" {
   type = any
   default = null

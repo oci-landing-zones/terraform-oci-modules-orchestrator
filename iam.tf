@@ -36,3 +36,16 @@ module "oci_lz_policies" {
   policies_configuration = var.policies_configuration
   compartments_dependency = local.compartments_dependency
 }
+
+module "oci_lz_identity_domains" {
+  count                 = var.identity_domains_configuration != null ? 1 : 0
+  source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains?ref=release-0.2.3"
+  providers              = { oci = oci.home }
+  tenancy_ocid           = var.tenancy_ocid
+  identity_domains_configuration                   = var.identity_domains_configuration
+  identity_domain_groups_configuration             = var.identity_domain_groups_configuration
+  identity_domain_dynamic_groups_configuration     = var.identity_domain_dynamic_groups_configuration
+  identity_domain_identity_providers_configuration = var.identity_domain_identity_providers_configuration
+  identity_domain_applications_configuration       = var.identity_domain_applications_configuration
+  compartments_dependency = local.compartments_dependency
+}
