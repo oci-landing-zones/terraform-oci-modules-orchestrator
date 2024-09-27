@@ -11,17 +11,22 @@
 
 ## **1. Introduction**
 
-The OCI LZ orchestrator is a major change, bringing new capabilities as the possibility to create configurations for new Networking (Network Load Balancer), Monitoring, Security, Governance, and other OCI services. It also includes some great changes to manage dependencies between operations in external locations, as files/object storage buckets, and some other features as being able to auto-detect home region for IAM resources provisioning.
+The OCI LZ orchestrator is evolving constantly, bringing new capabilities from new core modules functionality or modules. It also includes some great changes to manage dependencies between operations in external locations, as files/object storage buckets, and some other features.
 
-Because some of these new features, some variables have been updated.
+It is our commitment to guide or users in how to upgrade their existing configurations with minimum risk and disruption while moving to the latest versions of the orchestrator to take advantage of all these new cool features.
 
 This document is intended to guide any user with existing configurations of previous versions of the OCI LZ orchestrator to update their configs and orchestrator code. In this way you will be able to keep receiving orchestrator updates that might fix previous bugs and will unlock the capabilities to unlock the management of the services of your interest for the LZ withing the same configuration approach.
 
+We'll differentiate between different versions of the orchestrator. You should be able to update from old versions to the latest ones following the same amount of changes from the older versions to the latest ones.
+
 &nbsp; 
+
 
 ## **2. Upgrading configuration**
 
-### **2.1. Changes in credentials file**
+## **2.1. Upgrade from versions <2.0.0**
+
+#### **2.1.1. Changes in credentials file**
 
 The argument *home_region* in the *oci-credentials.tfvars.json* has been replaced by the argument *region*. 
 
@@ -37,7 +42,7 @@ Summary of the change:
 
 &nbsp; 
 
-### **2.2. Changes in the IAM Policies Module**
+#### **2.1.2. Changes in the IAM Policies Module**
 
 The argument to attach the IAM Policy to a compartment, the *compartment_ocid* has changed for *compartment_id* in the IAM Policies Module.
 
@@ -47,7 +52,7 @@ The argument to attach the IAM Policy to a compartment, the *compartment_ocid* h
 
 &nbsp; 
 
-### **2.3. General changes referencing compartments with OCIDs/Keys in the networking module**
+#### **2.1.3. General changes referencing compartments with OCIDs/Keys in the networking module**
 
 The networking module has some dependencies in the compartments module. To being able to reference the compartments, we have the possibility to reference the compartments by OCID (**compartment_id*) or by key (**compartment_key*). The reference to keys has been removed and now, the same argument accepts a key created in the same operation, and OCID or and external key.
 
@@ -61,9 +66,51 @@ Summary of the change:
 | network_configuration | category_compartment_key | category_compartment_id | *network.auto.tfvars.json |
 | network_configuration | compartment_key | compartment_id | *network.auto.tfvars.json |
 
+#### **2.1.4. Changes in the security list definition for OSN services.**
+
+The networking module now it is able the region that you're using and simplify the definition of the security list rules to access the regional services. It will apply automatically the correct value without needed to specify the region.
+
+All the egress rules to the all services in the OSN needs to be changed from *all-\<region>-services-in-oracle-services-network* to *all-services* like in this example:
+
+```
+ "egress_rules": [
+    {
+        "description": "egress rule for OSN",
+        "dst": "all-fra-services-in-oracle-services-network",
+        "dst_type": "SERVICE_CIDR_BLOCK",
+        "protocol": "ALL",
+        "stateless": false
+    }
+]
+```
+
+To:
+
+```
+ "egress_rules": [
+    {
+        "description": "egress rule for OSN",
+        "dst": "all-services",
+        "dst_type": "SERVICE_CIDR_BLOCK",
+        "protocol": "ALL",
+        "stateless": false
+    }
+]
+```
+
+## **2.2. Upgrade from versions <=2.0.3**
+
+### **2.2.1. Configuration changes to the OCI Native Firewall policies**
+
+The OCI Native Firewall experienced a major configuration change from the OCI Terraform Provider 5.16.0 version, changing the firewall policies to enable greater services limits in the different types of lists that can be created.
+
+Later versions of the orchestrator adopts the new native firewall policies model and here you have the procedure to upgrade the policies.
+
+TO BE UPDATED
+
 &nbsp; 
 
-### **2.4. Modules renaming**
+## **2.3. Modules renaming**
 
 The Terraform core modules used by the new orchestrator (>v2.0) has changed their names with a common name convention. However, a mechanisism has been introduced in the code to rename in the terraform state file the resources created with the old orchestrator with the new names.
 
@@ -178,23 +225,29 @@ To update the configuration, follow these steps:
    * ***Stack information section***:
      * Drop the zip file that you've just downloaded in the *Drop a .zip file* rectangle.
      * In the *Working directory*, select the *terraform-oci-landing-zones-orchestrator-main/rms-facade*.
-     * In the *Terraform version* dropdown list, select the "1.2.x" version. Confirm clicking in *Yes* button the Terraform version change dialog box when appears. This step should look like this:
-    ![ORM-Stack-information](./images/ORM-Stack-information.jpg)
+     * In the *Terraform version* dropdown list, select:
+       * For versions of the orchestrator **less or equal 2.0.3** select the **"1.2.x"** version. Confirm clicking in *Yes* button the Terraform version change dialog box when appears. 
+       * For versions of the orchestrator **greater than 2.0.3** select the **"1.5.x"** version. Confirm clicking in *Yes* button the Terraform version change dialog box when appears.
+       * This step should look like this:
+    ![rms-stack-information](./images/rms-stack-information.jpg)
      * Click *Next*.
    * ***Configure variables section***:
      * **Region**. Check that the region is the same as where you have the resources for this stack (might be different to where the stacks belongs.).
      * **Configuration source**. Select the source for your configuration files. If you were using before a public git repo or a public or pre-authenticated OCI Object Storage bucket, select *url*. Now you have the option to use private GitHub repos or private buckets. If you're planning to change to one of these repositories for your configuration, we recommend to do it in a second phase after everything is working fine with the new code to reduced the risks in the process.
      * **URL Sources**. Check that the URL Sources are correct for your existing configuration.
      * **Dependency Files**. The feature is new and optional. It is used to store a JSON files with the keys and OCIDs of some resources created in a previous operation (stack) so they can be used in this operation (stack). As with the configuration sources, we encorage to start using this feature after the upgrade of the previous orchestrator version. This step should look like this:
-    ![ORM-Configure-variables](./images/ORM-Configure-variables.jpg)
+    ![ORM-Configure-variables](./images/rms-configure-variables.jpg)
      * Click *Next*.
    * ***Review section***:
      * Just review that the stack information and the variables are correct, ensure that the *Run apply* is unmatched. This step should look like this:
-    ![ORM-Review](./images/ORM-Review.jpg)
+    ![rms-review](./images/rms-review.jpg)
      * Click *Next*.
 
 3. **Update the configuration files**. Ensure that you followed the section [2. Upgrading configuration](#2-upgrading-configuration) in this document and you uploaded the updated configuration files in the location configured in the stack (GitHub, OSS, other.).
    
-4. **Run the plan**. Just click on the *Plan* button in the stack. ***Pay LOT of attention to the output of the plan***. You should just see some changes in some freeform_tags that are being introduced with the version of the Terraform code module used (not any destruction/creation of resources). You also would be able to see the modules renaming mentioned in the section 2.4.
+4. **Run the plan**. Just click on the *Plan* button in the stack.
+   * ***For versions of the orchestrator greater than 2.0.3***, click on the *"Show advanced options"* and check the *Upgrade provider versions*, like show below:
+    ![rms-upgrade-providers](./images/rms-upgrade-providers.jpg)
+   * Click *Plan* and ***Pay LOT of attention to the output of the plan***. You should just see some changes in some freeform_tags that are being introduced with the version of the Terraform code module used (not any destruction/creation of resources). You also would be able to see the modules renaming mentioned in the section 2.4.
 
-5. **Run the apply**. Just click on the *Apply* button in the stack. You should just see some changes in some freeform_tags that are being introduced with the version of the Terraform code module used (not any destruction/creation of resources). You also would be able to see the modules renaming mentioned in the section 2.4. Once performed this step, you'll be running the new code and updated configuration. Modify any other stack/operation using old orchestrator version, to have full coherence in your infrastructure.
+5. **Run the apply**. Just click on the *Apply* button in the stack. You should just see some changes in some freeform_tags that are being introduced with the version of the Terraform code module used (not any destruction/creation of resources). Modify any other stack/operation using old orchestrator version, to have full coherence in your infrastructure.
