@@ -106,6 +106,10 @@ resource "local_file" "network_output" {
                           "drg_attachments" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_attachments : k => {"id" : v.id}}
                           "remote_peering_connections" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => {"id" : v.id}}
                           "local_peering_gateways" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.local_peering_gateways : k => {"id" : v.id}}
+                          "drg_route_tables" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => {"id" : v.id}}
+                          "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.id}}
+                          "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.id}}
+                          "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.id}}
     }})
   filename = "${var.output_path}/network_output.json"
 }
