@@ -66,6 +66,8 @@ Summary of the change:
 | network_configuration | category_compartment_key | category_compartment_id | *network.auto.tfvars.json |
 | network_configuration | compartment_key | compartment_id | *network.auto.tfvars.json |
 
+&nbsp; 
+
 #### **2.1.4. Changes in the security list definition for OSN services.**
 
 The networking module now it is able the region that you're using and simplify the definition of the security list rules to access the regional services. It will apply automatically the correct value without needed to specify the region.
@@ -98,6 +100,8 @@ To:
 ]
 ```
 
+&nbsp; 
+
 ## **2.2. Upgrade from versions <=2.0.3**
 
 ### **2.2.1. Configuration changes to the OCI Native Firewall policies**
@@ -107,6 +111,8 @@ The OCI Native Firewall experienced a major configuration change from the OCI Te
 Newer versions of the orchestrator (>2.0.3), adopts the new native firewall policies model and here we will discuss how to upgrade the Terraform configuration with the new model with the minimum service disruption.
 
 ***NOTE***: *You've to perform this procedure in all the firewalls manage by the same config file/state file at the same time. There is no other way to do it one-by-one than this if you want to keep the configuration managed with Terraform.*
+
+&nbsp; 
 
 #### **2.2.1.1 Guidelines**
 
@@ -125,6 +131,8 @@ If your policy contains any of the above, you will need to make the necessary ch
 Additionally, please note that during the upgrade process, you will be unable to make changes to the policy or its components, and once a policy is upgraded, it cannot be downgraded to the old version.
 
 If your pocily gets stuck during upgrade process, you'll need to open a Service Request for getting assistance from Cloud Ops.
+
+&nbsp; 
 
 #### **2.2.1.2 Firewall policies configuration**
 
@@ -571,6 +579,8 @@ Example of ***MIGRATED*** policy:
 }
 ```
 
+&nbsp; 
+
 #### **2.2.1.3 Upgrade procedure**
 
 The procedure is the following:
@@ -589,21 +599,21 @@ The procedure is the following:
    <br>
     a. Replace: 
     *"network_firewall_policy_key"*
-  <br>
+    <br>
     b. With:
     *"network_firewall_policy_id"* *:"\<OCID of the new upgraded active policy from the console>"*
 
-  1. Ensure you've a backup of the terraform state file (just in case you damage the current state file in the next step).
+  6. Ensure you've a backup of the terraform state file (just in case you damage the current state file in the next step).
    
-  2. Remove old policies from the state file. E.g.: Removing 2 FW policies identified with the keys *NFWPCY-FRA-LZP-HUB-POL1-KEY* and *NFWPCY-FRA-LZP-HUB-POL2-KEY*:
+  7. Remove old policies from the state file. E.g.: Removing 2 FW policies identified with the keys *NFWPCY-FRA-LZP-HUB-POL1-KEY* and *NFWPCY-FRA-LZP-HUB-POL2-KEY*:
   ```  
-  $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]'
-  Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]
-  Successfully removed 1 resource instance(s).
-  
-  $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]'
-  Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]
-  Successfully removed 1 resource instance(s).
+    $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]'
+    Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]
+    Successfully removed 1 resource instance(s).
+    
+    $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]'
+    Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]
+    Successfully removed 1 resource instance(s).
   ```  
 
   8. Run the plan, review that none resource is going to be deleted.
@@ -621,7 +631,7 @@ The procedure is the following:
     b. With the policy key you want to be active from the created and managed ones:
     *"network_firewall_policy_key"*
 
-  12. Remove from the console the policies you deleted from the state file and the upgraded from the console.
+  11. Remove from the console the policies you deleted from the state file and the upgraded from the console.
 
 #### **2.1.
 
