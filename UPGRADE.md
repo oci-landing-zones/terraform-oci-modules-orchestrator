@@ -596,12 +596,12 @@ The procedure is the following:
   4. Create new policies configuration following the suggested guidelines.
    
   5. Point the NFW config to the new upgraded policy OCID:
-   <br>
-    a. Replace: 
-    *"network_firewall_policy_key"*
     <br>
-    b. With:
-    *"network_firewall_policy_id"* *:"\<OCID of the new upgraded active policy from the console>"*
+      a. Replace: 
+      *"network_firewall_policy_key"*
+    <br>
+      b. With:
+      *"network_firewall_policy_id"* *:"\<OCID of the new upgraded active policy from the console>"*
 
   6. Ensure you've a backup of the terraform state file (just in case you damage the current state file in the next step).
    
