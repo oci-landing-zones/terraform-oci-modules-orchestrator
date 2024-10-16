@@ -104,9 +104,526 @@ To:
 
 The OCI Native Firewall experienced a major configuration change from the OCI Terraform Provider 5.16.0 version, changing the firewall policies to enable greater services limits in the different types of lists that can be created.
 
-Later versions of the orchestrator adopts the new native firewall policies model and here you have the procedure to upgrade the policies.
+Newer versions of the orchestrator (>2.0.3), adopts the new native firewall policies model and here we will discuss how to upgrade the Terraform configuration with the new model with the minimum service disruption.
 
-TO BE UPDATED
+***NOTE***: *You've to perform this procedure in all the firewalls manage by the same config file/state file at the same time. There is no other way to do it one-by-one than this if you want to keep the configuration managed with Terraform.*
+
+#### **2.2.1.1 Guidelines**
+
+**Upgrade FW policies from the console considerations**
+
+The upgrade process for firewall policies should not normally affect traffic on any firewalls using the policy and typically takes several minutes to complete.
+
+If your network firewall policy upgrade appears to be stuck, there could be a few potential reasons.
+
+Firstly, ensure that the policy you are attempting to upgrade does not contain any of the following attributes, as these may cause issues with the upgrade process:
+- An application list with a name longer than ***24 characters***.
+- Security or decryption rules where any of the list applications, URLs, sources, or destinations contain more than ***25 elements***.
+  
+If your policy contains any of the above, you will need to make the necessary changes before attempting the upgrade again.
+
+Additionally, please note that during the upgrade process, you will be unable to make changes to the policy or its components, and once a policy is upgraded, it cannot be downgraded to the old version.
+
+If your pocily gets stuck during upgrade process, you'll need to open a Service Request for getting assistance from Cloud Ops.
+
+#### **2.2.1.2 Firewall policies configuration**
+
+As part of the upgrade process you will need to create new configurations for your policies, as the structure has changed significantly.
+
+In the table below you can see how the resources has changed:
+
+
+<table>
+<tr>
+<th>Object</th>
+<th>Old variable arguments</th>
+<th>New variable arguments</th>
+</tr>
+
+<tr>
+<td>
+<b>Common</b>
+</td>
+<td>
+
+```
+compartment_id = optional(string),
+defined_tags   = optional(map(string)),
+display_name   = optional(string),
+freeform_tags  = optional(map(string))
+```
+</td>
+<td>
+
+```
+compartment_id = optional(string),
+defined_tags   = optional(map(string)),
+display_name   = optional(string),
+freeform_tags  = optional(map(string)
+```
+
+</td>
+</tr>
+<tr>
+<td>
+<b>Application/Services Lists</b>
+</td>
+<td>
+
+```
+application_lists = optional(map(object({
+    application_list_name = string,
+    application_values = map(object({
+      type         = string,
+      icmp_type    = optional(string),
+      icmp_code    = optional(string),
+      minimum_port = optional(number),
+      maximum_port = optional(number)
+    }))
+  })))
+```
+</td>
+<td>
+
+```
+services = optional(map(object({
+  name = string
+  type = optional(string) # Valid values: "TCP_SERVICE" or "UDP_SERVICE"
+  minimum_port = number
+  maximum_port = optional(number)
+})))
+service_lists = optional(map(object({
+  name     = string
+  services = list(string)
+})))
+applications = optional(map(object({
+  name      = string,
+  type      = string,
+  icmp_type = number,
+  icmp_code = optional(number),
+})))
+application_lists = optional(map(object({
+  name = string,
+  applications = list(string)
+})))
+```
+</td>
+</tr>
+
+<tr>
+<td>
+<b>IP Addresses Lists</b>
+</td>
+<td>
+
+```
+ip_address_lists = optional(map(object({
+  ip_address_list_name  = string,
+  ip_address_list_value = list(string)
+})))
+```
+</td>
+<td>
+
+```
+address_lists = optional(map(object({
+  name = string,
+  type = string, # Valid values: "FQND", "IP"
+  addresses = list(string)
+})))
+```
+</td>
+</tr>
+<tr>
+<td>
+<b>URL Lists</b>
+</td>
+<td>
+
+```
+url_lists = optional(map(object({
+url_list_name = string,
+url_list_values = map(object({
+  type    = string,
+  pattern = string
+}))
+```
+</td>
+<td>
+
+```
+url_lists = optional(map(object({
+  name    = string,
+  pattern = string,
+  type    = string # Valid value: SIMPLE
+})))
+```
+</td>
+
+</tr>
+<td>
+<b>Security Rules</b>
+</td>
+<td>
+
+```
+security_rules = optional(map(object({
+  action     = string,
+  inspection = optional(string),
+  name       = string
+  conditions = map(object({
+    applications = optional(list(string)),
+    destinations = optional(list(string)),
+    sources      = optional(list(string)),
+    urls         = optional(list(string))
+  }))
+})))
+```
+</td>
+<td>
+
+```
+security_rules = optional(map(object({
+    action = string, # Valid values: ALLOW,DROP,REJECT,INSPECT
+    name   = string,
+    application_lists         = optional(list(string)),
+    destination_address_lists = optional(list(string)),
+    service_lists             = optional(list(string)),
+    source_address_lists      = optional(list(string)),
+    url_lists                 = optional(list(string)),
+    inspection  = optional(string), # This is only applicable if action is INSPECT
+    after_rule  = optional(string),
+    before_rule = optional(string)
+  })))
+})))
+```
+</td>
+</tr>
+<tr>
+<td>
+<b>Decryption Profiles</b>
+</td>
+<td>
+
+```
+decryption_profiles = optional(map(object({
+  is_out_of_capacity_blocked            = bool,
+  is_unsupported_cipher_blocked         = bool,
+  is_unsupported_version_blocked        = bool,
+  type                                  = string,
+  key                                   = string,
+  are_certificate_extensions_restricted = optional(bool),
+  is_auto_include_alt_name              = optional(bool),
+  is_expired_certificate_blocked        = optional(bool),
+  is_revocation_status_timeout_blocked  = optional(bool),
+  is_unknown_revocation_status_blocked  = optional(bool),
+  is_untrusted_issuer_blocked           = optional(bool)
+})))
+```
+</td>
+<td>
+
+```
+decryption_profiles = optional(map(object({
+  type                                  = string, # Valid values: "SSL_FORWARD_PROXY", "SSL_INBOUND_INSPECTION"
+  name                                  = string,
+  is_out_of_capacity_blocked            = optional(bool),
+  is_unsupported_cipher_blocked         = optional(bool),
+  is_unsupported_version_blocked        = optional(bool),
+  are_certificate_extensions_restricted = optional(bool), # Applicable only when type = "SSL_FORWARD_PROXY"
+  is_auto_include_alt_name              = optional(bool), # Applicable only when type = "SSL_FORWARD_PROXY"
+  is_expired_certificate_blocked        = optional(bool), # Applicable only when type = "SSL_FORWARD_PROXY"
+  is_revocation_status_timeout_blocked  = optional(bool), # Applicable only when type = "SSL_FORWARD_PROXY"
+  is_unknown_revocation_status_blocked  = optional(bool), # Applicable only when type = "SSL_FORWARD_PROXY"
+  is_untrusted_issuer_blocked           = optional(bool)  # Applicable only when type = "SSL_FORWARD_PROXY"
+})))
+```
+</td>
+</tr>
+<tr>
+<td>
+<b>Decryption Rules</b>
+</td>
+<td>
+
+```
+decryption_rules = optional(map(object({
+  action             = string,
+  name               = string,
+  decryption_profile = optional(string),
+  secret             = optional(string),
+  conditions = map(object({
+    destinations = optional(list(string)),
+    sources      = optional(list(string))
+  }))
+})))
+```
+</td>
+<td>
+
+```
+decryption_rules = optional(map(object({
+  name                        = string,
+  action                      = string,
+  decryption_profile_id       = optional(string),
+  secret                      = optional(string),
+  source_ip_address_list      = optional(string),
+  destination_ip_address_list = optional(string)
+})))
+```
+</td>
+</tr>
+<td>
+<b>Mapped Secrets</b>
+</td>
+<td>
+
+```
+mapped_secrets = optional(map(object({
+  key             = optional(string),
+  type            = string,
+  vault_secret_id = string,
+  version_number  = string,
+})))
+```
+</td>
+<td>
+
+```
+mapped_secrets = optional(map(object({
+  name            = string,
+  type            = string, # Valid values: SSL_FORWARD_PROXY, SSL_INBOUND_INSPECTION
+  source          = string, # Valid value: OCI_VAULT
+  vault_secret_id = string,
+  version_number  = string,
+})))
+```
+</td>
+</tr>
+</table>
+
+Example of ***ORIGINAL*** policy:
+
+```
+"NFWPCY-FRA-LZP-HUB-POL1-KEY": {
+    "display_name": "nfwpcy-fra-lzp-hub-pol1",
+    "application_lists": {
+        "NFW-AL-FRA-HUB-1": {
+            "application_list_name": "nfw-al-fra-lzp-hub-1",
+            "application_values": {
+                "NFW-AL-FRA-LZP-HUB-1-1": {
+                    "maximum_port": 8080,
+                    "minimum_port": 80,
+                    "type": "TCP"
+                }
+            }
+        }
+    },
+    "ip_address_lists": {
+        "NFW-IL-FRA-LZP-HUB-1": {
+            "ip_address_list_name": "nfw-il-fra-lzp-hub-1",
+            "ip_address_list_value": [
+                "10.0.8.0/24",
+                "10.0.16.0/24"
+            ]
+        }
+    },
+    "url_lists": {
+        "NFW-UL-FRA-LZP-HUB-1": {
+            "url_list_name": "nfw-ul-fra-lzp-hub-1",
+            "url_list_values": {
+                "NFW-UL-FRA-LZP-HUB-1-1": {
+                    "pattern": "testapp1.example.com",
+                    "type": "SIMPLE"
+                }
+            }
+        },
+        "NFW-UL-FRA-LZP-HUB-2": {
+            "url_list_name": "nfw-ul-fra-lzp-hub-2",
+            "url_list_values": {
+                "NFW-UL-FRA-LZP-HUB-2-1": {
+                    "pattern": "pypi.org",
+                    "type": "SIMPLE"
+                },
+                "NFW-UL-FRA-LZP-HUB-2-2": {
+                    "pattern": "www.google.com",
+                    "type": "SIMPLE"
+                },
+                "NFW-UL-FRA-LZP-HUB-2-3": {
+                    "pattern": "files.pythonhosted.org",
+                    "type": "SIMPLE"
+                }
+            }
+        }
+    },
+    "security_rules": {
+        "SECURITY-RULE-INETAPPS": {
+            "action": "ALLOW",
+            "name": "SecurityRuleIntApps",
+            "conditions": {
+                "PRD-COND1-A": {
+                    "applications": ["nfw-al-fra-lzp-hub-1"],
+                    "destinations": [],
+                    "sources": [],
+                    "urls": []
+                }
+            }
+        },
+        "SECURITY-RULE-NAT": {
+            "action": "ALLOW",
+            "name": "SecurityRuleNAT",
+            "conditions": {
+                "PRD-COND1-A": {
+                    "applications": [],
+                    "destinations": [],
+                    "sources": ["nfw-il-fra-lzp-hub-1"],
+                    "urls": ["nfw-ul-fra-lzp-hub-2"]
+                }
+            }
+        },
+        "SECURITY-RULE-INTRUSION": {
+            "action": "INSPECT",
+            "inspection": "INTRUSION_DETECTION",
+            "name": "SecurityRuleIntrusion",
+            "conditions": {
+                "PRD-COND1-B": {
+                    "applications": [
+                        "nfw-al-fra-lzp-hub-1"
+                    ],
+                    "destinations": [],
+                    "sources": [
+                        "nfw-il-fra-lzp-hub-1"
+                    ],
+                    "urls": [
+                        "nfw-ul-fra-lzp-hub-1"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+Example of ***MIGRATED*** policy:
+
+```
+"NFWPCY-FRA-LZP-HUB-POL11-KEY": {
+    "display_name": "nfwpcy-fra-lzp-hub-pol11",
+    "services": {
+        "NFW-SV-FRA-LZP-HUB-1-KEY": {
+            "name": "nfw-sv-fra-lzp-hub-1",
+            "type": "TCP_SERVICE",
+            "minimum_port": "80",
+            "maximum_port": "8080"
+        }
+    },
+    "service_lists": {
+        "NFW-SVL-FRA-LZP-HUB-1-KEY": {
+            "name": "nfw-svl-fra-lzp-hub-1",
+            "services": ["NFW-SV-FRA-LZP-HUB-1-KEY"]
+        }
+    },
+    "address_lists": {
+        "NFW-IL-FRA-LZP-HUB-1-KEY":{
+            "name": "nfw-il-fra-lzp-hub-1",
+            "type": "IP",
+            "addresses": [
+                "10.0.8.0/24",
+                "10.0.16.0/24"
+            ]
+        }
+    },                                
+    "url_lists": {
+        "NFW-UL-FRA-LZP-HUB-1-KEY": {
+            "name": "nfw-ul-fra-lzp-hub-1",
+            "type": "SIMPLE",
+            "pattern": "testapp1.example.com"
+        },
+        "NFW-UL-FRA-LZP-HUB-2-KEY": {
+            "name": "nfw-ul-fra-lzp-hub-2",
+            "type": "SIMPLE",
+            "pattern": "www.google.com"
+        }
+    },                                    
+    "security_rules": {
+        "SECURITY-RULE-INETAPPS-KEY": {
+            "action": "ALLOW",
+            "name": "SecurityRuleIntApps",
+            "service_list": ["NFW-SVL-FRA-LZP-HUB-1-KEY"]
+        },
+        "SECURITY-RULE-INTRUSION-KEY": {
+            "action": "INSPECT",
+            "inspection": "INTRUSION_DETECTION",
+            "name": "SecurityRuleIntrusion",
+            "service_lists": ["NFW-SVL-FRA-LZP-HUB-1-KEY"],
+            "source_address_lists": ["NFW-IL-FRA-LZP-HUB-1-KEY"],
+            "url_lists": ["NFW-UL-FRA-LZP-HUB-1-KEY"],
+            "after_rule": "SecurityRuleIntApps"
+        },
+        "SECURITY-RULE-NAT-KEY": {
+            "action": "ALLOW",
+            "name": "SecurityRuleNAT",
+            "source_address_lists": ["NFW-IL-FRA-LZP-HUB-1-KEY"],
+            "url_lists": ["NFW-UL-FRA-LZP-HUB-2-KEY"],
+            "after_rule": "SecurityRuleIntrusion"
+        }
+    }
+}
+```
+
+#### **2.2.1.3 Upgrade procedure**
+
+The procedure is the following:
+
+  1. Upgrade Terraform binary version from 1.2.9 to 1.5.7. You can download it for your platform from [here](https://developer.hashicorp.com/terraform/install). Ensure that you setup the new terraform binary in your profile instead of the old one.
+   
+  2. Upgrade the orchestrator by cloning the latest version of this repo in your Terraform machine.
+   
+  3. Upgrade the FW active policy from the console: 
+     1. Identify the FW(s) active policy: *Menu -> Identity & Security -> Firewalls -> Choose FW from compartment -> Identify the Network firewall policy*
+     2. Upgrade the FW(s) active policy: *Menu -> Identity & Security -> Firewalls -> Network firewall policies -> Choose FW policy from compartment -> Upgrade policy*
+   
+  4. Create new policies configuration following the suggested guidelines.
+   
+  5. Point the NFW config to the new upgraded policy OCID:
+   <br>
+    a. Replace: 
+    *"network_firewall_policy_key"*
+  <br>
+    b. With:
+    *"network_firewall_policy_id"* *:"\<OCID of the new upgraded active policy from the console>"*
+
+  1. Ensure you've a backup of the terraform state file (just in case you damage the current state file in the next step).
+   
+  2. Remove old policies from the state file. E.g.: Removing 2 FW policies identified with the keys *NFWPCY-FRA-LZP-HUB-POL1-KEY* and *NFWPCY-FRA-LZP-HUB-POL2-KEY*:
+  ```  
+  $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]'
+  Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL1-KEY"]
+  Successfully removed 1 resource instance(s).
+  
+  $ terraform state rm 'module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]'
+  Removed module.oci_lz_network[0].oci_network_firewall_network_firewall_policy.these["NFWPCY-FRA-LZP-HUB-POL2-KEY"]
+  Successfully removed 1 resource instance(s).
+  ```  
+
+  8. Run the plan, review that none resource is going to be deleted.
+  - You should see updates in-place for the different networking resources updating the freeform tag with the networking module use.
+  - You should see update in-place for the firewall changing the active policy.
+  - You should see the different resources to be created for the new policies.
+ 
+  9. If you're ok with the plan run the apply to provision new policies and replace the active policy in the FW.
+   
+  10. Edit again the configuration and replace in the FW the policy:
+  <br>
+    a. Replace: 
+    *"network_firewall_policy_id"*
+  <br>
+    b. With the policy key you want to be active from the created and managed ones:
+    *"network_firewall_policy_key"*
+
+  12. Remove from the console the policies you deleted from the state file and the upgraded from the console.
+
+#### **2.1.
 
 &nbsp; 
 
