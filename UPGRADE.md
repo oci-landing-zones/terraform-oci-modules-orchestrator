@@ -624,16 +624,14 @@ The procedure is the following:
   9. If you're ok with the plan run the apply to provision new policies and replace the active policy in the FW.
    
   10. Edit again the configuration and replace in the FW the policy:
-  <br>
-    a. Replace: 
-    *"network_firewall_policy_id"*
-  <br>
-    b. With the policy key you want to be active from the created and managed ones:
-    *"network_firewall_policy_key"*
+    <br>
+      a. Replace: 
+      *"network_firewall_policy_id"*
+    <br>
+      b. With the policy key you want to be active from the created and managed ones:
+      *"network_firewall_policy_key"*
 
   11. Remove from the console the policies you deleted from the state file and the upgraded from the console.
-
-#### **2.1.
 
 &nbsp; 
 
