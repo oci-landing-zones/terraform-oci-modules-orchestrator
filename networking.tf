@@ -9,6 +9,7 @@ module "oci_lz_network" {
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.ext_dep_network_map
   private_ips_dependency  = local.nlbs_dependency 
+  tenancy_ocid            = var.tenancy_ocid
 }
 
 # Network Load Balancers
