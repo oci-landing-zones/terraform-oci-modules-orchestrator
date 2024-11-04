@@ -111,17 +111,17 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack creation scr
 
 The screenshot below shows how the IAM/ZPR stack variables look like.
 
-<a name="iamzpr-stack-input-variables">![iamzpr-stack-input-variables](images/iamzpr-stack-input-variables.png)</a>
+<a name="iamzpr-stack-input-variables">![iamzpr-stack-input-variables](images/iamzpr-stack-input-variables.jpeg)</a>
 
 #### Networking Stack
 
 Follow the same steps as in IAM/ZPR Stack for deploying the networking stack by clicking the button next.
 
-Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/network/config/network-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/network/config/network-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","oci_dependency_objects":"iam/output/compartments_output.json","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 
 The screenshot below shows how the networking stack variables look like.
 
-<a name="networking-stack-input-variables">![networking-stack-input-variables](images/networking-stack-input-variables.png)</a>
+<a name="networking-stack-input-variables">![networking-stack-input-variables](images/networking-stack-input-variables.jpeg)</a>
 
 #### Using GitHub Private repositories as configuration source
 
