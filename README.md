@@ -10,16 +10,18 @@
 
 Welcome to the [OCI Landing Zones (OLZ) Community](https://github.com/oci-landing-zones)! OCI Landing Zones simplify onboarding and running on OCI by providing design guidance, best practices, and pre-configured Terraform deployment templates for various architectures and use cases. These enable customers to easily provision a secure tenancy foundation in the cloud along with all required services, and reliably scale as workloads expand.
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release.
+
+### <a name="mod_versions">Modules Versions</a>
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.1 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.1)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.6.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.6.6)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.3)
-[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.1.6)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.1.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.1.7)
-[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [release-0.1.4-rms branch](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/release-0.1.4-rms)
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.5)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.7.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.7.1)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.4)
+[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.1.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.1.9)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.1.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.1.9)
+[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.1.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.1.7)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
