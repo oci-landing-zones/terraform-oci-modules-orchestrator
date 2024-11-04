@@ -90,6 +90,12 @@ resource "local_file" "compartments_output" {
   filename = "${var.output_path}/compartments_output.json"
 }
 
+resource "local_file" "identity_domains_output" {
+  count = var.output_path != null && length(module.oci_lz_identity_domains) > 0 ? 1 : 0
+  content  = jsonencode({"identity_domains" : {for k, v in module.oci_lz_identity_domains[0].identity_domains : k => {"id" : v.id}}})
+  filename = "${var.output_path}/identity_domains_output.json.json"
+}
+
 resource "local_file" "network_output" {
   count = var.output_path != null && length(module.oci_lz_network) > 0 ? 1 : 0
   content  = jsonencode({"network_resources" : {
@@ -100,8 +106,77 @@ resource "local_file" "network_output" {
                           "drg_attachments" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_attachments : k => {"id" : v.id}}
                           "remote_peering_connections" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => {"id" : v.id}}
                           "local_peering_gateways" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.local_peering_gateways : k => {"id" : v.id}}
+                          "drg_route_tables" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_route_tables : k => {"id" : v.id}}
+                          "dns_resolver" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_resolver : k => {"id" : v.id}}
+                          "dns_zones" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_zones : k => {"id" : v.id}}
+                          "dns_views" : {for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_views : k => {"id" : v.id}}
     }})
   filename = "${var.output_path}/network_output.json"
 }
 
-# TBD: add the output local files for all other outputs.
+resource "local_file" "topics_output" {
+  count = var.output_path != null && length(module.oci_lz_notifications) > 0 ? 1 : 0
+  content  = jsonencode({"topics" : {for k, v in module.oci_lz_notifications[0].topics : k => {"id" : v.id}}})
+  filename = "${var.output_path}/topics_output.json"
+}
+
+resource "local_file" "streams_output" {
+  count = var.output_path != null && length(module.oci_lz_streams) > 0 ? 1 : 0
+  content  = jsonencode({"streams" : {for k, v in module.oci_lz_streams[0].streams : k => {"id" : v.id}}})
+  filename = "${var.output_path}/streams_output.json"
+}
+
+resource "local_file" "service_logs_output" {
+  count = var.output_path != null && length(module.oci_lz_logging) > 0 ? 1 : 0
+  content  = jsonencode({"service_logs" : {for k, v in module.oci_lz_logging[0].service_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}})
+  filename = "${var.output_path}/service_logs_output.json"
+}
+
+resource "local_file" "custom_logs_output" {
+  count = var.output_path != null && length(module.oci_lz_logging) > 0 ? 1 : 0
+  content  = jsonencode({"custom_logs" : {for k, v in module.oci_lz_logging[0].custom_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}})
+  filename = "${var.output_path}/custom_logs_output.json"
+}
+
+resource "local_file" "vaults_output" {
+  count = var.output_path != null && length(module.oci_lz_vaults) > 0 ? 1 : 0
+  content  = jsonencode({"vaults" : {for k, v in module.oci_lz_vaults[0].vaults : k => {"management_endpoint" : v.management_endpoint}}})
+  filename = "${var.output_path}/vaults_output.json"
+}
+
+resource "local_file" "keys_output" {
+  count = var.output_path != null && length(module.oci_lz_vaults) > 0 ? 1 : 0
+  content  = jsonencode({"keys" : {for k, v in module.oci_lz_vaults[0].keys : k => {"id" : v.id}}})
+  filename = "${var.output_path}/keys_output.json"
+}
+
+resource "local_file" "tags_output" {
+  count = var.output_path != null && length(module.oci_lz_tags) > 0 ? 1 : 0
+  content  = jsonencode({"tags" : {for k, v in module.oci_lz_tags[0].tags : k => {"id" : v.id}}})
+  filename = "${var.output_path}/tags_output.json"
+}
+
+resource "local_file" "instances_output" {
+  count = var.output_path != null && length(module.oci_lz_compute) > 0 ? 1 : 0
+  content  = jsonencode({"instances" : {for k, v in module.oci_lz_compute[0].instances : k => {"id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip}},
+                         "secondary_vnics" : {for k, v in module.oci_lz_compute[0].secondary_vnics : k => {"id" : v.id, "private_ip" : v.private_ip_address}}})
+  filename = "${var.output_path}/instances_output.json"
+}
+
+resource "local_file" "nlbs_output" {
+  count = var.output_path != null && length(module.oci_lz_nlb) > 0 ? 1 : 0
+  content  = jsonencode({"nlbs_private_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_primary_private_ips : k => {"private_ip_id" : v.private_ips[0].id}},
+                         "nlbs_public_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_public_ips: k => {"private_ip_id" : v.private_ip_id, "public_ip_id" : v.id}}})
+  filename = "${var.output_path}/nlbs_output.json"
+}
+
+
+
+
+
+
+
+
+
+
+

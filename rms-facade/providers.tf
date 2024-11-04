@@ -12,7 +12,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-  experiments = [module_variable_optional_attrs]
 }
 
 provider "oci" {
