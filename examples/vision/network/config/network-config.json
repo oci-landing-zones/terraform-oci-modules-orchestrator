@@ -4,7 +4,7 @@
     "network_configuration_categories" : {
       "production" : {
         "vcns" : {
-          "SECURITY-VCN" : {
+          "ORCHESTRATOR-VCN" : {
             "display_name"                     : "orchestrator-vcn",
             "is_ipv6enabled"                   : false,
             "is_oracle_gua_allocation_enabled" : false,
@@ -18,7 +18,7 @@
             },
 
             "subnets" : {
-              "SECURITY-VCN-FRONT-SUB" : {
+              "ORCHESTRATOR-VCN-FRONT-SUB" : {
                 "cidr_block"                 : "192.168.0.64/28",
                 "dhcp_options_key"           : "default_dhcp_options",
                 "display_name"               : "front-sub",
@@ -26,10 +26,10 @@
                 "ipv6cidr_blocks"            : [],
                 "prohibit_internet_ingress"  : true,
                 "prohibit_public_ip_on_vnic" : true,
-                "route_table_key"            : "SECURITY-VCN-FRONT-SUB-ROUTE",
-                "security_list_keys"         : ["SECURITY-VCN-SL"]
+                "route_table_key"            : "ORCHESTRATOR-VCN-FRONT-SUB-ROUTE",
+                "security_list_keys"         : ["ORCHESTRATOR-VCN-SL"]
               },
-              "SECURITY-VCN-MID-SUB" : {
+              "ORCHESTRATOR-VCN-MID-SUB" : {
                 "cidr_block"                 : "192.168.0.80/28",
                 "dhcp_options_key"           : "default_dhcp_options",
                 "display_name"               : "mid-sub",
@@ -37,10 +37,10 @@
                 "ipv6cidr_blocks"            : [],
                 "prohibit_internet_ingress"  : true,
                 "prohibit_public_ip_on_vnic" : true,
-                "route_table_key"            : "SECURITY-VCN-MID-SUB-ROUTE",
-                "security_list_keys"         : ["SECURITY-VCN-SL"]
+                "route_table_key"            : "ORCHESTRATOR-VCN-MID-SUB-ROUTE",
+                "security_list_keys"         : ["ORCHESTRATOR-VCN-SL"]
               },
-              "SECURITY-VCN-BACK-SUB" : {
+              "ORCHESTRATOR-VCN-BACK-SUB" : {
                 "cidr_block"                 : "192.168.0.96/28",
                 "dhcp_options_key"           : "default_dhcp_options",
                 "display_name"               : "back-sub",
@@ -48,13 +48,13 @@
                 "ipv6cidr_blocks"            : [],
                 "prohibit_internet_ingress"  : true,
                 "prohibit_public_ip_on_vnic" : true,
-                "route_table_key"            : "SECURITY-VCN-BACK-SUB-ROUTE",
-                "security_list_keys"         : ["SECURITY-VCN-SL"]
+                "route_table_key"            : "ORCHESTRATOR-VCN-BACK-SUB-ROUTE",
+                "security_list_keys"         : ["ORCHESTRATOR-VCN-SL"]
               }
             },
 
             "security_lists" : {
-              "SECURITY-VCN-SL" : {
+              "ORCHESTRATOR-VCN-SL" : {
                 "display_name" : "basic-sl",
                 "ingress_rules" : [
                   {
@@ -72,15 +72,15 @@
             },
 
             "route_tables" : {
-              "SECURITY-VCN-FRONT-SUB-ROUTE" : {
+              "ORCHESTRATOR-VCN-FRONT-SUB-ROUTE" : {
                 "display_name" : "front-sub-route",
                 "route_rules" : {}
               },
-              "SECURITY-VCN-MID-SUB-ROUTE" : {
+              "ORCHESTRATOR-VCN-MID-SUB-ROUTE" : {
                 "display_name" : "mid-sub-route",
                 "route_rules" : {}
               },
-              "SECURITY-VCN-BACK-SUB-ROUTE" : {
+              "ORCHESTRATOR-VCN-BACK-SUB-ROUTE" : {
                 "display_name" : "back-sub-route",
                 "route_rules" : {}
               }
