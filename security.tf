@@ -3,14 +3,14 @@
 
 module "oci_lz_scanning" {
   count  = var.scanning_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss?ref=v0.1.8"
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss?ref=v0.1.9"
   scanning_configuration  = var.scanning_configuration
   compartments_dependency = local.compartments_dependency
 }
 
 module "oci_lz_cloud_guard" {
   count  = var.cloud_guard_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard?ref=v0.1.8"
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard?ref=v0.1.9"
   tenancy_ocid              = var.tenancy_ocid
   cloud_guard_configuration = var.cloud_guard_configuration
   compartments_dependency   = local.compartments_dependency
@@ -18,7 +18,7 @@ module "oci_lz_cloud_guard" {
 
 module "oci_lz_security_zones" {
   count  = var.security_zones_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones?ref=v0.1.8"
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones?ref=v0.1.9"
   tenancy_ocid                 = var.tenancy_ocid
   security_zones_configuration = var.security_zones_configuration
   compartments_dependency      = local.compartments_dependency
@@ -26,7 +26,7 @@ module "oci_lz_security_zones" {
 
 module "oci_lz_vaults" {
   count  = var.vaults_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults?ref=v0.1.8"
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults?ref=v0.1.9"
   providers = {
     oci = oci
     oci.home = oci.home
@@ -34,4 +34,14 @@ module "oci_lz_vaults" {
   vaults_configuration    = var.vaults_configuration
   compartments_dependency = local.compartments_dependency
   vaults_dependency       = local.ext_dep_vaults_map
+}
+
+module "oci_lz_zpr" {
+  count  = var.zpr_configuration != null ? 1 : 0
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr?ref=v0.1.9"
+  providers = {
+    oci.home = oci.home
+  }
+  zpr_configuration    = var.zpr_configuration
+  compartments_dependency = local.compartments_dependency
 }

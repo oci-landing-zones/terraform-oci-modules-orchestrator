@@ -136,6 +136,11 @@ variable "vaults_configuration" {
   default = null
 }
 
+variable "zpr_configuration" {
+  type    = any
+  default = null
+}
+
 variable "budgets_configuration" {
   type    = any
   default = null
