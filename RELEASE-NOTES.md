@@ -1,3 +1,9 @@
+# November 05, 2024 Release Notes - 2.0.4
+## Updates
+1. Support added for ZPR attributes and policies.
+2. Supporting modules updated. See [Modules Versions](./README.md#mod_versions) for details.
+
+
 # August 07, 2024 Release Notes - 2.0.3
 ## Updates
 1. This repository has been moved to the OCI Landing Zones GitHub organization and renamed. It's new location is now  https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator
