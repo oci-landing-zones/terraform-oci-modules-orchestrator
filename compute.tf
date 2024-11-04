@@ -3,7 +3,7 @@
 
 module "oci_lz_compute" {
   count                   = var.instances_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage?ref=release-0.1.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage?ref=v0.1.7"
   providers = {
     oci = oci
     oci.block_volumes_replication_region = oci
