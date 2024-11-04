@@ -44,4 +44,5 @@ module "oci_lz_zpr" {
   }
   zpr_configuration    = var.zpr_configuration
   compartments_dependency = local.compartments_dependency
+  tenancy_ocid = var.tenancy_ocid
 }
