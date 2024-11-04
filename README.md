@@ -79,7 +79,7 @@ Steps 1-10 below shows how to deploy with RMS. The stack is one concrete Orchest
 
 **FOR RUNNING THE EXAMPLE AS-IS, A PRE-EXISTING PRIVATE BUCKET NAMED "terraform-runtime-bucket" IS REQUIRED.**
 
-1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/release-2.0.4.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/release-2.0.4.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json,https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/security/config/zpr-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 2. Accept terms, wait for the configuration to load. 
 3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade". 
 4. Give the stack a name in the *Name* field.
@@ -93,7 +93,7 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack creation scr
     1. Select or accept the selected deployment *Region* (IAM resources are always automatically deployed in the home region regardless).
     2. In *Input Files* section, select the *Configurations Source*. Each supported source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example has the following fields:
         - *Configurations Source*: "url", which means any URL in the *Configuration Files* field must be publicly available.
-        - *Configuration Files*: "https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json", that happens to be available in this public GitHub repository.
+        - *Configuration Files*: "https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json" and "https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/security/config/zpr-config.json", both available in this public GitHub repository.
         - *Dependencies Source for URL-based Configurations*: "ocibucket", which means dependency files are read and written to an OCI private bucket.
         - *OCI Bucket Name*: "terraform-runtime-bucket", the bucket name where dependency files are read and written to. **THE BUCKET IS NOT CREATED BY THE ORCHESTRATOR.**
         - *Dependency Files*: empty, which means the specified configuration files stack do not rely on any dependencies.
@@ -151,6 +151,7 @@ The *terraform plan* command is broken down in different lines for clarity. Note
 terraform plan \
 -var-file ./examples/vision/iam/config/iam-credentials.json \
 -var-file ./examples/vision/iam/config/iam-config.json \
+-var-file ./examples/vision/security/config/zpr-config.json \
 -var "output_path=./examples/vision/iam/config" \
 -state ./examples/vision/iam/runtime/terraform.tfstate \
 -out ./examples/vision/iam/runtime/plan.out
