@@ -40,7 +40,7 @@ module "oci_lz_zpr" {
   count  = var.zpr_configuration != null ? 1 : 0
   source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr?ref=v0.1.9"
   providers = {
-    oci.home = oci.home
+    oci = oci.home
   }
   zpr_configuration    = var.zpr_configuration
   compartments_dependency = local.compartments_dependency
