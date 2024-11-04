@@ -12,9 +12,9 @@
             "dns_label"                        : "orchestratorvcn",
             "block_nat_traffic"                : false,
             "security"                         : {
-              "zpr_attributes" : {
-                ["namespace" : "orchestrator-zpr-namespace", "attr_name" : "application", "attr_value : "hr"]
-              }
+              "zpr_attributes" : [
+                {"namespace" : "orchestrator-zpr-namespace", "attr_name" : "application", "attr_value" : "hr"}
+              ]
             },
 
             "subnets" : {
