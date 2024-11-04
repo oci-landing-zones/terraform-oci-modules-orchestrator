@@ -81,7 +81,7 @@ Plain Public URLs             | JSON, YAML                  | Private GitHub rep
 
 #### IAM/ZPR Stack
 
-Steps 1-10 below shows how to deploy IAM and ZPR configurations. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
+Steps 1-9 below show how to deploy IAM and ZPR configurations. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
 
 1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json,https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 2. Accept terms, wait for the configuration to load. 
@@ -117,7 +117,7 @@ The screenshot below shows how the IAM/ZPR stack variables look like.
 
 Follow the same steps as in IAM/ZPR Stack for deploying the networking stack by clicking the button next.
 
-Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/network/config/network-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","oci_dependency_objects":"iam/output/compartments_output.json","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/network/config/network-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source_oci_objects":"iam/output/compartments_output.json","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 
 The screenshot below shows how the networking stack variables look like.
 
