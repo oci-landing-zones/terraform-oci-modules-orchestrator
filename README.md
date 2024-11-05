@@ -10,16 +10,18 @@
 
 Welcome to the [OCI Landing Zones (OLZ) Community](https://github.com/oci-landing-zones)! OCI Landing Zones simplify onboarding and running on OCI by providing design guidance, best practices, and pre-configured Terraform deployment templates for various architectures and use cases. These enable customers to easily provision a secure tenancy foundation in the cloud along with all required services, and reliably scale as workloads expand.
 
-The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release:
+The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrates the creation of Landing Zone architectures expressed in a single or multiple configuration files, that can be JSON documents, YAML documents or contain HCL (Hashicorp Language) object declarations. These configurations **must** be defined according to the specifications and requirements set forth by the OCI Landing Zones core modules, that are available in the repositories listed in table below. The table also shows the respective repository versions referenced by this Orchestrator release.
+
+### <a name="mod_versions">Modules Versions</a>
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.1 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.1)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.6.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.6.6)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.3)
-[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.1.6)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.1.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.1.7)
-[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [release-0.1.4-rms branch](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/release-0.1.4-rms)
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.5)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.7.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.7.1)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.4)
+[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.1.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.1.9)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.1.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.1.9)
+[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.1.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.1.7)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -27,19 +29,13 @@ Such approach allows for the build out of custom Landing Zones in a declarative 
 
 ## Requirements
 
+## Terraform Version >= 1.3.0
+
+This module requires Terraform binary version 1.3.0 or greater, as it relies on Optional Object Type Attributes feature. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
+
 ### IAM Permissions
 
 The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
-
-### Terraform Version < 1.3.x and Optional Object Type Attributes
-The Orchestrator underlying modules rely on [Terraform Optional Object Type Attributes feature](https://developer.hashicorp.com/terraform/language/expressions/type-constraints#optional-object-type-attributes), which is experimental from Terraform 0.14.x to 1.2.x. It shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes. The feature has been promoted and it is no longer experimental in Terraform 1.3.x.
-
-**As of April 2024, the Orchestrator can only be used with Terraform versions up to 1.2.x**, because it can be deployed using the [OCI Resource Manager service](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm), that still does not support Terraform 1.3.x.
-
-Upon running *terraform plan* with Terraform versions prior to 1.3.x, Terraform displays the following harmless warning:
-```
-Warning: Experimental feature "module_variable_optional_attrs" is active
-```
 
 ## External Dependencies
 
@@ -63,9 +59,11 @@ instances_configuration | instances_output.json
 
 ## How to Invoke the Orchestrator
 
-Before anything, have your configurations (and dependencies, if any) ready and accessible. This repository has sample configurations in [*./examples/vision/iam/config*](./examples/vision/iam/config) and [*./examples/vision/network/config*](./examples/vision/network/config) folders. 
+Before anything, have your configurations (and dependencies, if any) ready and accessible. This repository has sample configurations in [*./examples/vision/iam/config*](./examples/vision/iam/config), [*./examples/vision/security/config*](./examples/vision/security/config) and [*./examples/vision/network/config*](./examples/vision/network/config) folders. 
 
 An extensive catalog of configurations is available in the [Operating Entities Landing Zones repository](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/examples).
+
+Next we present a practical scenario using both RMS and Terraform CLI where configurations for IAM (Identity and Access Management), ZPR (Zero Trust Packet Routing) and networking are deployed via the Orchestrator. IAM and ZPR are deployed together, while networking is deployed separately in its own configuration.
 
 ### Deploying with OCI Resource Manager Service (RMS)
 
@@ -79,25 +77,27 @@ Private GitHub repository     | JSON, YAML                  | Same private GitHu
 Private OCI bucket            | JSON, YAML                  | Same private OCI bucket                       | JSON                     | OCI IAM permissions to read/(write, if saving output) to the private OCI bucket. 
 Plain Public URLs             | JSON, YAML                  | Private GitHub repository, private OCI bucket | JSON                     | URLs are reachable. Read/(write, if saving output) access permissions to private GitHub repository or private OCI bucket
 
-Steps 1-10 below shows how to deploy with RMS. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
+**FOR RUNNING THIS EXAMPLE AS-IS, A PRE-EXISTING PRIVATE BUCKET NAMED "terraform-runtime-bucket" IS REQUIRED.**
 
-**FOR RUNNING THE EXAMPLE AS-IS, A PRE-EXISTING PRIVATE BUCKET NAMED "terraform-runtime-bucket" IS REQUIRED.**
+#### IAM/ZPR Stack
 
-1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+Steps 1-9 below show how to deploy IAM and ZPR configurations. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
+
+1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json,https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
 2. Accept terms, wait for the configuration to load. 
 3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade". 
 4. Give the stack a name in the *Name* field.
-5. Set *Terraform version* to 1.2.x. Click *Next* button at the bottom of the screen. 
+5. Make sure *Terraform version* is set to 1.5.x or greater. Click *Next* button at the bottom of the screen. 
 
 The [screenshot below](#rms-stack-creation) shows how the RMS stack creation screen looks like on step 5.
 
 <a name="rms-stack-creation">![rms-stack-creation](images/rms-stack-creation.png)</a>
 
-6. Upon clicking *Next* button, the *Configure variables* screen is displayed with input variables pre-filled: (see [image below](#rms-stack-input-variables) for an example):
+6. Upon clicking *Next* button, the *Configure variables* screen is displayed with input variables pre-filled: (see [image below](#iamzpr-stack-input-variables) for an example):
     1. Select or accept the selected deployment *Region* (IAM resources are always automatically deployed in the home region regardless).
     2. In *Input Files* section, select the *Configurations Source*. Each supported source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example has the following fields:
         - *Configurations Source*: "url", which means any URL in the *Configuration Files* field must be publicly available.
-        - *Configuration Files*: "https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/main/examples/vision/iam/config/iam-config.json", that happens to be available in this public GitHub repository.
+        - *Configuration Files*: *https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json* and *https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json*, both available in this public GitHub repository.
         - *Dependencies Source for URL-based Configurations*: "ocibucket", which means dependency files are read and written to an OCI private bucket.
         - *OCI Bucket Name*: "terraform-runtime-bucket", the bucket name where dependency files are read and written to. **THE BUCKET IS NOT CREATED BY THE ORCHESTRATOR.**
         - *Dependency Files*: empty, which means the specified configuration files stack do not rely on any dependencies.
@@ -109,9 +109,19 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack creation scr
 9. Click the *Plan* button.
 10. Upon a successfully created plan, click the *Apply* button and pick the created plan in the *Apply job plan resolution* drop down.
 
-The [screenshot below](#rms-stack-creation) shows how the RMS stack variables look like on step 6.3.
+The screenshot below shows how the IAM/ZPR stack variables look like.
 
-<a name="rms-stack-input-variables">![rms-stack-input-variables](images/rms-stack-input-variables.png)</a>
+<a name="iamzpr-stack-input-variables">![iamzpr-stack-input-variables](images/iamzpr-stack-input-variables.jpeg)</a>
+
+#### Networking Stack
+
+Follow the same steps as in IAM/ZPR Stack for deploying the networking stack by clicking the button next.
+
+Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/network/config/network-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source_oci_objects":"iam/output/compartments_output.json","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
+
+The screenshot below shows how the networking stack variables look like.
+
+<a name="networking-stack-input-variables">![networking-stack-input-variables](images/networking-stack-input-variables.jpeg)</a>
 
 #### Using GitHub Private repositories as configuration source
 
@@ -146,7 +156,7 @@ The examples are fully functional. The first *terraform plan/apply* pair provisi
 **Note**: Make sure to add your tenancy connectivity credentials in [*./examples/vision/iam/config/iam-credentials.json*](./examples/vision/iam/config/iam-credentials.json) and [*./examples/vision/network/config/network-credentials.json*](./examples/vision/network/config/network-credentials.json).
 
 
-#### 1. Provisioning IAM Resources
+#### 1. Provisioning IAM/ZPR Resources
 ```
 terraform init
 ```
@@ -155,6 +165,7 @@ The *terraform plan* command is broken down in different lines for clarity. Note
 terraform plan \
 -var-file ./examples/vision/iam/config/iam-credentials.json \
 -var-file ./examples/vision/iam/config/iam-config.json \
+-var-file ./examples/vision/security/config/zpr-config.json \
 -var "output_path=./examples/vision/iam/config" \
 -state ./examples/vision/iam/runtime/terraform.tfstate \
 -out ./examples/vision/iam/runtime/plan.out

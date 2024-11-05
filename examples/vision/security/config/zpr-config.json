@@ -1,0 +1,27 @@
+{
+  "zpr_configuration" : {
+    "namespaces" : {
+      "ORCHESTRATOR-NAMESPACE" : {
+        "compartment_id" : "NETWORK-CMP",
+        "description" : "Sample ZPR security attribute namespace created by OCI Landing Zones Orchestrator.",
+        "name" : "orchestrator-zpr-namespace"
+      }
+    },
+    "security_attributes" : {
+      "ORCHESTRATOR-ATTRIBUTE-APP" : {
+        "description" : "Sample ZPR attribute for identifying applications created by OCI Landing Zones Orchestrator.",
+        "name" : "application",
+        "namespace_id" : "ORCHESTRATOR-NAMESPACE" ,
+        "validator_type" : "ENUM",
+        "validator_values" : ["hr", "payroll", "benefits"]
+      }
+    },
+    "zpr_policies" : {
+      "ORCHESTRATOR-ZPR-POLICY" : {
+        "description" : "Sample ZPR policy created by OCI Landing Zones Orchestrator.",
+        "name" : "orchestrator-zpr-policy",
+        "statements" : ["in orchestrator-zpr-namespace.application:hr VCN allow orchestrator-zpr-namespace.application:hr endpoints to connect to 'osn-services-ip-addresses'"]
+      }
+    }
+  }
+}

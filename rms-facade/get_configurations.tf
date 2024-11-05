@@ -56,10 +56,17 @@ locals {
   merged_input_configs = merge(local.all_json_configs_map, local.all_yaml_configs_map)
 
   # IAM
-  compartments_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "compartments_configuration") ? local.merged_input_configs.compartments_configuration : null : null
-  groups_configuration         = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "groups_configuration") ? local.merged_input_configs.groups_configuration : null : null
-  dynamic_groups_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "dynamic_groups_configuration") ? local.merged_input_configs.dynamic_groups_configuration : null : null
-  policies_configuration       = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "policies_configuration") ? local.merged_input_configs.policies_configuration : null : null
+  compartments_configuration     = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "compartments_configuration") ? local.merged_input_configs.compartments_configuration : null : null
+  groups_configuration           = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "groups_configuration") ? local.merged_input_configs.groups_configuration : null : null
+  dynamic_groups_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "dynamic_groups_configuration") ? local.merged_input_configs.dynamic_groups_configuration : null : null
+  policies_configuration         = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "policies_configuration") ? local.merged_input_configs.policies_configuration : null : null
+
+  # IAM Identity Domains
+  identity_domains_configuration                   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "identity_domains_configuration") ? local.merged_input_configs.identity_domains_configuration : null : null
+  identity_domain_groups_configuration             = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "identity_domain_groups_configuration") ? local.merged_input_configs.identity_domain_groups_configuration : null : null
+  identity_domain_dynamic_groups_configuration     = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "identity_domain_dynamic_groups_configuration") ? local.merged_input_configs.identity_domain_dynamic_groups_configuration : null : null
+  identity_domain_identity_providers_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "identity_domain_identity_providers_configuration") ? local.merged_input_configs.identity_domain_identity_providers_configuration : null : null
+  identity_domain_applications_configuration       = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "identity_domain_applications_configuration") ? local.merged_input_configs.identity_domain_applications_configuration : null : null
 
   # Networking
   network_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "network_configuration") ? local.merged_input_configs.network_configuration : null : null
@@ -79,6 +86,7 @@ locals {
   cloud_guard_configuration    = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "cloud_guard_configuration") ? local.merged_input_configs.cloud_guard_configuration : null : null
   security_zones_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "security_zones_configuration") ? local.merged_input_configs.security_zones_configuration : null : null
   vaults_configuration         = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "vaults_configuration") ? local.merged_input_configs.vaults_configuration : null : null
+  zpr_configuration            = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "zpr_configuration") ? local.merged_input_configs.zpr_configuration : null : null
 
   # Governance
   tags_configuration    = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "tags_configuration") ? local.merged_input_configs.tags_configuration : null : null
