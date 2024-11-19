@@ -1,3 +1,8 @@
+# November 19, 2024 Release Notes - 2.0.5
+## Updates
+1. Bug fix: _var.save_output_ removed from Object Storage namespace check, thus making it really optional for stacks not requiring any outputs.
+   
+   
 # November 05, 2024 Release Notes - 2.0.4
 ## Updates
 1. Support added for ZPR attributes and policies.
