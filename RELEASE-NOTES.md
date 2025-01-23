@@ -1,3 +1,9 @@
+# January 24, 2025 Release Notes - 2.0.6
+## Updates
+1. Bug fix: _nlbs\_output_ output set with "id" attribute, now aligned with the reading in _nlbs\_dependency_ local variable.
+2. Supporting modules updated. See [Modules Versions](./README.md#mod-versions) for details.
+
+
 # November 19, 2024 Release Notes - 2.0.5
 ## Updates
 1. Bug fix: _var.save_output_ removed from Object Storage namespace check, thus making it really optional for stacks not requiring any outputs.
