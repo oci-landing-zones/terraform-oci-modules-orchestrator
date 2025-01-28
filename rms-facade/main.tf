@@ -40,6 +40,7 @@ module "oci_lz_orchestrator" {
   security_zones_configuration     = local.security_zones_configuration
   vaults_configuration             = local.vaults_configuration
   zpr_configuration                = local.zpr_configuration 
+  bastions_configuration           = local.bastions_configuration
   # Governance
   budgets_configuration = local.budgets_configuration
   tags_configuration    = local.tags_configuration

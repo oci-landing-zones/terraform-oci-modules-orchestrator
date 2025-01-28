@@ -57,6 +57,7 @@ output "security_resources" {
   value = {
     keys = length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].keys : {}
     vaults = length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}
+    bastions = length(module.oci_lz_bastions) > 0 ? module.oci_lz_bastions[0].bastions : {}
   }
 }
 

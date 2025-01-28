@@ -41,6 +41,9 @@ locals {
     keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
         "keys" : {for k, v in module.oci_lz_orchestrator.security_resources.keys : k => {"id" : v.id}}
     } : null
+    bastions_output = length(module.oci_lz_orchestrator.security_resources.bastions) > 0 ? {
+        "bastions" : {for k, v in module.oci_lz_orchestrator.security_resources.bastions : k => {"id" : v.id}}
+    } : null
     tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
         "tags" : {for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => {"id" : v.id}}
     } : null
@@ -62,6 +65,7 @@ locals {
     custom_logs_output_file_name      = "custom_logs_output.json"
     vaults_output_file_name           = "vaults_output.json"
     keys_output_file_name             = "keys_output.json"
+    bastions_output_file_name         = "bastions_output.json"
     tags_output_file_name             = "tags_output.json"
     instances_output_file_name        = "instances_output.json"
     nlbs_output_file_name             = "nlbs_output.json"
@@ -146,6 +150,15 @@ resource "oci_objectstorage_object" "keys" {
   content   = jsonencode(local.keys_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
+}
+
+### Writing bastions output to OCI bucket
+resource "oci_objectstorage_object" "bastions" {
+  count = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.bastions_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")
+  content   = jsonencode(local.bastions_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.bastions_output_file_name}" : local.bastions_output_file_name
 }
 
 ### Writing tags output to OCI bucket
@@ -292,6 +305,19 @@ resource "github_repository_file" "keys" {
   overwrite_on_create = true
 }
 
+### Writing bastions output to GitHub repository
+resource "github_repository_file" "bastions" {
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.bastions_output != null ? 1 : 0
+  repository          = var.github_configuration_repo
+  branch              = var.github_configuration_branch
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.bastions_output_file_name}" : local.bastions_output_file_name
+  content             = jsonencode(local.bastions_output)
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 ### Writing tags output to GitHub repository
 resource "github_repository_file" "tags" {
   count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.tags_output != null ? 1 : 0
@@ -338,8 +364,8 @@ data "github_repository" "this" {
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.identity_domains[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.tags[0].object,""),try(oci_objectstorage_object.instances[0].object,""),try(oci_objectstorage_object.nlbs[0].object,"")]))}"
-  github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.identity_domains[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.tags[0].file,""),try(github_repository_file.instances[0].file,""),try(github_repository_file.nlbs[0].file,"")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket,var.url_dependency_source_oci_bucket,"__void__")}: ${join(",",compact([try(oci_objectstorage_object.compartments[0].object,""),try(oci_objectstorage_object.identity_domains[0].object,""),try(oci_objectstorage_object.networking[0].object,""),try(oci_objectstorage_object.topics[0].object,""),try(oci_objectstorage_object.streams[0].object,""),try(oci_objectstorage_object.service_logs[0].object,""),try(oci_objectstorage_object.custom_logs[0].object,""),try(oci_objectstorage_object.vaults[0].object,""),try(oci_objectstorage_object.keys[0].object,""),try(oci_objectstorage_object.bastions[0].object,""),try(oci_objectstorage_object.tags[0].object,""),try(oci_objectstorage_object.instances[0].object,""),try(oci_objectstorage_object.nlbs[0].object,"")]))}"
+  github_output_string = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo,"__void__")}, branch ${coalesce(var.github_configuration_branch,"__void__")}: ${join(",",compact([try(github_repository_file.compartments[0].file,""),try(github_repository_file.identity_domains[0].file,""),try(github_repository_file.networking[0].file,""),try(github_repository_file.topics[0].file,""),try(github_repository_file.streams[0].file,""),try(github_repository_file.service_logs[0].file,""),try(github_repository_file.custom_logs[0].file,""),try(github_repository_file.vaults[0].file,""),try(github_repository_file.keys[0].file,""),try(github_repository_file.bastions[0].file,""),try(github_repository_file.tags[0].file,""),try(github_repository_file.instances[0].file,""),try(github_repository_file.nlbs[0].file,"")]))}"
   output_string = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : "") : null
 } 
 

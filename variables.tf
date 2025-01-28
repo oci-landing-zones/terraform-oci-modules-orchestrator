@@ -141,6 +141,11 @@ variable "zpr_configuration" {
   default = null
 }
 
+variable "bastions_configuration" {
+  type    = any
+  default = null
+}
+
 variable "budgets_configuration" {
   type    = any
   default = null
