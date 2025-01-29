@@ -50,6 +50,7 @@ module "oci_lz_zpr" {
 module "oci_lz_bastions" {
   count  = var.bastions_configuration != null ? 1 : 0
   source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion?ref=v0.2.0"
+  bastions_configuration  = var.bastions_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
 }

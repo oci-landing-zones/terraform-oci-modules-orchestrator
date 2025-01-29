@@ -151,6 +151,12 @@ resource "local_file" "keys_output" {
   filename = "${var.output_path}/keys_output.json"
 }
 
+resource "local_file" "bastions_output" {
+  count = var.output_path != null && length(module.oci_lz_bastions) > 0 ? 1 : 0
+  content  = jsonencode({"bastions" : {for k, v in module.oci_lz_bastions[0].bastions : k => {"id" : v.id}}})
+  filename = "${var.output_path}/bastions_output.json"
+}
+
 resource "local_file" "tags_output" {
   count = var.output_path != null && length(module.oci_lz_tags) > 0 ? 1 : 0
   content  = jsonencode({"tags" : {for k, v in module.oci_lz_tags[0].tags : k => {"id" : v.id}}})
@@ -170,7 +176,6 @@ resource "local_file" "nlbs_output" {
                          "nlbs_public_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_public_ips: k => {"private_ip_id" : v.private_ip_id, "public_ip_id" : v.id}}})
   filename = "${var.output_path}/nlbs_output.json"
 }
-
 
 
 
