@@ -87,6 +87,7 @@ locals {
   security_zones_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "security_zones_configuration") ? local.merged_input_configs.security_zones_configuration : null : null
   vaults_configuration         = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "vaults_configuration") ? local.merged_input_configs.vaults_configuration : null : null
   zpr_configuration            = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "zpr_configuration") ? local.merged_input_configs.zpr_configuration : null : null
+  bastions_configuration       = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "bastions_configuration") ? local.merged_input_configs.bastions_configuration : null : null
 
   # Governance
   tags_configuration    = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "tags_configuration") ? local.merged_input_configs.tags_configuration : null : null
