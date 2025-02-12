@@ -1,7 +1,8 @@
-# February 12, 2025 Release Notes - 2.0.6
+# February 13, 2025 Release Notes - 2.0.6
 ## Updates
 1. Bug fix: _nlbs\_output_ output set with "id" attribute, now aligned with the reading in _nlbs\_dependency_ local variable.
-2. Supporting modules updated. See [Modules Versions](./README.md#mod-versions) for details.
+2. Support for [OCI Bastion module](https://github.com/oci-landing-zones/terraform-oci-modules-security/tree/main/bastion) added in [security.tf](./security.tf).
+3. Supporting modules updated. See [Modules Versions](./README.md#mod-versions) for details.
 
 
 # November 19, 2024 Release Notes - 2.0.5
