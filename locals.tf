@@ -50,5 +50,5 @@ locals {
 
     # var.nlbs_dependency
     ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
-    nlbs_dependency  = {for k, v in coalesce(local.ext_dep_nlbs_map,{}) : k => {"id" : v.id}}
+    nlbs_dependency  = merge({for k, v in coalesce(local.ext_dep_nlbs_map,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_primary_private_ips : {}) : k => {"id" : v.private_ips[0].id}})
 }
