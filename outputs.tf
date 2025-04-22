@@ -172,8 +172,8 @@ resource "local_file" "instances_output" {
 
 resource "local_file" "nlbs_output" {
   count = var.output_path != null && length(module.oci_lz_nlb) > 0 ? 1 : 0
-  content  = jsonencode({"nlbs_private_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_primary_private_ips : k => {"private_ip_id" : v.private_ips[0].id}},
-                         "nlbs_public_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_public_ips: k => {"private_ip_id" : v.private_ip_id, "public_ip_id" : v.id}}})
+  content  = jsonencode({"nlbs_private_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_primary_private_ips : k => {"id" : v.private_ips[0].id}},
+                         "nlbs_public_ips" : {for k, v in module.oci_lz_nlb[0].nlbs_public_ips: k => {"private_ip_id" : v.private_ip_id, "id" : v.id}}})
   filename = "${var.output_path}/nlbs_output.json"
 }
 
