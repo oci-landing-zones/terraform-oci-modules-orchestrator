@@ -184,5 +184,3 @@ resource "local_file" "nlbs_output" {
 
 
 
-
-
