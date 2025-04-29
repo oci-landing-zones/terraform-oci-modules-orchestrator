@@ -25,6 +25,7 @@ variableGroups:
       - oci_configuration_objects
       - oci_dependency_objects
       - github_token
+      - github_base_url
       - github_configuration_repo
       - github_configuration_branch
       - github_configuration_files
@@ -115,6 +116,15 @@ variables:
     title: "GitHub Token"
     description : "The token that allows working with the GitHub repository. Make sure you have a Personal Access Token (PAT) or Fine Grained Access Token (FGAT) in GitHub properly scoped to read (and write if you save the stack output back to GitHub) the repository."
     visible: 
+      eq:
+        - configuration_source
+        - "github"
+
+  github_base_url:
+    type: string
+    title: "Github Base URL"
+    description: "Only required when working with GitHub Enterprise. The value must end with a slash. E.g. https://example.com/"
+    visible:
       eq:
         - configuration_source
         - "github"
