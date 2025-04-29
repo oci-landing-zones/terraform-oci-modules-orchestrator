@@ -3,13 +3,13 @@
 
 # Core networking
 module "oci_lz_network" {
-  depends_on              = [ module.oci_lz_zpr ] # network_configuration may have ZPR attributes that must exist up front.
+  depends_on              = [module.oci_lz_zpr] # network_configuration may have ZPR attributes that must exist up front.
   count                   = var.network_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git?ref=release-0.7.5"
   network_configuration   = var.network_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.ext_dep_network_map
-  private_ips_dependency  = local.nlbs_dependency 
+  private_ips_dependency  = local.nlbs_dependency
   tenancy_ocid            = var.tenancy_ocid
 }
 
