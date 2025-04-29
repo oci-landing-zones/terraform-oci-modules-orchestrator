@@ -88,6 +88,11 @@ variable "oci_dependency_objects" {
 variable "github_configuration_repo" {
   type    = string
   default = null
+
+  validation {
+    condition     = contains(["/"], var.github_configuration_repo)
+    error_message = "Github repository is expected in format organization/repository or user/repository"
+  }
 }
 variable "github_configuration_branch" {
   type    = string
@@ -136,3 +141,4 @@ variable "url_dependency_source_github_dependency_files" {
   type    = list(string)
   default = null
 }
+

@@ -132,7 +132,8 @@ variables:
   github_configuration_repo:
     type: string
     title: "GitHub Repository"
-    description : "The GitHub repository with Landing Zone configurations. A GitHub token with read permissions is required."
+    description : "The GitHub repository with Landing Zone configurations. A GitHub token with read permissions is required. Required format is organization/repository or user/repository"
+    pattern: "^(.+\/.+)$|^$"
     visible: 
       eq:
         - configuration_source

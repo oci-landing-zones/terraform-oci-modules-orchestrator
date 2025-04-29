@@ -190,6 +190,15 @@ resource "oci_objectstorage_object" "nlbs" {
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
 }
 
+# Github 
+# 
+# Github repository file has a bug where TF `data` and `resource` has inconsitent behaviour of handling repository name. 
+# When token used for authentication is created in different organization than a target repository this results in 404 error as `owner` on github provider 
+# defaults to the current user. We expect organization to be always part of repository name and use it to infer right owner. Additionally organization 
+# shouldn't be part of repository in `resource github_repository_file` so we use only the repository name itself.
+#
+# This comment is referenced in `rms-facade/providers.tf`
+
 ### Writing compartments output to GitHub repository
 resource "github_repository_file" "compartments" {
   count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.compartments_output != null ? 1 : 0
