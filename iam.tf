@@ -28,24 +28,24 @@ module "oci_lz_dynamic_groups" {
 }
 
 module "oci_lz_policies" {
-  count                 = var.policies_configuration != null ? 1 : 0
-  depends_on             = [ module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups ]
-  source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.2.9"
-  providers              = { oci = oci.home }
-  tenancy_ocid           = var.tenancy_ocid
-  policies_configuration = var.policies_configuration
+  count                   = var.policies_configuration != null ? 1 : 0
+  depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups]
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.2.9"
+  providers               = { oci = oci.home }
+  tenancy_ocid            = var.tenancy_ocid
+  policies_configuration  = var.policies_configuration
   compartments_dependency = local.compartments_dependency
 }
 
 module "oci_lz_identity_domains" {
-  count                 = var.identity_domains_configuration != null ? 1 : 0
-  source                 = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains?ref=v0.2.9"
-  providers              = { oci = oci.home }
-  tenancy_ocid           = var.tenancy_ocid
+  count                                            = var.identity_domains_configuration != null ? 1 : 0
+  source                                           = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains?ref=v0.2.9"
+  providers                                        = { oci = oci.home }
+  tenancy_ocid                                     = var.tenancy_ocid
   identity_domains_configuration                   = var.identity_domains_configuration
   identity_domain_groups_configuration             = var.identity_domain_groups_configuration
   identity_domain_dynamic_groups_configuration     = var.identity_domain_dynamic_groups_configuration
   identity_domain_identity_providers_configuration = var.identity_domain_identity_providers_configuration
   identity_domain_applications_configuration       = var.identity_domain_applications_configuration
-  compartments_dependency = local.compartments_dependency
+  compartments_dependency                          = local.compartments_dependency
 }

@@ -24,7 +24,7 @@ module "oci_lz_events" {
   events_configuration    = var.events_configuration
   compartments_dependency = local.compartments_dependency
   streams_dependency      = local.streams_dependency #merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
-  topics_dependency       = local.topics_dependency #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
+  topics_dependency       = local.topics_dependency  #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
   functions_dependency    = var.functions_dependency
 }
 
@@ -36,7 +36,7 @@ module "oci_lz_home_region_events" {
   events_configuration    = var.home_region_events_configuration
   compartments_dependency = local.compartments_dependency
   streams_dependency      = local.streams_dependency #merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
-  topics_dependency       = local.topics_dependency #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
+  topics_dependency       = local.topics_dependency  #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
   functions_dependency    = var.functions_dependency
 }
 
@@ -47,12 +47,12 @@ module "oci_lz_alarms" {
   alarms_configuration    = var.alarms_configuration
   compartments_dependency = local.compartments_dependency
   streams_dependency      = local.streams_dependency #merge({for k, v in coalesce(var.streams_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => {"id" : v.id, "compartment_id" : v.compartment_id}})
-  topics_dependency       = local.topics_dependency #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
+  topics_dependency       = local.topics_dependency  #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
 }
 
 module "oci_lz_logging" {
-  count  = var.logging_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.2.3"
+  count                   = var.logging_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.2.3"
   tenancy_ocid            = var.tenancy_ocid
   logging_configuration   = var.logging_configuration
   compartments_dependency = local.compartments_dependency
@@ -62,16 +62,16 @@ module "oci_lz_service_connectors" {
   count  = var.service_connectors_configuration != null ? 1 : 0
   source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors?ref=v0.2.3"
   providers = {
-    oci = oci
-    oci.home = oci.home
+    oci                  = oci
+    oci.home             = oci.home
     oci.secondary_region = oci.secondary_region
   }
-  tenancy_ocid            = var.tenancy_ocid
+  tenancy_ocid                     = var.tenancy_ocid
   service_connectors_configuration = var.service_connectors_configuration
-  compartments_dependency = local.compartments_dependency
-  streams_dependency      = local.streams_dependency
-  topics_dependency       = local.topics_dependency
-  logs_dependency         = local.logs_dependency
-  kms_dependency          = local.kms_dependency
-  functions_dependency    = var.functions_dependency
+  compartments_dependency          = local.compartments_dependency
+  streams_dependency               = local.streams_dependency
+  topics_dependency                = local.topics_dependency
+  logs_dependency                  = local.logs_dependency
+  kms_dependency                   = local.kms_dependency
+  functions_dependency             = var.functions_dependency
 }
