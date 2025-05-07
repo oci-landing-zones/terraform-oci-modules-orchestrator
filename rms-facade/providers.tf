@@ -24,5 +24,10 @@ provider "oci" {
 }
 
 provider "github" {
-  token = var.github_token != null ? var.github_token : (var.url_dependency_source_github_token != null ? var.url_dependency_source_github_token : null)
+  token    = var.github_token != null ? var.github_token : (var.url_dependency_source_github_token != null ? var.url_dependency_source_github_token : null)
+  base_url = var.github_base_url
+  # Workaround for github_repository_file commiting across organizations
+  # See `rms-facade/outputs.tf` Github section for details 
+  owner = split("/", var.github_configuration_repo)[0]
 }
+

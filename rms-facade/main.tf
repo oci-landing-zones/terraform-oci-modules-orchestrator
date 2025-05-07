@@ -13,16 +13,16 @@ module "oci_lz_orchestrator" {
 
   # Configurations
   # IAM
-  compartments_configuration     = local.compartments_configuration
-  groups_configuration           = local.groups_configuration
-  dynamic_groups_configuration   = local.dynamic_groups_configuration
-  policies_configuration         = local.policies_configuration
+  compartments_configuration   = local.compartments_configuration
+  groups_configuration         = local.groups_configuration
+  dynamic_groups_configuration = local.dynamic_groups_configuration
+  policies_configuration       = local.policies_configuration
   # IAM Identity Domains
-  identity_domains_configuration = local.identity_domains_configuration
-  identity_domain_groups_configuration = local.identity_domain_groups_configuration
-  identity_domain_dynamic_groups_configuration = local.identity_domain_dynamic_groups_configuration
+  identity_domains_configuration                   = local.identity_domains_configuration
+  identity_domain_groups_configuration             = local.identity_domain_groups_configuration
+  identity_domain_dynamic_groups_configuration     = local.identity_domain_dynamic_groups_configuration
   identity_domain_identity_providers_configuration = local.identity_domain_identity_providers_configuration
-  identity_domain_applications_configuration = local.identity_domain_applications_configuration
+  identity_domain_applications_configuration       = local.identity_domain_applications_configuration
   # Networking
   network_configuration = local.network_configuration
   nlb_configuration     = local.nlb_configuration
@@ -35,12 +35,12 @@ module "oci_lz_orchestrator" {
   home_region_events_configuration = local.home_region_events_configuration
   alarms_configuration             = local.alarms_configuration
   # Security
-  scanning_configuration           = local.scanning_configuration
-  cloud_guard_configuration        = local.cloud_guard_configuration
-  security_zones_configuration     = local.security_zones_configuration
-  vaults_configuration             = local.vaults_configuration
-  zpr_configuration                = local.zpr_configuration 
-  bastions_configuration           = local.bastions_configuration
+  scanning_configuration       = local.scanning_configuration
+  cloud_guard_configuration    = local.cloud_guard_configuration
+  security_zones_configuration = local.security_zones_configuration
+  vaults_configuration         = local.vaults_configuration
+  zpr_configuration            = local.zpr_configuration
+  bastions_configuration       = local.bastions_configuration
   # Governance
   budgets_configuration = local.budgets_configuration
   tags_configuration    = local.tags_configuration
@@ -58,7 +58,7 @@ module "oci_lz_orchestrator" {
   topics_dependency       = local.topics_dependency
   logging_dependency      = local.logging_dependency
   functions_dependency    = local.functions_dependency
-  vaults_dependency       = local.vaults_dependency 
+  vaults_dependency       = local.vaults_dependency
   instances_dependency    = local.instances_dependency
-  nlbs_dependency         = local.nlbs_dependency  
+  nlbs_dependency         = local.nlbs_dependency
 }
