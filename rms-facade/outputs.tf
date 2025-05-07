@@ -70,7 +70,7 @@ locals {
     instances_output_file_name        = "instances_output.json"
     nlbs_output_file_name             = "nlbs_output.json"
 
-    github_repository_name = split("/", var.github_configuration_repo)[1] # Use only repository name
+    github_repository_name = var.github_configuration_repo ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
 
 ### Writing compartments output to bucket

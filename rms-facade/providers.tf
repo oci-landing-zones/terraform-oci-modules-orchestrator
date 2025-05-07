@@ -28,6 +28,6 @@ provider "github" {
   base_url = var.github_base_url
   # Workaround for github_repository_file commiting across organizations
   # See `rms-facade/outputs.tf` Github section for details 
-  owner = split("/", var.github_configuration_repo)[0]
+  owner = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[0] : null
 }
 
