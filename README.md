@@ -16,12 +16,12 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.7 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.7)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.7.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.7.3)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.4)
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.2.9 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.2.9)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.7.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.7.5)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.5)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.0)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.1)
-[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.1.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.1.9)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.3)
+[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
