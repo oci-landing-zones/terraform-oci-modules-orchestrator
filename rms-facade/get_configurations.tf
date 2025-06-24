@@ -98,4 +98,8 @@ locals {
 
   # Compute
   instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
+
+  # OKE
+  clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "clusters_configuration") ? local.merged_input_configs.clusters_configuration : null : null
+  workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "workers_configuration") ? local.merged_input_configs.workers_configuration : null : null
 }

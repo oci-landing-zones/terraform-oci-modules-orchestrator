@@ -55,6 +55,11 @@ locals {
         "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"id" : v.private_ips[0].id}},
         "nlbs_public_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => {"private_ip_id" : v.private_ip_id, "id" : v.id}}
     } : null
+    oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
+        "clusters" : {for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => {"id" : v.id}},
+        "node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => {"id" : v.id}},
+        "virtual_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => {"id" : v.id}}
+    } : null
 
     compartments_output_file_name     = "compartments_output.json"
     identity_domains_output_file_name = "identity_domains_output.json"
@@ -69,6 +74,7 @@ locals {
     tags_output_file_name             = "tags_output.json"
     instances_output_file_name        = "instances_output.json"
     nlbs_output_file_name             = "nlbs_output.json"
+    oke_output_file_name              = "oke_output.json"
 
     github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -188,6 +194,15 @@ resource "oci_objectstorage_object" "nlbs" {
   content   = jsonencode(local.nlbs_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
+}
+
+### Writing OKE output to OCI bucket
+resource "oci_objectstorage_object" "oke" {
+  count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.oke_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
+  content   = jsonencode(local.oke_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.oke_output_file_name}" : local.oke_output_file_name
 }
 
 # Github 
@@ -368,15 +383,27 @@ resource "github_repository_file" "nlbs" {
   overwrite_on_create = true
 }
 
-### Writing private_ips output to GitHub repository
+### Writing OKE output to GitHub repository
+resource "github_repository_file" "oke" {
+  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.oke_output != null ? 1 : 0
+  repository          = local.github_repository_name
+  branch              = var.github_configuration_branch
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.oke_output_file_name}" : local.oke_output_file_name
+  content             = jsonencode(local.oke_output)
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 data "github_repository" "this" {
   count = var.save_output && lower(var.configuration_source) == "github" ? 1 : 0
   name  = var.github_configuration_repo
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, "")]))}"
-  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, "")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, "")]))}"
+  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, "")]))}"
   output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : "") : null
 }
 

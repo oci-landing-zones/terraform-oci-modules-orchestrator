@@ -77,6 +77,15 @@ output "compute_resources" {
   }
 }
 
+output "oke_resources" {
+  description = "Provisioned OKE resources"
+  value = {
+    clusters   = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}
+    node_pools = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}
+    virtual_node_pools = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].virtual_node_pools : {}
+  }
+}
+
 output "nlb_resources" {
   description = "Provisioned NLB resources"
   value = {
@@ -175,4 +184,12 @@ resource "local_file" "nlbs_output" {
   content = jsonencode({ "nlbs_private_ips" : { for k, v in module.oci_lz_nlb[0].nlbs_primary_private_ips : k => { "id" : v.private_ips[0].id } },
   "nlbs_public_ips" : { for k, v in module.oci_lz_nlb[0].nlbs_public_ips : k => { "private_ip_id" : v.private_ip_id, "id" : v.id } } })
   filename = "${var.output_path}/nlbs_output.json"
+}
+
+resource "local_file" "oke_output" {
+  count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
+  content = jsonencode({ "clusters" : { for k, v in module.oci_lz_oke[0].clusters : k => { "id" : v.id } },
+  "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
+  "virtual_node_pools" : { for k, v in module.oci_lz_oke[0].virtual_node_pools : k => { "id" : v.id } } })
+  filename = "${var.output_path}/oke_output.json"
 }
