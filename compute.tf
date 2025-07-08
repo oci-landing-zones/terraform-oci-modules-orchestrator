@@ -9,6 +9,7 @@ module "oci_lz_compute" {
     oci                                  = oci
     oci.block_volumes_replication_region = oci
   }
+  tenancy_ocid            = var.tenancy_ocid
   instances_configuration = var.instances_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
@@ -16,3 +17,4 @@ module "oci_lz_compute" {
   #  instances_dependency    = TBD
   #  file_system_dependency  = TBD
 }
+
