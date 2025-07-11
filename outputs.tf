@@ -77,6 +77,14 @@ output "compute_resources" {
   }
 }
 
+output "oke_cluster_resources" {
+  description = "Provisioned OKE Cluster resources"
+  value = {
+    oke_clusters = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}
+    oke_workers  = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}
+  }
+}
+
 output "nlb_resources" {
   description = "Provisioned NLB resources"
   value = {
@@ -168,6 +176,13 @@ resource "local_file" "instances_output" {
   content = jsonencode({ "instances" : { for k, v in module.oci_lz_compute[0].instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
   "secondary_vnics" : { for k, v in module.oci_lz_compute[0].secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } } })
   filename = "${var.output_path}/instances_output.json"
+}
+
+resource "local_file" "oke_clusters_output" {
+  count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
+  content = jsonencode({ "oke_clusters" : { for k, v in module.oci_lz_oke[0].clusters : k => { "id" : v.id } },
+  "oke_workers" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } } })
+  filename = "${var.output_path}/oke_clusters_output.json"
 }
 
 resource "local_file" "nlbs_output" {

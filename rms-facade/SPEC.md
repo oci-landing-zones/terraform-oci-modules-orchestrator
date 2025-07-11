@@ -9,9 +9,9 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | n/a |
-| <a name="provider_oci"></a> [oci](#provider\_oci) | n/a |
+| <a name="provider_github"></a> [github](#provider\_github) | 5.45.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | 3.5.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 7.12.0 |
 
 ## Modules
 
@@ -23,6 +23,7 @@
 
 | Name | Type |
 |------|------|
+| [github_repository_file.bastions](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.compartments](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.custom_logs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.identity_domains](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
@@ -30,11 +31,13 @@
 | [github_repository_file.keys](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.networking](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.nlbs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.oke_clusters](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.service_logs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.streams](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.tags](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.topics](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.vaults](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [oci_objectstorage_object.bastions](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.compartments](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.custom_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.identity_domains](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
@@ -42,6 +45,7 @@
 | [oci_objectstorage_object.keys](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.networking](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.nlbs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.oke_clusters](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.service_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.streams](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.tags](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
@@ -63,6 +67,7 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_configuration_source"></a> [configuration\_source](#input\_configuration\_source) | The source where configuration files are pulled from. | `string` | `"url"` | no |
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | n/a | `string` | `null` | no |
+| <a name="input_github_base_url"></a> [github\_base\_url](#input\_github\_base\_url) | GitHub base API endpoint. Required when working with GitHub Enterprise. The value must end with a slash. E.g. https://example.com/ | `string` | `null` | no |
 | <a name="input_github_configuration_branch"></a> [github\_configuration\_branch](#input\_github\_configuration\_branch) | n/a | `string` | `null` | no |
 | <a name="input_github_configuration_files"></a> [github\_configuration\_files](#input\_github\_configuration\_files) | n/a | `list(string)` | `null` | no |
 | <a name="input_github_configuration_repo"></a> [github\_configuration\_repo](#input\_github\_configuration\_repo) | n/a | `string` | `null` | no |
