@@ -18,3 +18,12 @@ module "oci_lz_compute" {
   #  file_system_dependency  = TBD
 }
 
+module "oci_lz_oke" {
+  count                   = var.clusters_configuration != null || var.workers_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.0"
+  clusters_configuration  = var.clusters_configuration
+  workers_configuration   = var.workers_configuration
+  compartments_dependency = local.compartments_dependency
+  network_dependency      = local.network_dependency
+  kms_dependency          = local.kms_dependency
+}

@@ -21,7 +21,7 @@ Repository | Referenced Tags/Branches
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.5)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.0)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.3)
-[Secure Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.0)
+[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -56,6 +56,7 @@ logging_configuration | service_logs_output.json and custom_logs_output.json
 vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
+clusters_configuration | clusters_output.json
 
 ## How to Invoke the Orchestrator
 
@@ -131,11 +132,11 @@ When you select *github* as Configuration Source for Input Files, you'll see a f
 
 * **GitHub Token**: You can use GitHub's Personal Access Token (classic) or Fine-grained personal access tokens (see this [reference](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)). While both are valid, we recommend the use of Fine-grained personal access tokens as, beside giving you the option to fine-tune the operation access to your repo, you can select the repos you want to give access to.
   
-* **GitHub Repository**: This is the name of your GitHub repository unique in your userorganization. E.g.: *test-orch* (without the .git).
+* **GitHub Repository**: This is the name of your GitHub repository including your Github organization. E.g.: *org/repo-name* (without the .git).
   
 * **GitHub Branch**: This is your desired branch where/to get/put the input/output information. E.g.: *main*.
   
-* **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-orch.git/iam/identity.json).
+* **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-org.git/iam/identity.json).
   
 * **Dependency Files**: The relative reference to where the dependency files (created in a previous operation) are stored in your repository. E.g.: *output/compartments_output.json* and *output/network_output.json*.
   
@@ -211,7 +212,7 @@ Please consult the [security guide](./SECURITY.md) for our responsible security 
 
 ## License
 
-Copyright (c) 2023,2024 Oracle and/or its affiliates.
+Copyright (c) 2025 Oracle and/or its affiliates.
 
 Released under the Universal Permissive License v1.0 as shown at
 <https://oss.oracle.com/licenses/upl/>.

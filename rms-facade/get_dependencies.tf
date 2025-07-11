@@ -62,5 +62,7 @@ locals {
   functions_dependency    = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "functions") ? { "functions" : local.all_json_dependencies_map.functions } : null : null
   vaults_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "vaults") ? { "vaults" : local.all_json_dependencies_map.vaults } : null : null
   instances_dependency    = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "instances") ? { "instances" : local.all_json_dependencies_map.instances } : {}, contains(keys(local.all_json_dependencies_map), "private_ips") ? { "private_ips" : local.all_json_dependencies_map.private_ips } : {}) : null
+  clusters_dependency     = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "clusters") ? { "clusters" : local.all_json_dependencies_map.clusters } : null : null
   nlbs_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "nlbs_private_ips") ? { "nlbs_private_ips" : local.all_json_dependencies_map.nlbs_private_ips } : null : null
 }
+

@@ -46,8 +46,9 @@ module "oci_lz_orchestrator" {
   tags_configuration    = local.tags_configuration
   # Object Storage
   object_storage_configuration = local.object_storage_configuration
-  # Compute
+  # Workloads 
   instances_configuration = local.instances_configuration
+  clusters_configuration  = local.clusters_configuration
 
   # Dependencies
   compartments_dependency = local.compartments_dependency
@@ -60,5 +61,7 @@ module "oci_lz_orchestrator" {
   functions_dependency    = local.functions_dependency
   vaults_dependency       = local.vaults_dependency
   instances_dependency    = local.instances_dependency
+  clusters_dependency     = local.clusters_dependency
   nlbs_dependency         = local.nlbs_dependency
 }
+

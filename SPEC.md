@@ -8,33 +8,35 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_local"></a> [local](#provider\_local) | 2.5.2 |
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 6.15.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.5.3 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 7.8.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_oci_lz_alarms"></a> [oci\_lz\_alarms](#module\_oci\_lz\_alarms) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms | v0.2.1 |
-| <a name="module_oci_lz_budgets"></a> [oci\_lz\_budgets](#module\_oci\_lz\_budgets) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//budgets | release-0.1.4 |
+| <a name="module_oci_lz_alarms"></a> [oci\_lz\_alarms](#module\_oci\_lz\_alarms) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms | v0.2.3 |
+| <a name="module_oci_lz_bastions"></a> [oci\_lz\_bastions](#module\_oci\_lz\_bastions) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion | v0.2.0 |
+| <a name="module_oci_lz_budgets"></a> [oci\_lz\_budgets](#module\_oci\_lz\_budgets) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//budgets | v0.1.5 |
 | <a name="module_oci_lz_cloud_guard"></a> [oci\_lz\_cloud\_guard](#module\_oci\_lz\_cloud\_guard) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard | v0.2.0 |
-| <a name="module_oci_lz_compartments"></a> [oci\_lz\_compartments](#module\_oci\_lz\_compartments) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments | v0.2.7 |
-| <a name="module_oci_lz_compute"></a> [oci\_lz\_compute](#module\_oci\_lz\_compute) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage | v0.1.9 |
-| <a name="module_oci_lz_dynamic_groups"></a> [oci\_lz\_dynamic\_groups](#module\_oci\_lz\_dynamic\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups | v0.2.7 |
-| <a name="module_oci_lz_events"></a> [oci\_lz\_events](#module\_oci\_lz\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.1 |
-| <a name="module_oci_lz_groups"></a> [oci\_lz\_groups](#module\_oci\_lz\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups | v0.2.7 |
-| <a name="module_oci_lz_home_region_events"></a> [oci\_lz\_home\_region\_events](#module\_oci\_lz\_home\_region\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.1 |
-| <a name="module_oci_lz_identity_domains"></a> [oci\_lz\_identity\_domains](#module\_oci\_lz\_identity\_domains) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains | v0.2.7 |
-| <a name="module_oci_lz_logging"></a> [oci\_lz\_logging](#module\_oci\_lz\_logging) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging | v0.2.1 |
-| <a name="module_oci_lz_network"></a> [oci\_lz\_network](#module\_oci\_lz\_network) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git | v0.7.2 |
-| <a name="module_oci_lz_nlb"></a> [oci\_lz\_nlb](#module\_oci\_lz\_nlb) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git//modules/nlb | v0.7.2 |
-| <a name="module_oci_lz_notifications"></a> [oci\_lz\_notifications](#module\_oci\_lz\_notifications) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications | v0.2.1 |
-| <a name="module_oci_lz_policies"></a> [oci\_lz\_policies](#module\_oci\_lz\_policies) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies | v0.2.7 |
+| <a name="module_oci_lz_compartments"></a> [oci\_lz\_compartments](#module\_oci\_lz\_compartments) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments | v0.2.9 |
+| <a name="module_oci_lz_compute"></a> [oci\_lz\_compute](#module\_oci\_lz\_compute) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage | v0.2.0 |
+| <a name="module_oci_lz_dynamic_groups"></a> [oci\_lz\_dynamic\_groups](#module\_oci\_lz\_dynamic\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups | v0.2.9 |
+| <a name="module_oci_lz_events"></a> [oci\_lz\_events](#module\_oci\_lz\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.3 |
+| <a name="module_oci_lz_groups"></a> [oci\_lz\_groups](#module\_oci\_lz\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups | v0.2.9 |
+| <a name="module_oci_lz_home_region_events"></a> [oci\_lz\_home\_region\_events](#module\_oci\_lz\_home\_region\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.3 |
+| <a name="module_oci_lz_identity_domains"></a> [oci\_lz\_identity\_domains](#module\_oci\_lz\_identity\_domains) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains | v0.2.9 |
+| <a name="module_oci_lz_logging"></a> [oci\_lz\_logging](#module\_oci\_lz\_logging) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging | v0.2.3 |
+| <a name="module_oci_lz_network"></a> [oci\_lz\_network](#module\_oci\_lz\_network) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git | v0.7.5 |
+| <a name="module_oci_lz_nlb"></a> [oci\_lz\_nlb](#module\_oci\_lz\_nlb) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git//modules/nlb | v0.7.5 |
+| <a name="module_oci_lz_notifications"></a> [oci\_lz\_notifications](#module\_oci\_lz\_notifications) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications | v0.2.3 |
+| <a name="module_oci_lz_oke"></a> [oci\_lz\_oke](#module\_oci\_lz\_oke) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.2.0 |
+| <a name="module_oci_lz_policies"></a> [oci\_lz\_policies](#module\_oci\_lz\_policies) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies | v0.2.9 |
 | <a name="module_oci_lz_scanning"></a> [oci\_lz\_scanning](#module\_oci\_lz\_scanning) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss | v0.2.0 |
 | <a name="module_oci_lz_security_zones"></a> [oci\_lz\_security\_zones](#module\_oci\_lz\_security\_zones) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones | v0.2.0 |
-| <a name="module_oci_lz_service_connectors"></a> [oci\_lz\_service\_connectors](#module\_oci\_lz\_service\_connectors) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors | v0.2.1 |
-| <a name="module_oci_lz_streams"></a> [oci\_lz\_streams](#module\_oci\_lz\_streams) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams | v0.2.1 |
-| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags | release-0.1.4 |
+| <a name="module_oci_lz_service_connectors"></a> [oci\_lz\_service\_connectors](#module\_oci\_lz\_service\_connectors) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors | v0.2.3 |
+| <a name="module_oci_lz_streams"></a> [oci\_lz\_streams](#module\_oci\_lz\_streams) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams | v0.2.3 |
+| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags | v0.1.5 |
 | <a name="module_oci_lz_vaults"></a> [oci\_lz\_vaults](#module\_oci\_lz\_vaults) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults | v0.2.0 |
 | <a name="module_oci_lz_zpr"></a> [oci\_lz\_zpr](#module\_oci\_lz\_zpr) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr | v0.2.0 |
 
@@ -42,6 +44,8 @@
 
 | Name | Type |
 |------|------|
+| [local_file.bastions_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.clusters_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.compartments_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.custom_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.identity_domains_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -64,8 +68,11 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alarms_configuration"></a> [alarms\_configuration](#input\_alarms\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_bastions_configuration"></a> [bastions\_configuration](#input\_bastions\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_budgets_configuration"></a> [budgets\_configuration](#input\_budgets\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_cloud_guard_configuration"></a> [cloud\_guard\_configuration](#input\_cloud\_guard\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_clusters_configuration"></a> [clusters\_configuration](#input\_clusters\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_clusters_dependency"></a> [clusters\_dependency](#input\_clusters\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_compartments_configuration"></a> [compartments\_configuration](#input\_compartments\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_compartments_dependency"></a> [compartments\_dependency](#input\_compartments\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_dynamic_groups_configuration"></a> [dynamic\_groups\_configuration](#input\_dynamic\_groups\_configuration) | n/a | `any` | `null` | no |
@@ -107,12 +114,14 @@
 | <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | n/a | `string` | `null` | no |
 | <a name="input_vaults_configuration"></a> [vaults\_configuration](#input\_vaults\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_vaults_dependency"></a> [vaults\_dependency](#input\_vaults\_dependency) | n/a | `any` | `null` | no |
+| <a name="input_workers_configuration"></a> [workers\_configuration](#input\_workers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_zpr_configuration"></a> [zpr\_configuration](#input\_zpr\_configuration) | n/a | `any` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cluster_resources"></a> [cluster\_resources](#output\_cluster\_resources) | Provisioned OKE Cluster resources |
 | <a name="output_compute_resources"></a> [compute\_resources](#output\_compute\_resources) | Provisioned compute resources |
 | <a name="output_governance_resources"></a> [governance\_resources](#output\_governance\_resources) | Provisioned governance resources |
 | <a name="output_iam_resources"></a> [iam\_resources](#output\_iam\_resources) | Provisioned identity resources |
