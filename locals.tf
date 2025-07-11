@@ -48,7 +48,13 @@ locals {
   ext_dep_instances_map = var.instances_dependency != null ? try(var.instances_dependency.instances, jsondecode(file(var.instances_dependency)).instances, null) : null
   instances_dependency  = merge({ for k, v in coalesce(local.ext_dep_instances_map, {}) : k => { "id" : v.id, "private_ip" : v.private_ip } }, { for k, v in(length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}) : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } }, { for k, v in(length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}) : k => { "id" : v.id, "private_ip" : v.private_ip_address } })
 
+  # var.clusters_dependency
+  ext_dep_clusters_map = var.clusters_dependency != null ? try(var.clusters_dependency.clusters, jsondecode(file(var.clusters_dependency)).clusters, null) : null
+  clusters_dependency  = merge({ for k, v in coalesce(local.ext_dep_clusters_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}) : k => { "id" : v.id } })
+
+
   # var.nlbs_dependency
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
   nlbs_dependency  = { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } }
 }
+
