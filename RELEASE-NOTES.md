@@ -1,3 +1,9 @@
+# August 26, 2025 Release Notes - 2.0.8
+## Updates
+1. Support for OKE (Oracle Kubernetes Engine) added. See [workloads.tf](./workloads.tf)
+2. Supporting modules updated. See [Modules Versions](./README.md#mod-versions) for details.
+
+
 # May 22, 2025 Release Notes - 2.0.7
 ## Updates
 1. Bug fix: _nlbs\_output_ base output set with "id" attribute, now aligned with the reading in _nlbs\_dependency_ local variable.
