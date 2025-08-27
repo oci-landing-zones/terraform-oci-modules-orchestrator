@@ -96,10 +96,10 @@ locals {
   # Object Storage
   object_storage_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "object_storage_configuration") ? local.merged_input_configs.object_storage_configuration : null : null
 
-  # Workloads 
-  instances_configuration    = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
-  oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "oke_clusters_configuration") ? local.merged_input_configs.oke_clusters_configuration : null : null
-  oke_workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "oke_workers_configuration") ? local.merged_input_configs.oke_workers_configuration : null : null
+  # Compute
+  instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
 
+  # OKE
+  oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "clusters_configuration") ? local.merged_input_configs.clusters_configuration : null : null
+  oke_workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "workers_configuration") ? local.merged_input_configs.workers_configuration : null : null
 }
-
