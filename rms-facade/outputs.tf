@@ -18,9 +18,9 @@ locals {
             "remote_peering_connections" : {for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => {"id" : v.id}}
             "local_peering_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => {"id" : v.id}}
             "drg_route_tables" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => {"id" : v.id}}
-            "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.id}}
-            "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.id}}
-            "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.id}}
+            "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.ocid}}
+            "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.ocid}}
+            "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.ocid}}
         }    
     } : null
     topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
