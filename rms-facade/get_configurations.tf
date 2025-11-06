@@ -102,4 +102,7 @@ locals {
   # OKE
   oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "clusters_configuration") ? local.merged_input_configs.clusters_configuration : null : null
   oke_workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "workers_configuration") ? local.merged_input_configs.workers_configuration : null : null
+
+  # OCVS
+  ocvs_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "ocvs_configuration") ? local.merged_input_configs.ocvs_configuration : null : null
 }

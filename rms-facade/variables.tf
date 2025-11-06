@@ -90,7 +90,7 @@ variable "github_configuration_repo" {
   default = null
 
   validation {
-    condition     = var.github_configuration_repo != null ? strcontains(var.github_configuration_repo,"/") : true
+    condition     = var.github_configuration_repo != null ? strcontains(var.github_configuration_repo, "/") : true
     error_message = "Github repository is expected in format organization/repository or user/repository"
   }
 }
