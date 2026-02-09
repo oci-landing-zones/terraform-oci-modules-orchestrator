@@ -21,7 +21,7 @@ Repository | Referenced Tags/Branches
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.5)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.2 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.2)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.3)
-[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.1)
+[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.3)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 

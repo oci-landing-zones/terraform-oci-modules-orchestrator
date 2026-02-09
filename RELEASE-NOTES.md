@@ -1,3 +1,9 @@
+# February 9, 2026 Release Notes - 2.0.11
+
+## Updates
+
+1. Update Workloads Module to 2.0.3
+
 # December 3, 2025 Release Notes - 2.0.9
 
 ## Updates
