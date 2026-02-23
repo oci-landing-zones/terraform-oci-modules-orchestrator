@@ -176,16 +176,6 @@ variable "object_storage_configuration" {
   default = null
 }
 
-variable "clusters_configuration" {
-  type    = any
-  default = null
-}
-
-variable "workers_configuration" {
-  type    = any
-  default = null
-}
-
 variable "compartments_dependency" {
   type    = any
   default = null
