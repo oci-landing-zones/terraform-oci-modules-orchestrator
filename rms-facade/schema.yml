@@ -55,7 +55,10 @@ variableGroups:
       - private_key_path
       - private_key_password
       - region
-    
+      - local_config_file_paths
+      - output_folder_path
+      - local_dependency_file_paths
+      
 variables:
   region:
     type: oci:identity:region:name

@@ -69,7 +69,9 @@ Configurations Source         | Configuration Files Formats | Dependencies Sourc
 Private GitHub repository     | JSON, YAML                  | Same private GitHub repository                | JSON, YAML               | GitHub token with read/(write, if saving output) access permissions on the private GitHub repository. 
 Private OCI bucket            | JSON, YAML                  | Same private OCI bucket                       | JSON, YAML               | OCI IAM permissions to read/(write, if saving output) to the private OCI bucket. 
 Plain Public URLs             | JSON, YAML                  | Private GitHub repository, private OCI bucket | JSON, YAML               | URLs must be reachable. Read/(write, if saving output) access permissions to private GitHub repository or private OCI bucket.
-Local File System             | JSON, YAML                  | Local file system                             | JSON, YAML               | Dependency files available in local file system where Terraform is executed.
+Local File System (*)         | JSON, YAML                  | Local file system                             | JSON, YAML               | Dependency files available in local file system where Terraform is executed.
+
+(*) Configurations Source type of Local File System is currently not supported for deployments in Resource Manager service. It can only be used when deploying with Terraform CLI.
 
 ## How to Invoke the Orchestrator
 
