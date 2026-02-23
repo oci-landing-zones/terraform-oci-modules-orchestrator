@@ -43,8 +43,8 @@ locals {
   url_github_json_dependencies    = [for element in flatten(data.github_repository_file.url_dependencies[*].content) : try(jsondecode(element), "") if length(data.github_repository_file.url_dependencies) > 0]
   ocibucket_json_dependencies     = [for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : try(jsondecode(element), "") if length(data.oci_objectstorage_object.dependencies) > 0]
   github_json_dependencies        = [for element in flatten(data.github_repository_file.dependencies[*].content) : try(jsondecode(element), "") if length(data.github_repository_file.dependencies) > 0]
-  #all_json_dependencies = concat(local.url_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies)
-  all_json_dependencies = concat(local.url_ocibucket_json_dependencies, local.url_github_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies)
+  local_file_json_dependencies    = [for element in var.local_dependency_file_paths : try(jsondecode(file(element)), "") ]
+  all_json_dependencies = concat(local.url_ocibucket_json_dependencies, local.url_github_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies, local.local_file_json_dependencies)
 
   all_json_dependencies_keys = flatten([for value in local.all_json_dependencies : keys(value) if length(local.all_json_dependencies) > 0])
 
@@ -52,16 +52,31 @@ locals {
     key => [for config in local.all_json_dependencies : config[key] if contains(keys(config), key)][0]
   if length(local.all_json_dependencies_keys) > 0 }
 
-  compartments_dependency = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "compartments") ? { "compartments" : local.all_json_dependencies_map.compartments } : null : null
-  tags_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "tags") ? { "tags" : local.all_json_dependencies_map.tags } : null : null
-  network_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "network_resources") ? { "network_resources" : local.all_json_dependencies_map.network_resources } : null : null
-  kms_dependency          = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "keys") ? { "keys" : local.all_json_dependencies_map.keys } : null : null
-  streams_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "streams") ? { "streams" : local.all_json_dependencies_map.streams } : null : null
-  topics_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "topics") ? { "topics" : local.all_json_dependencies_map.topics } : null : null
-  logging_dependency      = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "service_logs") ? { "service_logs" : local.all_json_dependencies_map.service_logs } : {}, contains(keys(local.all_json_dependencies_map), "custom_logs") ? { "custom_logs" : local.all_json_dependencies_map.custom_logs } : {}) : null
-  functions_dependency    = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "functions") ? { "functions" : local.all_json_dependencies_map.functions } : null : null
-  vaults_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "vaults") ? { "vaults" : local.all_json_dependencies_map.vaults } : null : null
-  instances_dependency    = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "instances") ? { "instances" : local.all_json_dependencies_map.instances } : {}, contains(keys(local.all_json_dependencies_map), "private_ips") ? { "private_ips" : local.all_json_dependencies_map.private_ips } : {}) : null
-  nlbs_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "nlbs_private_ips") ? { "nlbs_private_ips" : local.all_json_dependencies_map.nlbs_private_ips } : null : null
+  url_ocibucket_yaml_dependencies = [for element in flatten(data.oci_objectstorage_object.url_dependencies[*].content) : try(yamldecode(element), "") if length(data.oci_objectstorage_object.url_dependencies) > 0]
+  url_github_yaml_dependencies    = [for element in flatten(data.github_repository_file.url_dependencies[*].content) : try(yamldecode(element), "") if length(data.github_repository_file.url_dependencies) > 0]
+  ocibucket_yaml_dependencies     = [for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : try(yamldecode(element), "") if length(data.oci_objectstorage_object.dependencies) > 0]
+  github_yaml_dependencies        = [for element in flatten(data.github_repository_file.dependencies[*].content) : try(yamldecode(element), "") if length(data.github_repository_file.dependencies) > 0]
+  local_file_yaml_dependencies    = [for element in var.local_dependency_file_paths : try(yamldecode(file(element)), "") ]
+  all_yaml_dependencies = concat(local.url_ocibucket_yaml_dependencies, local.url_github_yaml_dependencies, local.ocibucket_yaml_dependencies, local.github_yaml_dependencies, local.local_file_yaml_dependencies)
+
+  all_yaml_dependencies_keys = flatten([for value in local.all_yaml_dependencies : keys(value) if length(local.all_yaml_dependencies) > 0])
+
+  all_yaml_dependencies_map = { for key in local.all_yaml_dependencies_keys :
+    key => [for config in local.all_yaml_dependencies : config[key] if contains(keys(config), key)][0]
+  if length(local.all_yaml_dependencies_keys) > 0 }
+
+  merged_dependencies = merge(local.all_json_dependencies_map, local.all_yaml_dependencies_map)
+
+  compartments_dependency = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "compartments") ? { "compartments" : local.merged_dependencies.compartments } : null : null
+  tags_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "tags") ? { "tags" : local.merged_dependencies.tags } : null : null
+  network_dependency      = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "network_resources") ? { "network_resources" : local.merged_dependencies.network_resources } : null : null
+  kms_dependency          = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "keys") ? { "keys" : local.merged_dependencies.keys } : null : null
+  streams_dependency      = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "streams") ? { "streams" : local.merged_dependencies.streams } : null : null
+  topics_dependency       = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "topics") ? { "topics" : local.merged_dependencies.topics } : null : null
+  logging_dependency      = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "service_logs") ? { "service_logs" : local.merged_dependencies.service_logs } : {}, contains(keys(local.merged_dependencies), "custom_logs") ? { "custom_logs" : local.merged_dependencies.custom_logs } : {}) : null
+  functions_dependency    = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "functions") ? { "functions" : local.merged_dependencies.functions } : null : null
+  vaults_dependency       = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "vaults") ? { "vaults" : local.merged_dependencies.vaults } : null : null
+  instances_dependency    = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {}, contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {}) : null
+  nlbs_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }
 

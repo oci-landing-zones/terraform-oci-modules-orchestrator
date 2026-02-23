@@ -1,0 +1,24 @@
+zpr_configuration:
+  namespaces:
+    VISION-ORCHESTRATOR-NAMESPACE:
+      compartment_id: NETWORK-CMP
+      description: Sample ZPR security attribute namespace created by OCI Landing Zones Orchestrator.
+      name: vision-orchestrator-zpr-namespace
+
+  security_attributes:
+    VISION-ORCHESTRATOR-ATTRIBUTE-APP:
+      description: Sample ZPR attribute for identifying applications created by OCI Landing Zones Orchestrator.
+      name: application
+      namespace_id: VISION-ORCHESTRATOR-NAMESPACE
+      validator_type: ENUM
+      validator_values:
+        - hr
+        - payroll
+        - benefits
+
+  zpr_policies:
+    VISION-ORCHESTRATOR-ZPR-POLICY:
+      description: Sample ZPR policy created by OCI Landing Zones Orchestrator.
+      name: vision-orchestrator-zpr-policy
+      statements:
+        - "in vision-orchestrator-zpr-namespace.application:hr VCN allow vision-orchestrator-zpr-namespace.application:hr endpoints to connect to 'osn-services-ip-addresses'"

@@ -61,20 +61,37 @@ locals {
         "oke_virtual_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => {"id" : v.id}}
     } : null
 
-    compartments_output_file_name     = "compartments_output.json"
-    identity_domains_output_file_name = "identity_domains_output.json"
-    networking_output_file_name       = "network_output.json"
-    topics_output_file_name           = "topics_output.json"
-    streams_output_file_name          = "streams_output.json"
-    service_logs_output_file_name     = "service_logs_output.json"
-    custom_logs_output_file_name      = "custom_logs_output.json"
-    vaults_output_file_name           = "vaults_output.json"
-    keys_output_file_name             = "keys_output.json"
-    bastions_output_file_name         = "bastions_output.json"
-    tags_output_file_name             = "tags_output.json"
-    instances_output_file_name        = "instances_output.json"
-    nlbs_output_file_name             = "nlbs_output.json"
-    oke_output_file_name              = "oke_output.json"
+    output_format = lower(trimspace(var.output_format))
+
+    compartments_output_file_name     = "compartments_output.${local.output_format}"
+    identity_domains_output_file_name = "identity_domains_output.${local.output_format}"
+    networking_output_file_name       = "network_output.${local.output_format}"
+    topics_output_file_name           = "topics_output.${local.output_format}"
+    streams_output_file_name          = "streams_output.${local.output_format}"
+    service_logs_output_file_name     = "service_logs_output.${local.output_format}"
+    custom_logs_output_file_name      = "custom_logs_output.${local.output_format}"
+    vaults_output_file_name           = "vaults_output.${local.output_format}"
+    keys_output_file_name             = "keys_output.${local.output_format}"
+    bastions_output_file_name         = "bastions_output.${local.output_format}"
+    tags_output_file_name             = "tags_output.${local.output_format}"
+    instances_output_file_name        = "instances_output.${local.output_format}"
+    nlbs_output_file_name             = "nlbs_output.${local.output_format}"
+    oke_output_file_name              = "oke_output.${local.output_format}"
+
+    compartments_content     = local.output_format == "json" ? jsonencode(local.compartments_output) : yamlencode(local.compartments_output)
+    identity_domains_content = local.output_format == "json" ? jsonencode(local.identity_domains_output) : yamlencode(local.identity_domains_output)
+    networking_content       = local.output_format == "json" ? jsonencode(local.network_output) : yamlencode(local.network_output)
+    topics_content           = local.output_format == "json" ? jsonencode(local.topics_output) : yamlencode(local.topics_output)
+    streams_content          = local.output_format == "json" ? jsonencode(local.streams_output) : yamlencode(local.streams_output)
+    service_logs_content     = local.output_format == "json" ? jsonencode(local.service_logs_output) : yamlencode(local.service_logs_output)
+    custom_logs_content      = local.output_format == "json" ? jsonencode(local.custom_logs_output) : yamlencode(local.custom_logs_output)
+    vaults_content           = local.output_format == "json" ? jsonencode(local.vaults_output) : yamlencode(local.vaults_output)
+    keys_content             = local.output_format == "json" ? jsonencode(local.keys_output) : yamlencode(local.keys_output)
+    bastions_content         = local.output_format == "json" ? jsonencode(local.bastions_output) : yamlencode(local.bastions_output)
+    tags_content             = local.output_format == "json" ? jsonencode(local.tags_output) : yamlencode(local.tags_output)
+    instances_content        = local.output_format == "json" ? jsonencode(local.instances_output) : yamlencode(local.instances_output)
+    nlbs_content             = local.output_format == "json" ? jsonencode(local.nlbs_output) : yamlencode(local.nlbs_output)
+    oke_content              = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
 
   github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -83,7 +100,7 @@ locals {
 resource "oci_objectstorage_object" "compartments" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.compartments_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.compartments_output)
+  content   = local.compartments_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
 }
@@ -92,7 +109,7 @@ resource "oci_objectstorage_object" "compartments" {
 resource "oci_objectstorage_object" "identity_domains" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.identity_domains_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.identity_domains_output)
+  content   = local.identity_domains_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.identity_domains_output_file_name}" : local.identity_domains_output_file_name
 }
@@ -101,7 +118,7 @@ resource "oci_objectstorage_object" "identity_domains" {
 resource "oci_objectstorage_object" "networking" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.network_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.network_output)
+  content   = local.networking_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
 }
@@ -110,7 +127,7 @@ resource "oci_objectstorage_object" "networking" {
 resource "oci_objectstorage_object" "topics" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.topics_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.topics_output)
+  content   = local.topics_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
 }
@@ -119,7 +136,7 @@ resource "oci_objectstorage_object" "topics" {
 resource "oci_objectstorage_object" "streams" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.streams_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.streams_output)
+  content   = local.streams_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
 }
@@ -128,7 +145,7 @@ resource "oci_objectstorage_object" "streams" {
 resource "oci_objectstorage_object" "service_logs" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.service_logs_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.service_logs_output)
+  content   = local.service_logs_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
 }
@@ -137,7 +154,7 @@ resource "oci_objectstorage_object" "service_logs" {
 resource "oci_objectstorage_object" "custom_logs" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.custom_logs_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.custom_logs_output)
+  content   = local.custom_logs_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
 }
@@ -146,7 +163,7 @@ resource "oci_objectstorage_object" "custom_logs" {
 resource "oci_objectstorage_object" "vaults" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.vaults_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.vaults_output)
+  content   = local.vaults_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
 }
@@ -155,7 +172,7 @@ resource "oci_objectstorage_object" "vaults" {
 resource "oci_objectstorage_object" "keys" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.keys_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.keys_output)
+  content   = local.keys_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
 }
@@ -164,7 +181,7 @@ resource "oci_objectstorage_object" "keys" {
 resource "oci_objectstorage_object" "bastions" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.bastions_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.bastions_output)
+  content   = local.bastions_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.bastions_output_file_name}" : local.bastions_output_file_name
 }
@@ -173,7 +190,7 @@ resource "oci_objectstorage_object" "bastions" {
 resource "oci_objectstorage_object" "tags" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.tags_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.tags_output)
+  content   = local.tags_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
 }
@@ -182,7 +199,7 @@ resource "oci_objectstorage_object" "tags" {
 resource "oci_objectstorage_object" "instances" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.instances_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.instances_output)
+  content   = local.instances_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
 }
@@ -191,7 +208,7 @@ resource "oci_objectstorage_object" "instances" {
 resource "oci_objectstorage_object" "nlbs" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.nlbs_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.nlbs_output)
+  content   = local.nlbs_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
 }
@@ -200,7 +217,7 @@ resource "oci_objectstorage_object" "nlbs" {
 resource "oci_objectstorage_object" "oke" {
   count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.oke_output != null ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
-  content   = jsonencode(local.oke_output)
+  content   = local.oke_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.oke_output_file_name}" : local.oke_output_file_name
 }
@@ -220,7 +237,7 @@ resource "github_repository_file" "compartments" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.compartments_output_file_name}" : local.compartments_output_file_name
-  content             = jsonencode(local.compartments_output)
+  content             = local.compartments_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -233,7 +250,7 @@ resource "github_repository_file" "identity_domains" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.identity_domains_output_file_name}" : local.identity_domains_output_file_name
-  content             = jsonencode(local.identity_domains_output)
+  content             = local.identity_domains_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -246,7 +263,7 @@ resource "github_repository_file" "networking" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.networking_output_file_name}" : local.networking_output_file_name
-  content             = jsonencode(local.network_output)
+  content             = local.networking_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -259,7 +276,7 @@ resource "github_repository_file" "topics" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.topics_output_file_name}" : local.topics_output_file_name
-  content             = jsonencode(local.topics_output)
+  content             = local.topics_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -272,7 +289,7 @@ resource "github_repository_file" "streams" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.streams_output_file_name}" : local.streams_output_file_name
-  content             = jsonencode(local.streams_output)
+  content             = local.streams_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -285,7 +302,7 @@ resource "github_repository_file" "service_logs" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.service_logs_output_file_name}" : local.service_logs_output_file_name
-  content             = jsonencode(local.service_logs_output)
+  content             = local.service_logs_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -298,7 +315,7 @@ resource "github_repository_file" "custom_logs" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.custom_logs_output_file_name}" : local.custom_logs_output_file_name
-  content             = jsonencode(local.custom_logs_output)
+  content             = local.custom_logs_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -311,7 +328,7 @@ resource "github_repository_file" "vaults" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.vaults_output_file_name}" : local.vaults_output_file_name
-  content             = jsonencode(local.vaults_output)
+  content             = local.vaults_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -324,7 +341,7 @@ resource "github_repository_file" "keys" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.keys_output_file_name}" : local.keys_output_file_name
-  content             = jsonencode(local.keys_output)
+  content             = local.keys_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -337,7 +354,7 @@ resource "github_repository_file" "bastions" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.bastions_output_file_name}" : local.bastions_output_file_name
-  content             = jsonencode(local.bastions_output)
+  content             = local.bastions_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -350,7 +367,7 @@ resource "github_repository_file" "tags" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.tags_output_file_name}" : local.tags_output_file_name
-  content             = jsonencode(local.tags_output)
+  content             = local.tags_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -363,7 +380,7 @@ resource "github_repository_file" "instances" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
-  content             = jsonencode(local.instances_output)
+  content             = local.instances_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -376,7 +393,7 @@ resource "github_repository_file" "nlbs" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.nlbs_output_file_name}" : local.nlbs_output_file_name
-  content             = jsonencode(local.nlbs_output)
+  content             = local.nlbs_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -389,7 +406,7 @@ resource "github_repository_file" "oke" {
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.oke_output_file_name}" : local.oke_output_file_name
-  content             = jsonencode(local.oke_output)
+  content             = local.oke_content
   commit_message      = "Managed by OCI Landing Zones Orchestrator."
   commit_author       = "Terraform User"
   commit_email        = "terraform@example.com"
@@ -401,10 +418,110 @@ data "github_repository" "this" {
   name  = var.github_configuration_repo
 }
 
+### Writing compartments output to file
+resource "local_file" "compartments" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.compartments_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.compartments_output_file_name}"
+  content  = local.compartments_content
+}
+
+### Writing identity_domains output to file
+resource "local_file" "identity_domains" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.identity_domains_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.identity_domains_output_file_name}"
+  content  = local.identity_domains_content
+}
+
+### Writing networking output to file
+resource "local_file" "networking" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.network_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.networking_output_file_name}"
+  content  = local.networking_content
+}
+
+### Writing notification topics output to file
+resource "local_file" "topics" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.topics_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.topics_output_file_name}"
+  content  = local.topics_content
+}
+
+### Writing streams output to file
+resource "local_file" "streams" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.streams_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.streams_output_file_name}"
+  content  = local.streams_content
+}
+
+### Writing service logs output to file
+resource "local_file" "service_logs" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.service_logs_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.service_logs_output_file_name}"
+  content  = local.service_logs_content
+}
+
+### Writing custom logs output to file
+resource "local_file" "custom_logs" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.custom_logs_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.custom_logs_output_file_name}"
+  content  = local.custom_logs_content
+}
+
+### Writing vaults output to file
+resource "local_file" "vaults" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.vaults_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.vaults_output_file_name}"
+  content  = local.vaults_content
+}
+
+### Writing keys output to file
+resource "local_file" "keys" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.keys_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.keys_output_file_name}"
+  content  = local.keys_content
+}  
+
+### Writing bastions output file
+resource "local_file" "bastions" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.bastions_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.bastions_output_file_name}"
+  content  = local.bastions_content
+}
+
+### Writing tags output to file
+resource "local_file" "tags" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.tags_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.tags_output_file_name}"
+  content  = local.tags_content
+}
+
+### Writing instances output to file
+resource "local_file" "instances" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.instances_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.instances_output_file_name}"
+  content  = local.instances_content
+}
+
+### Writing NLBs output to file
+resource "local_file" "nlbs" {
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.nlbs_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.nlbs_output_file_name}"
+  content  = local.nlbs_content
+}
+
+### Writing OKE output to file
+resource "local_file" "oke" {
+  count = var.save_output && lower(var.configuration_source) == "file" && local.oke_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path,path.module)}/${local.oke_output_file_name}"
+  content  = local.oke_content
+}
+
+
 locals {
   object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, "")]))}"
   github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, "")]))}"
-  output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : "") : null
+  local_file_output_string     = "Files saved to local file system: ${join(",", compact([try(local_file.compartments[0].filename, ""), try(local_file.identity_domains[0].filename, ""), try(local_file.networking[0].filename, ""), try(local_file.topics[0].filename, ""), try(local_file.streams[0].filename, ""), try(local_file.service_logs[0].filename, ""), try(local_file.custom_logs[0].filename, ""), try(local_file.vaults[0].filename, ""), try(local_file.keys[0].filename, ""), try(local_file.bastions[0].filename, ""), try(local_file.tags[0].filename, ""), try(local_file.instances[0].filename, ""), try(local_file.nlbs[0].filename, ""), try(local_file.oke[0].filename, "")]))}"
+  output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : lower(var.configuration_source) == "file" ? local.local_file_output_string : "") : null
 }
 
 output "output_string" {
