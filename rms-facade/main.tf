@@ -51,18 +51,24 @@ module "oci_lz_orchestrator" {
   # OKE
   oke_clusters_configuration = local.oke_clusters_configuration
   oke_workers_configuration  = local.oke_workers_configuration
-  
-  # Dependencies
-  compartments_dependency = local.compartments_dependency
-  network_dependency      = local.network_dependency
-  tags_dependency         = local.tags_dependency
-  kms_dependency          = local.kms_dependency
-  streams_dependency      = local.streams_dependency
-  topics_dependency       = local.topics_dependency
-  logging_dependency      = local.logging_dependency
-  functions_dependency    = local.functions_dependency
-  vaults_dependency       = local.vaults_dependency
-  instances_dependency    = local.instances_dependency
-  nlbs_dependency         = local.nlbs_dependency
-}
+  # Exadata
+  exadata_cloud_infrastructures_configuration = local.exadata_cloud_infrastructures_configuration
+  exadata_cloud_vm_clusters_configuration     = local.exadata_cloud_vm_clusters_configuration
+  exadata_db_homes_configuration              = local.exadata_db_homes_configuration
+  exadata_databases_configuration             = local.exadata_databases_configuration
+  exadata_pluggable_databases_configuration   = local.exadata_pluggable_databases_configuration
 
+  # Dependencies
+  compartments_dependency         = local.compartments_dependency
+  network_dependency              = local.network_dependency
+  tags_dependency                 = local.tags_dependency
+  kms_dependency                  = local.kms_dependency
+  streams_dependency              = local.streams_dependency
+  topics_dependency               = local.topics_dependency
+  logging_dependency              = local.logging_dependency
+  functions_dependency            = local.functions_dependency
+  vaults_dependency               = local.vaults_dependency
+  instances_dependency            = local.instances_dependency
+  nlbs_dependency                 = local.nlbs_dependency
+  exadata_subscription_dependency = local.exadata_subscription_dependency
+}
