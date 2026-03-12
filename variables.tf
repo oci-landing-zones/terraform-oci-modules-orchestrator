@@ -176,6 +176,31 @@ variable "object_storage_configuration" {
   default = null
 }
 
+variable "exadata_cloud_infrastructures_configuration" {
+  type    = any
+  default = null
+}
+
+variable "exadata_cloud_vm_clusters_configuration" {
+  type    = any
+  default = null
+}
+
+variable "exadata_db_homes_configuration" {
+  type    = any
+  default = null
+}
+
+variable "exadata_databases_configuration" {
+  type    = any
+  default = null
+}
+
+variable "exadata_pluggable_databases_configuration" {
+  type    = any
+  default = null
+}
+
 variable "compartments_dependency" {
   type    = any
   default = null
@@ -231,8 +256,12 @@ variable "nlbs_dependency" {
   default = null
 }
 
+variable "exadata_subscription_dependency" {
+  type    = any
+  default = null
+}
+
 variable "output_path" {
   type    = string
   default = null
 }
-
