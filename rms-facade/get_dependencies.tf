@@ -63,5 +63,7 @@ locals {
   vaults_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "vaults") ? { "vaults" : local.all_json_dependencies_map.vaults } : null : null
   instances_dependency    = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "instances") ? { "instances" : local.all_json_dependencies_map.instances } : {}, contains(keys(local.all_json_dependencies_map), "private_ips") ? { "private_ips" : local.all_json_dependencies_map.private_ips } : {}) : null
   nlbs_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "nlbs_private_ips") ? { "nlbs_private_ips" : local.all_json_dependencies_map.nlbs_private_ips } : null : null
+  # Exadata uses a flat alias -> id map for subscriptions.
+  exadata_subscription_dependency = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "subscriptions") ? local.all_json_dependencies_map.subscriptions : null : null
 }
 
