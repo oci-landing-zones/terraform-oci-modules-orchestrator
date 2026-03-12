@@ -16,3 +16,5 @@ test/**
 **/*auto.tfvars
 **/tf-facade-*
 **/*-example.json
+**/credentials.json
+examples/exacs/

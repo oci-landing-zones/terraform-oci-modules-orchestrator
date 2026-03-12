@@ -96,6 +96,7 @@ output "nlb_resources" {
 
 output "exadata_resources" {
   description = "Provisioned Exadata resources"
+  sensitive = true
   value = {
     cloud_exadata_infrastructures = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_exadata_infrastructures : {}
     cloud_vm_clusters             = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_vm_clusters : {}
