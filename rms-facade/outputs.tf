@@ -2,79 +2,78 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 locals {
-    compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
-        "compartments" : {for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => {"id" : v.id}}
-    } : null
-    identity_domains_output = length(module.oci_lz_orchestrator.iam_resources.identity_domains) > 0 ? {
-        "identity_domains" : {for k, v in module.oci_lz_orchestrator.iam_resources.identity_domains : k => {"id" : v.id}}
-    } : null
-    network_output = module.oci_lz_orchestrator.network_resources != null ? {
-        "network_resources" : {
-            "vcns" : {for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => {"id" : v.id}},
-            "subnets" : {for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => {"id" : v.id}},
-            "network_security_groups" : {for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => {"id" : v.id}}
-            "dynamic_routing_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => {"id" : v.id}}
-            "drg_attachments" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => {"id" : v.id}}
-            "remote_peering_connections" : {for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => {"id" : v.id}}
-            "local_peering_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => {"id" : v.id}}
-            "drg_route_tables" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => {"id" : v.id}}
-            "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.ocid}}
-            "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.ocid}}
-            "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.ocid}}
-        }    
-    } : null
-    topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
-        "topics" : {for k, v in module.oci_lz_orchestrator.observability_resources.notifications_topics : k => {"id" : v.id}}
-    } : null
-    streams_output = length(module.oci_lz_orchestrator.observability_resources.streams) > 0 ? {
-        "streams" : {for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => {"id" : v.id}}
-    } : null
-    custom_logs_output = length(module.oci_lz_orchestrator.observability_resources.custom_logs) > 0 ? {
-        "custom_logs" : {for k, v in module.oci_lz_orchestrator.observability_resources.custom_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}
-    } : null
-    service_logs_output = length(module.oci_lz_orchestrator.observability_resources.service_logs) > 0 ? {
-        "service_logs" : {for k, v in module.oci_lz_orchestrator.observability_resources.service_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}
-    } : null
-    vaults_output = length(module.oci_lz_orchestrator.security_resources.vaults) > 0 ? {
-        "vaults" : {for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => {"management_endpoint" : v.management_endpoint}}
-    } : null
-    keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
-        "keys" : {for k, v in module.oci_lz_orchestrator.security_resources.keys : k => {"id" : v.id}}
-    } : null
-    bastions_output = length(module.oci_lz_orchestrator.security_resources.bastions) > 0 ? {
-        "bastions" : {for k, v in module.oci_lz_orchestrator.security_resources.bastions : k => {"id" : v.id}}
-    } : null
-    tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
-        "tags" : {for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => {"id" : v.id}}
-    } : null
-    instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
-        "instances" : {for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => {"id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip}},
-        "secondary_vnics" : {for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => {"id" : v.id, "private_ip" : v.private_ip_address}}
-    } : null
-    nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
-        "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"id" : v.private_ips[0].id}},
-        "nlbs_public_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => {"private_ip_id" : v.private_ip_id, "id" : v.id}}
-    } : null
-    oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
-        "oke_clusters" : {for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => {"id" : v.id}},
-        "oke_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => {"id" : v.id}},
-        "oke_virtual_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => {"id" : v.id}}
-    } : null
-
-    compartments_output_file_name     = "compartments_output.json"
-    identity_domains_output_file_name = "identity_domains_output.json"
-    networking_output_file_name       = "network_output.json"
-    topics_output_file_name           = "topics_output.json"
-    streams_output_file_name          = "streams_output.json"
-    service_logs_output_file_name     = "service_logs_output.json"
-    custom_logs_output_file_name      = "custom_logs_output.json"
-    vaults_output_file_name           = "vaults_output.json"
-    keys_output_file_name             = "keys_output.json"
-    bastions_output_file_name         = "bastions_output.json"
-    tags_output_file_name             = "tags_output.json"
-    instances_output_file_name        = "instances_output.json"
-    nlbs_output_file_name             = "nlbs_output.json"
-    oke_output_file_name              = "oke_output.json"
+  compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
+    "compartments" : { for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => { "id" : v.id } }
+  } : null
+  identity_domains_output = length(module.oci_lz_orchestrator.iam_resources.identity_domains) > 0 ? {
+    "identity_domains" : { for k, v in module.oci_lz_orchestrator.iam_resources.identity_domains : k => { "id" : v.id } }
+  } : null
+  network_output = module.oci_lz_orchestrator.network_resources != null ? {
+    "network_resources" : {
+      "vcns" : { for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => { "id" : v.id } },
+      "subnets" : { for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => { "id" : v.id } },
+      "network_security_groups" : { for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => { "id" : v.id } }
+      "dynamic_routing_gateways" : { for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => { "id" : v.id } }
+      "drg_attachments" : { for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => { "id" : v.id } }
+      "remote_peering_connections" : { for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => { "id" : v.id } }
+      "local_peering_gateways" : { for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => { "id" : v.id } }
+      "drg_route_tables" : { for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => { "id" : v.id } }
+      "dns_resolver" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => { "id" : v.ocid } }
+      "dns_zones" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => { "id" : v.ocid } }
+      "dns_views" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => { "id" : v.ocid } }
+    }
+  } : null
+  topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
+    "topics" : { for k, v in module.oci_lz_orchestrator.observability_resources.notifications_topics : k => { "id" : v.id } }
+  } : null
+  streams_output = length(module.oci_lz_orchestrator.observability_resources.streams) > 0 ? {
+    "streams" : { for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => { "id" : v.id } }
+  } : null
+  custom_logs_output = length(module.oci_lz_orchestrator.observability_resources.custom_logs) > 0 ? {
+    "custom_logs" : { for k, v in module.oci_lz_orchestrator.observability_resources.custom_logs : k => { "id" : v.id, "compartment_id" : v.compartment_id } }
+  } : null
+  service_logs_output = length(module.oci_lz_orchestrator.observability_resources.service_logs) > 0 ? {
+    "service_logs" : { for k, v in module.oci_lz_orchestrator.observability_resources.service_logs : k => { "id" : v.id, "compartment_id" : v.compartment_id } }
+  } : null
+  vaults_output = length(module.oci_lz_orchestrator.security_resources.vaults) > 0 ? {
+    "vaults" : { for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => { "management_endpoint" : v.management_endpoint } }
+  } : null
+  keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
+    "keys" : { for k, v in module.oci_lz_orchestrator.security_resources.keys : k => { "id" : v.id } }
+  } : null
+  bastions_output = length(module.oci_lz_orchestrator.security_resources.bastions) > 0 ? {
+    "bastions" : { for k, v in module.oci_lz_orchestrator.security_resources.bastions : k => { "id" : v.id } }
+  } : null
+  tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
+    "tags" : { for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => { "id" : v.id } }
+  } : null
+  instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
+    "instances" : { for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
+    "secondary_vnics" : { for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } }
+  } : null
+  nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
+    "nlbs_private_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => { "id" : v.private_ips[0].id } },
+    "nlbs_public_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => { "private_ip_id" : v.private_ip_id, "id" : v.id } }
+  } : null
+  oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
+    "oke_clusters" : { for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => { "id" : v.id } },
+    "oke_node_pools" : { for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => { "id" : v.id } },
+    "oke_virtual_node_pools" : { for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => { "id" : v.id } }
+  } : null
+  compartments_output_file_name     = "compartments_output.json"
+  identity_domains_output_file_name = "identity_domains_output.json"
+  networking_output_file_name       = "network_output.json"
+  topics_output_file_name           = "topics_output.json"
+  streams_output_file_name          = "streams_output.json"
+  service_logs_output_file_name     = "service_logs_output.json"
+  custom_logs_output_file_name      = "custom_logs_output.json"
+  vaults_output_file_name           = "vaults_output.json"
+  keys_output_file_name             = "keys_output.json"
+  bastions_output_file_name         = "bastions_output.json"
+  tags_output_file_name             = "tags_output.json"
+  instances_output_file_name        = "instances_output.json"
+  nlbs_output_file_name             = "nlbs_output.json"
+  oke_output_file_name              = "oke_output.json"
 
   github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -385,7 +384,7 @@ resource "github_repository_file" "nlbs" {
 
 ### Writing OKE output to GitHub repository
 resource "github_repository_file" "oke" {
-  count = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.oke_output != null ? 1 : 0
+  count               = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.oke_output != null ? 1 : 0
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.oke_output_file_name}" : local.oke_output_file_name
