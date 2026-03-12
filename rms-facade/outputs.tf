@@ -51,6 +51,9 @@ locals {
     "instances" : { for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
     "secondary_vnics" : { for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } }
   } : null
+  autonomous_databases_output = length(module.oci_lz_orchestrator.autonomous_database_resources.autonomous_databases) > 0 ? {
+    "autonomous_databases" : { for k, v in module.oci_lz_orchestrator.autonomous_database_resources.autonomous_databases : k => { "id" : v.ocid } }
+  } : null
   nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
     "nlbs_private_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => { "id" : v.private_ips[0].id } },
     "nlbs_public_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => { "private_ip_id" : v.private_ip_id, "id" : v.id } }
@@ -71,21 +74,22 @@ locals {
     "databases" : { for k, v in module.oci_lz_orchestrator.exadata_resources.databases : k => { "id" : v.id } },
     "pluggable_databases" : { for k, v in module.oci_lz_orchestrator.exadata_resources.pluggable_databases : k => { "id" : v.id } }
   } : null
-  compartments_output_file_name     = "compartments_output.json"
-  identity_domains_output_file_name = "identity_domains_output.json"
-  networking_output_file_name       = "network_output.json"
-  topics_output_file_name           = "topics_output.json"
-  streams_output_file_name          = "streams_output.json"
-  service_logs_output_file_name     = "service_logs_output.json"
-  custom_logs_output_file_name      = "custom_logs_output.json"
-  vaults_output_file_name           = "vaults_output.json"
-  keys_output_file_name             = "keys_output.json"
-  bastions_output_file_name         = "bastions_output.json"
-  tags_output_file_name             = "tags_output.json"
-  instances_output_file_name        = "instances_output.json"
-  nlbs_output_file_name             = "nlbs_output.json"
-  oke_output_file_name              = "oke_output.json"
-  exadata_output_file_name          = "exadata_output.json"
+  compartments_output_file_name         = "compartments_output.json"
+  identity_domains_output_file_name     = "identity_domains_output.json"
+  networking_output_file_name           = "network_output.json"
+  topics_output_file_name               = "topics_output.json"
+  streams_output_file_name              = "streams_output.json"
+  service_logs_output_file_name         = "service_logs_output.json"
+  custom_logs_output_file_name          = "custom_logs_output.json"
+  vaults_output_file_name               = "vaults_output.json"
+  keys_output_file_name                 = "keys_output.json"
+  bastions_output_file_name             = "bastions_output.json"
+  tags_output_file_name                 = "tags_output.json"
+  instances_output_file_name            = "instances_output.json"
+  autonomous_databases_output_file_name = "autonomous_databases_output.json"
+  nlbs_output_file_name                 = "nlbs_output.json"
+  oke_output_file_name                  = "oke_output.json"
+  exadata_output_file_name              = "exadata_output.json"
 
   github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -196,6 +200,15 @@ resource "oci_objectstorage_object" "instances" {
   content   = jsonencode(local.instances_output)
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.instances_output_file_name}" : local.instances_output_file_name
+}
+
+### Writing Autonomous Databases output to OCI bucket
+resource "oci_objectstorage_object" "autonomous_databases" {
+  count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.autonomous_databases_output != null ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
+  content   = jsonencode(local.autonomous_databases_output)
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.autonomous_databases_output_file_name}" : local.autonomous_databases_output_file_name
 }
 
 ### Writing NLBs output to OCI bucket
@@ -390,6 +403,19 @@ resource "github_repository_file" "instances" {
   overwrite_on_create = true
 }
 
+### Writing Autonomous Databases output to GitHub repository
+resource "github_repository_file" "autonomous_databases" {
+  count               = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.autonomous_databases_output != null ? 1 : 0
+  repository          = local.github_repository_name
+  branch              = var.github_configuration_branch
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.autonomous_databases_output_file_name}" : local.autonomous_databases_output_file_name
+  content             = jsonencode(local.autonomous_databases_output)
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 ### Writing NLBs output to GitHub repository
 resource "github_repository_file" "nlbs" {
   count               = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.nlbs_output != null ? 1 : 0
@@ -435,8 +461,8 @@ data "github_repository" "this" {
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.exadata[0].object, "")]))}"
-  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.exadata[0].file, "")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.autonomous_databases[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.exadata[0].object, "")]))}"
+  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.autonomous_databases[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.exadata[0].file, "")]))}"
   output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : "") : null
 }
 

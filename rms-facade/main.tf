@@ -46,6 +46,8 @@ module "oci_lz_orchestrator" {
   tags_configuration    = local.tags_configuration
   # Object Storage
   object_storage_configuration = local.object_storage_configuration
+  # Autonomous Database
+  autonomous_databases_configuration = local.autonomous_databases_configuration
   # Compute
   instances_configuration = local.instances_configuration
   # OKE
@@ -63,6 +65,7 @@ module "oci_lz_orchestrator" {
   network_dependency              = local.network_dependency
   tags_dependency                 = local.tags_dependency
   kms_dependency                  = local.kms_dependency
+  databases_dependency            = local.databases_dependency
   streams_dependency              = local.streams_dependency
   topics_dependency               = local.topics_dependency
   logging_dependency              = local.logging_dependency

@@ -22,6 +22,7 @@ Repository | Referenced Tags/Branches
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.4)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.3)
+[Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/main/autonomous-database) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 [Exadata](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
@@ -57,6 +58,7 @@ logging_configuration | service_logs_output.json and custom_logs_output.json
 vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
+autonomous_databases_configuration | autonomous_databases_output.json
 oke_clusters_configuration | oke_clusters_output.json
 exadata_cloud_infrastructures_configuration | exadata_output.json
 

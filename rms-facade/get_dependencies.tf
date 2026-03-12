@@ -56,6 +56,7 @@ locals {
   tags_dependency         = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "tags") ? { "tags" : local.all_json_dependencies_map.tags } : null : null
   network_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "network_resources") ? { "network_resources" : local.all_json_dependencies_map.network_resources } : null : null
   kms_dependency          = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "keys") ? { "keys" : local.all_json_dependencies_map.keys } : null : null
+  databases_dependency    = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "container_databases") ? { "container_databases" : local.all_json_dependencies_map.container_databases } : null : null
   streams_dependency      = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "streams") ? { "streams" : local.all_json_dependencies_map.streams } : null : null
   topics_dependency       = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "topics") ? { "topics" : local.all_json_dependencies_map.topics } : null : null
   logging_dependency      = local.all_json_dependencies_map != null ? merge(contains(keys(local.all_json_dependencies_map), "service_logs") ? { "service_logs" : local.all_json_dependencies_map.service_logs } : {}, contains(keys(local.all_json_dependencies_map), "custom_logs") ? { "custom_logs" : local.all_json_dependencies_map.custom_logs } : {}) : null
@@ -66,4 +67,3 @@ locals {
   # Exadata uses a flat alias -> id map for subscriptions.
   exadata_subscription_dependency = local.all_json_dependencies_map != null ? contains(keys(local.all_json_dependencies_map), "subscriptions") ? local.all_json_dependencies_map.subscriptions : null : null
 }
-

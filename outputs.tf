@@ -77,6 +77,14 @@ output "compute_resources" {
   }
 }
 
+output "autonomous_database_resources" {
+  description = "Provisioned Autonomous Database resources"
+  sensitive   = true
+  value = {
+    autonomous_databases = length(module.oci_lz_autonomous_database) > 0 ? module.oci_lz_autonomous_database[0].autonomous_databases : {}
+  }
+}
+
 output "oke_resources" {
   description = "Provisioned OKE resources"
   value = {
@@ -96,7 +104,7 @@ output "nlb_resources" {
 
 output "exadata_resources" {
   description = "Provisioned Exadata resources"
-  sensitive = true
+  sensitive   = true
   value = {
     cloud_exadata_infrastructures = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_exadata_infrastructures : {}
     cloud_vm_clusters             = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_vm_clusters : {}
@@ -189,6 +197,14 @@ resource "local_file" "instances_output" {
   content = jsonencode({ "instances" : { for k, v in module.oci_lz_compute[0].instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
   "secondary_vnics" : { for k, v in module.oci_lz_compute[0].secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } } })
   filename = "${var.output_path}/instances_output.json"
+}
+
+resource "local_file" "autonomous_databases_output" {
+  count = var.output_path != null && length(module.oci_lz_autonomous_database) > 0 ? 1 : 0
+  content = jsonencode({
+    "autonomous_databases" : { for k, v in module.oci_lz_autonomous_database[0].autonomous_databases : k => { "id" : v.ocid } }
+  })
+  filename = "${var.output_path}/autonomous_databases_output.json"
 }
 
 resource "local_file" "nlbs_output" {

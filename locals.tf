@@ -38,6 +38,12 @@ locals {
   ext_dep_kms_map = var.kms_dependency != null ? try(var.kms_dependency.keys, jsondecode(file(var.kms_dependency)).keys, null) : null
   kms_dependency  = merge({ for k, v in coalesce(local.ext_dep_kms_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].keys : {}) : k => { "id" : v.id } })
 
+  # var.databases_dependency
+  ext_dep_container_databases_map = var.databases_dependency != null ? try(var.databases_dependency.container_databases, jsondecode(file(var.databases_dependency)).container_databases, null) : null
+  databases_dependency = local.ext_dep_container_databases_map != null ? {
+    "container_databases" : { for k, v in coalesce(local.ext_dep_container_databases_map, {}) : k => { "id" : v.id } }
+  } : null
+
   # var.vaults_dependency
   ext_dep_vaults_map = var.vaults_dependency != null ? try(var.vaults_dependency.vaults, jsondecode(file(var.vaults_dependency)).vaults, null) : null
   vaults_dependency  = merge({ for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => { "management_endpoint" : v.management_endpoint } })
@@ -54,4 +60,3 @@ locals {
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
   nlbs_dependency  = { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } }
 }
-

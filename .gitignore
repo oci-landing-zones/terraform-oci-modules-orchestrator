@@ -18,3 +18,4 @@ test/**
 **/*-example.json
 **/credentials.json
 examples/exacs/
+examples/autonomous-database/

@@ -29,6 +29,22 @@ module "oci_lz_oke" {
   kms_dependency          = local.kms_dependency
 }
 
+module "oci_lz_autonomous_database" {
+  depends_on = [module.oci_lz_zpr]
+  count      = var.autonomous_databases_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database?ref=v1.1.0"
+  providers = {
+    oci      = oci
+    oci.home = oci.home
+  }
+  tenancy_ocid                       = var.tenancy_ocid
+  autonomous_databases_configuration = var.autonomous_databases_configuration
+  compartments_dependency            = local.compartments_dependency
+  network_dependency                 = local.network_dependency
+  kms_dependency                     = local.kms_dependency
+  databases_dependency               = local.databases_dependency
+}
+
 module "oci_lz_exadata" {
   depends_on                                  = [module.oci_lz_zpr] # Exadata network resources may have ZPR attributes that must exist up front.
   count                                       = var.exadata_cloud_infrastructures_configuration != null || var.exadata_cloud_vm_clusters_configuration != null || var.exadata_db_homes_configuration != null || var.exadata_databases_configuration != null || var.exadata_pluggable_databases_configuration != null ? 1 : 0

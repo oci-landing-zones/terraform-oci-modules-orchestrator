@@ -96,6 +96,9 @@ locals {
   # Object Storage
   object_storage_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "object_storage_configuration") ? local.merged_input_configs.object_storage_configuration : null : null
 
+  # Autonomous Database
+  autonomous_databases_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "autonomous_databases_configuration") ? local.merged_input_configs.autonomous_databases_configuration : null : null
+
   # Compute
   instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
 

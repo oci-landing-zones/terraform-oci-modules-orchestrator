@@ -176,6 +176,11 @@ variable "object_storage_configuration" {
   default = null
 }
 
+variable "autonomous_databases_configuration" {
+  type    = any
+  default = null
+}
+
 variable "exadata_cloud_infrastructures_configuration" {
   type    = any
   default = null
@@ -217,6 +222,11 @@ variable "network_dependency" {
 }
 
 variable "kms_dependency" {
+  type    = any
+  default = null
+}
+
+variable "databases_dependency" {
   type    = any
   default = null
 }
