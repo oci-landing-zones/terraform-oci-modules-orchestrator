@@ -102,4 +102,12 @@ locals {
   # OKE
   oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "oke_clusters_configuration") ? local.merged_input_configs.oke_clusters_configuration : null : null
   oke_workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "oke_workers_configuration") ? local.merged_input_configs.oke_workers_configuration : null : null
+
+  # Exadata
+  # For multi-stack, keep all Exadata resources in the same stack.
+  exadata_cloud_infrastructures_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadata_cloud_infrastructures_configuration") ? local.merged_input_configs.exadata_cloud_infrastructures_configuration : null : null
+  exadata_cloud_vm_clusters_configuration     = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadata_cloud_vm_clusters_configuration") ? local.merged_input_configs.exadata_cloud_vm_clusters_configuration : null : null
+  exadata_db_homes_configuration              = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadata_db_homes_configuration") ? local.merged_input_configs.exadata_db_homes_configuration : null : null
+  exadata_databases_configuration             = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadata_databases_configuration") ? local.merged_input_configs.exadata_databases_configuration : null : null
+  exadata_pluggable_databases_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadata_pluggable_databases_configuration") ? local.merged_input_configs.exadata_pluggable_databases_configuration : null : null
 }
