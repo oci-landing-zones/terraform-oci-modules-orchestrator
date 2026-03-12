@@ -80,8 +80,8 @@ output "compute_resources" {
 output "oke_resources" {
   description = "Provisioned OKE resources"
   value = {
-    clusters   = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}
-    node_pools = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}
+    clusters           = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}
+    node_pools         = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}
     virtual_node_pools = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].virtual_node_pools : {}
   }
 }
@@ -91,6 +91,17 @@ output "nlb_resources" {
   value = {
     nlbs_private_ips = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_primary_private_ips : {}
     nlbs_public_ips  = length(module.oci_lz_nlb) > 0 ? module.oci_lz_nlb[0].nlbs_public_ips : {}
+  }
+}
+
+output "exadata_resources" {
+  description = "Provisioned Exadata resources"
+  value = {
+    cloud_exadata_infrastructures = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_exadata_infrastructures : {}
+    cloud_vm_clusters             = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].cloud_vm_clusters : {}
+    database_homes                = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].database_homes : {}
+    databases                     = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].databases : {}
+    pluggable_databases           = length(module.oci_lz_exadata) > 0 ? module.oci_lz_exadata[0].pluggable_databases : {}
   }
 }
 
@@ -189,7 +200,19 @@ resource "local_file" "nlbs_output" {
 resource "local_file" "oke_output" {
   count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
   content = jsonencode({ "clusters" : { for k, v in module.oci_lz_oke[0].clusters : k => { "id" : v.id } },
-  "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
+    "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
   "virtual_node_pools" : { for k, v in module.oci_lz_oke[0].virtual_node_pools : k => { "id" : v.id } } })
   filename = "${var.output_path}/oke_output.json"
+}
+
+resource "local_file" "exadata_output" {
+  count = var.output_path != null && length(module.oci_lz_exadata) > 0 ? 1 : 0
+  content = jsonencode({
+    "cloud_exadata_infrastructures" : { for k, v in module.oci_lz_exadata[0].cloud_exadata_infrastructures : k => { "id" : v.id } },
+    "cloud_vm_clusters" : { for k, v in module.oci_lz_exadata[0].cloud_vm_clusters : k => { "id" : v.id } },
+    "database_homes" : { for k, v in module.oci_lz_exadata[0].database_homes : k => { "id" : v.id } },
+    "databases" : { for k, v in module.oci_lz_exadata[0].databases : k => { "id" : v.id } },
+    "pluggable_databases" : { for k, v in module.oci_lz_exadata[0].pluggable_databases : k => { "id" : v.id } }
+  })
+  filename = "${var.output_path}/exadata_output.json"
 }
