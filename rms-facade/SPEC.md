@@ -9,9 +9,9 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | 5.45.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | 3.5.0 |
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 7.12.0 |
+| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | n/a |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | n/a |
 
 ## Modules
 
@@ -31,7 +31,7 @@
 | [github_repository_file.keys](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.networking](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.nlbs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
-| [github_repository_file.oke_clusters](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.oke](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.service_logs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.streams](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.tags](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
@@ -45,7 +45,7 @@
 | [oci_objectstorage_object.keys](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.networking](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.nlbs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
-| [oci_objectstorage_object.oke_clusters](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.oke](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.service_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.streams](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.tags](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |

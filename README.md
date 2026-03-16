@@ -75,7 +75,7 @@ Local File System (*)         | JSON, YAML                  | Local file system 
 
 ## How to Invoke the Orchestrator
 
-Before anything, have your configurations (and dependencies, if any) ready and accessible. This repository has sample configurations in [*./examples/vision/iam/config*](./examples/vision/iam/config), [*./examples/vision/security/config*](./examples/vision/security/config) and [*./examples/vision/network/config*](./examples/vision/network/config) folders. 
+Before anything, have your configurations (and dependencies, if any) ready and accessible. This repository has sample configurations in [*./examples/vision/iam/config*](./examples/vision/iam/config), [*./examples/vision/security/config*](./examples/vision/security/config) and [*./examples/vision/network/config*](./examples/vision/network/config) folders.
 
 An extensive catalog of configurations is available in the [Operating Entities Landing Zones repository](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/examples).
 
@@ -87,13 +87,13 @@ Next we present a practical scenario using both RMS and Terraform CLI where conf
 
 #### IAM/ZPR Stack
 
-Steps 1-9 below show how to deploy IAM and ZPR configurations. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies. 
+Steps 1-9 below show how to deploy IAM and ZPR configurations. The stack is one concrete Orchestrator example with all variables pre-filled, and it can be changed depending on where your configuration files are located and which system (GitHub or OCI bucket) you want to utilize for dependencies.
 
 1. Click [![Deploy_To_OCI](./images/DeployToOCI.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/archive/refs/heads/main.zip&zipUrlVariables={"input_config_files_urls":"https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json,https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json","url_dependency_source_oci_bucket":"terraform-runtime-bucket","url_dependency_source":"ocibucket","save_output":true,"oci_object_prefix":"iam/output"})
-2. Accept terms, wait for the configuration to load. 
-3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade". 
+2. Accept terms, wait for the configuration to load.
+3. Set *Working directory* to "terraform-oci-landing-zones-orchestrator-main/rms-facade".
 4. Give the stack a name in the *Name* field.
-5. Make sure *Terraform version* is set to 1.5.x or greater. Click *Next* button at the bottom of the screen. 
+5. Make sure *Terraform version* is set to 1.5.x or greater. Click *Next* button at the bottom of the screen.
 
 The [screenshot below](#rms-stack-creation) shows how the RMS stack creation screen looks like on step 5.
 
@@ -103,12 +103,12 @@ The [screenshot below](#rms-stack-creation) shows how the RMS stack creation scr
     1. Select or accept the selected deployment *Region* (IAM resources are always automatically deployed in the home region regardless).
     2. In *Input Files* section, select the *Configurations Source*. Each supported source has distinct input fields, but all of them have *Configuration Files* (Required) and *Dependency Files* (Optional). The example has the following fields:
         - *Configurations Source*: "url", which means any URL in the *Configuration Files* field must be publicly available.
-        - *Configuration Files*: *https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json* and *https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json*, both available in this public GitHub repository.
+        - *Configuration Files*: *<https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/iam/config/iam-config.json>* and *<https://raw.githubusercontent.com/oci-landing-zones/terraform-oci-modules-orchestrator/refs/heads/main/examples/vision/security/config/zpr-config.json>*, both available in this public GitHub repository.
         - *Dependencies Source for URL-based Configurations*: "ocibucket", which means dependency files are read and written to an OCI private bucket.
         - *OCI Bucket Name*: "terraform-runtime-bucket", the bucket name where dependency files are read and written to. **THE BUCKET IS NOT CREATED BY THE ORCHESTRATOR.**
         - *Dependency Files*: empty, which means the specified configuration files stack do not rely on any dependencies.
     3. In *Output Files* section, the following fields are pre-filled:
-        - *Save Output?* option is checked, which means the stack output is saved in the same OCI bucket specified for dependency files. The saved file can be subsequently referred as a dependency in *Dependency Files* in another stack. 
+        - *Save Output?* option is checked, which means the stack output is saved in the same OCI bucket specified for dependency files. The saved file can be subsequently referred as a dependency in *Dependency Files* in another stack.
         - *OCI Object Prefix*: "iam/output", which gets prepended to the generated file name. In this example, the full file path is "iam/output/compartments_output.json".
     4. Click *Next*.
 8. Uncheck *Run apply* option at the bottom of the screen. Click *Create*.
@@ -135,15 +135,15 @@ Here we leave some guidance while using GitHub Private repositories as a configu
 
 When you select *github* as Configuration Source for Input Files, you'll see a form with:
 
-* **GitHub Token**: You can use GitHub's Personal Access Token (classic) or Fine-grained personal access tokens (see this [reference](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)). While both are valid, we recommend the use of Fine-grained personal access tokens as, beside giving you the option to fine-tune the operation access to your repo, you can select the repos you want to give access to.
+- **GitHub Token**: You can use GitHub's Personal Access Token (classic) or Fine-grained personal access tokens (see this [reference](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)). While both are valid, we recommend the use of Fine-grained personal access tokens as, beside giving you the option to fine-tune the operation access to your repo, you can select the repos you want to give access to.
   
-* **GitHub Repository**: This is the name of your GitHub repository including your Github organization. E.g.: *org/repo-name* (without the .git).
+- **GitHub Repository**: This is the name of your GitHub repository including your Github organization. E.g.: *org/repo-name* (without the .git).
   
-* **GitHub Branch**: This is your desired branch where/to get/put the input/output information. E.g.: *main*.
+- **GitHub Branch**: This is your desired branch where/to get/put the input/output information. E.g.: *main*.
   
-* **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-org.git/iam/identity.json).
+- **Configuration Files**: The configuration files are given as relative reference to the file in your repository. E.g.: *iam/identity.json* (for a file in test-org.git/iam/identity.json).
   
-* **Dependency Files**: The relative reference to where the dependency files (created in a previous operation) are stored in your repository. E.g.: *output/compartments_output.json* and *output/network_output.json*.
+- **Dependency Files**: The relative reference to where the dependency files (created in a previous operation) are stored in your repository. E.g.: *output/compartments_output.json* and *output/network_output.json*.
   
 You can see an example of a stack configuration with Input Files from GitHub and dependency files also gathered from the same GitHub's repo:
 
@@ -159,8 +159,8 @@ The examples are fully functional. The first *terraform plan/apply* pair provisi
 
 **Note**: The input variables are defined in the provided *input-json.tfvars* (for JSON-based configuration files) or *input-yaml.tfvars* (for YAML-based configuration files). Pick the one according to your preference and make sure to add your tenancy connectivity credentials in them.
 
-
 #### 1. Provisioning IAM/ZPR Resources
+
 ```
 cd rms-facade
 ```
@@ -170,6 +170,7 @@ terraform init
 ```
 terraform plan -var-file ../examples/vision/iam/config/input-json.tfvars -state ../examples/vision/iam/runtime/terraform.tfstate -out ../examples/vision/iam/runtime/plan.out
 ```
+
 ```
 terraform apply -state ../examples/vision/iam/runtime/terraform.tfstate ../examples/vision/iam/runtime/plan.out
 ```
@@ -188,6 +189,7 @@ terraform apply -state ../examples/vision/network/runtime/terraform.tfstate ../e
 ```
 cd rms-facade
 ```
+
 ```
 terraform apply -destroy -var-file ../examples/vision/network/config/input-json.tfvars -state ../examples/vision/network/runtime/terraform.tfstate
 ```
