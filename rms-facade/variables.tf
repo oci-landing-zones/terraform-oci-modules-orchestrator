@@ -58,6 +58,16 @@ variable "save_output" {
   description = "Whether to save the module output. This is typically done when the output is used as the input to another module."
 }
 
+variable "output_format" {
+  type = string
+  default = "json"
+  description = "The output files format. Valid values are \"json\" and \"yaml\" (or \"yml\")."
+  validation {
+    condition     = lower(trimspace(var.output_format)) == "json" || lower(trimspace(var.output_format == "yaml")) || lower(trimspace(var.output_format)) == "yml"
+    error_message = "Invalid value provided for output_format variable: valid values are \"json\", \"yaml\" or \"yml\"."
+  }
+}
+
 variable "oci_object_prefix" {
   type        = string
   default     = null
@@ -140,5 +150,23 @@ variable "url_dependency_source_github_branch" {
 variable "url_dependency_source_github_dependency_files" {
   type    = list(string)
   default = null
+}
+
+variable "local_config_file_paths" {
+  type = list(string)
+  description = "List of local configuration files in JSON or YAML format."
+  default = []
+}
+
+variable "output_folder_path" {
+  type = string
+  description = "The path to the output folder for input configuration files."
+  default = null
+}
+
+variable "local_dependency_file_paths" {
+  type = list(string)
+  description = "List of local dependency files in JSON format."
+  default = []
 }
 

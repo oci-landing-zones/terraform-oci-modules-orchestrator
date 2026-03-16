@@ -1,0 +1,29 @@
+compartments_configuration:
+  compartments:
+    NETWORK-CMP:
+      name: orchestrator-network-cmp
+      description: Sample IAM compartment created by OCI Landing Zones Orchestrator.
+
+groups_configuration:
+  groups:
+    NETWORK-GROUP:
+      name: orchestrator-network-admin-grp
+      description: Sample IAM group created by OCI Landing Zones Orchestrator.
+
+policies_configuration:
+  supplied_policies:
+    NETWORK-POLICY:
+      name: orchestrator-network-admin-policy
+      description: Sample IAM policy created by OCI Landing Zones Orchestrator.
+      compartment_id: TENANCY-ROOT
+      statements:
+        - allow group orchestrator-network-admin-grp to manage virtual-network-family in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage drgs in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage load-balancers in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage instance-family in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage instance-agent-plugins in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage volume-family in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage file-family in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage keys in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to manage secret-family in compartment orchestrator-network-cmp
+        - allow group orchestrator-network-admin-grp to use key-delegate in compartment orchestrator-network-cmp
