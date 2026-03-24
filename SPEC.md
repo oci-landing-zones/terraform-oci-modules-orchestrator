@@ -9,7 +9,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_local"></a> [local](#provider\_local) | n/a |
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 6.35.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | n/a |
 
 ## Modules
 
@@ -53,7 +53,7 @@
 | [local_file.keys_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.network_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.nlbs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
-| [local_file.oke_clusters_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.oke_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.service_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.streams_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.tags_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -97,7 +97,6 @@
 | <a name="input_notifications_configuration"></a> [notifications\_configuration](#input\_notifications\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_object_storage_configuration"></a> [object\_storage\_configuration](#input\_object\_storage\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_oke_clusters_configuration"></a> [oke\_clusters\_configuration](#input\_oke\_clusters\_configuration) | n/a | `any` | `null` | no |
-| <a name="input_oke_clusters_dependency"></a> [oke\_clusters\_dependency](#input\_oke\_clusters\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_oke_workers_configuration"></a> [oke\_workers\_configuration](#input\_oke\_workers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_output_path"></a> [output\_path](#input\_output\_path) | n/a | `string` | `null` | no |
 | <a name="input_policies_configuration"></a> [policies\_configuration](#input\_policies\_configuration) | n/a | `any` | `null` | no |
@@ -128,5 +127,5 @@
 | <a name="output_network_resources"></a> [network\_resources](#output\_network\_resources) | Provisioned networking resources |
 | <a name="output_nlb_resources"></a> [nlb\_resources](#output\_nlb\_resources) | Provisioned NLB resources |
 | <a name="output_observability_resources"></a> [observability\_resources](#output\_observability\_resources) | Provisioned streaming resources |
-| <a name="output_oke_cluster_resources"></a> [oke\_cluster\_resources](#output\_oke\_cluster\_resources) | Provisioned OKE Cluster resources |
+| <a name="output_oke_resources"></a> [oke\_resources](#output\_oke\_resources) | Provisioned OKE resources |
 | <a name="output_security_resources"></a> [security\_resources](#output\_security\_resources) | Provisioned security resources |

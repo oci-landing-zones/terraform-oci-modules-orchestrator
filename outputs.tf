@@ -110,7 +110,7 @@ resource "local_file" "compartments_output" {
 resource "local_file" "identity_domains_output" {
   count    = var.output_path != null && length(module.oci_lz_identity_domains) > 0 ? 1 : 0
   content  = jsonencode({ "identity_domains" : { for k, v in module.oci_lz_identity_domains[0].identity_domains : k => { "id" : v.id } } })
-  filename = "${var.output_path}/identity_domains_output.json.json"
+  filename = "${var.output_path}/identity_domains_output.json"
 }
 
 resource "local_file" "network_output" {
