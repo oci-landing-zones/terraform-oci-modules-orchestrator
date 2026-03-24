@@ -86,6 +86,13 @@ output "oke_resources" {
   }
 }
 
+output "ocvs_resources" {
+  description = "Provisioned OCVS resources"
+  value = {
+    clusters = length(module.oci_lz_ocvs) > 0 ? module.oci_lz_ocvs[0].clusters : {}
+  }
+}
+
 output "nlb_resources" {
   description = "Provisioned NLB resources"
   value = {
@@ -189,7 +196,13 @@ resource "local_file" "nlbs_output" {
 resource "local_file" "oke_output" {
   count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
   content = jsonencode({ "clusters" : { for k, v in module.oci_lz_oke[0].clusters : k => { "id" : v.id } },
-  "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
+    "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
   "virtual_node_pools" : { for k, v in module.oci_lz_oke[0].virtual_node_pools : k => { "id" : v.id } } })
   filename = "${var.output_path}/oke_output.json"
+}
+
+resource "local_file" "ocvs_output" {
+  count    = var.output_path != null && length(module.oci_lz_ocvs) > 0 ? 1 : 0
+  content  = jsonencode({ "clusters" : { for k, v in module.oci_lz_ocvs[0].clusters : k => { "id" : v.id } } })
+  filename = "${var.output_path}/ocvs_output.json"
 }

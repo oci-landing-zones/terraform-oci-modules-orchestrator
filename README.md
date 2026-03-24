@@ -16,12 +16,13 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.3 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.3)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.1)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
-[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.4)
-[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.3)
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.0 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.0)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.7.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.7.7)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.5)
+[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.2 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.2)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.3)
+[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.1)
+[OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -57,6 +58,7 @@ vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
+ocvs_configuration | ocvs_output.json
 
 ## How to Invoke the Orchestrator
 
