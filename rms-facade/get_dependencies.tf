@@ -77,6 +77,7 @@ locals {
   functions_dependency    = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "functions") ? { "functions" : local.merged_dependencies.functions } : null : null
   vaults_dependency       = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "vaults") ? { "vaults" : local.merged_dependencies.vaults } : null : null
   instances_dependency    = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {}, contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {}) : null
+  ocvs_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "clusters") ? { "clusters" : local.merged_dependencies.clusters } : null : null
   nlbs_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }
 

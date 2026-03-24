@@ -28,3 +28,13 @@ module "oci_lz_oke" {
   network_dependency      = local.network_dependency
   kms_dependency          = local.kms_dependency
 }
+
+module "oci_lz_ocvs" {
+  depends_on              = [module.oci_lz_zpr] # ocvs_configuration may have ZPR attributes that must exist up front.
+  count                   = var.ocvs_configuration != null ? 1 : 0
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs.git//ocvs/modules/ocvs?ref=v1.1.0"
+  tenancy_ocid            = var.tenancy_ocid
+  ocvs_configuration      = var.ocvs_configuration
+  compartments_dependency = local.compartments_dependency
+  network_dependency      = local.network_dependency
+}

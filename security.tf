@@ -54,3 +54,4 @@ module "oci_lz_bastions" {
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
 }
+
