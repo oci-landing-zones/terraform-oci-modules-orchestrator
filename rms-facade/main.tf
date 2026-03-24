@@ -51,7 +51,9 @@ module "oci_lz_orchestrator" {
   # OKE
   oke_clusters_configuration = local.oke_clusters_configuration
   oke_workers_configuration  = local.oke_workers_configuration
-  
+  # OCVS
+  ocvs_configuration = local.ocvs_configuration
+
   # Dependencies
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
@@ -63,6 +65,7 @@ module "oci_lz_orchestrator" {
   functions_dependency    = local.functions_dependency
   vaults_dependency       = local.vaults_dependency
   instances_dependency    = local.instances_dependency
+  ocvs_dependency         = local.ocvs_dependency
   nlbs_dependency         = local.nlbs_dependency
 }
 

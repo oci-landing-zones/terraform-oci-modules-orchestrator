@@ -171,6 +171,11 @@ variable "oke_workers_configuration" {
   default = null
 }
 
+variable "ocvs_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null
@@ -222,6 +227,11 @@ variable "vaults_dependency" {
 }
 
 variable "instances_dependency" {
+  type    = any
+  default = null
+}
+
+variable "ocvs_dependency" {
   type    = any
   default = null
 }
