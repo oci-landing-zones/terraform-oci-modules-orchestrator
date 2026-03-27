@@ -31,10 +31,11 @@ data "http" "configurations" {
 locals {
 
   # JSON inputs
-  ocibucket_json_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : jsondecode(element) if length(data.oci_objectstorage_object.configurations) > 0 && try(jsondecode(element), null) != null]
-  github_json_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : jsondecode(element) if length(data.github_repository_file.configurations) > 0 && try(jsondecode(element), null) != null]
-  url_json_configs       = [for element in flatten(data.http.configurations[*].body) : jsondecode(element) if length(data.http.configurations) > 0 && try(jsondecode(element), null) != null]
-  all_json_configs       = concat(local.ocibucket_json_configs, local.github_json_configs, local.url_json_configs)
+  ocibucket_json_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : try(jsondecode(element), null) if length(data.oci_objectstorage_object.configurations) > 0]
+  github_json_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : try(jsondecode(element), null) if length(data.github_repository_file.configurations) > 0]
+  url_json_configs       = [for element in flatten(data.http.configurations[*].body) : try(jsondecode(element), null) if length(data.http.configurations) > 0]
+  file_json_configs      = [for element in var.local_config_file_paths : try(jsondecode(file(element)), null) if var.configuration_source == "file" && lower(reverse(split(".", element))[0]) == "json"]
+  all_json_configs       = concat(local.ocibucket_json_configs, local.github_json_configs, local.url_json_configs, local.file_json_configs)
 
   all_json_configs_keys = flatten([for config in local.all_json_configs : keys(config) if length(local.all_json_configs) > 0])
   all_json_configs_map = { for key in local.all_json_configs_keys :
@@ -42,10 +43,11 @@ locals {
   if length(local.all_json_configs_keys) > 0 }
 
   # YAML inputs
-  ocibucket_yaml_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : yamldecode(element) if length(data.oci_objectstorage_object.configurations) > 0 && try(yamldecode(element), null) != null]
-  github_yaml_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : yamldecode(element) if length(data.github_repository_file.configurations) > 0 && try(yamldecode(element), null) != null]
-  url_yaml_configs       = [for element in flatten(data.http.configurations[*].body) : yamldecode(element) if length(data.http.configurations) > 0 && try(yamldecode(element), null) != null]
-  all_yaml_configs       = concat(local.ocibucket_yaml_configs, local.github_yaml_configs, local.url_yaml_configs)
+  ocibucket_yaml_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : try(yamldecode(element), null) if length(data.oci_objectstorage_object.configurations) > 0]
+  github_yaml_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : try(yamldecode(element), null) if length(data.github_repository_file.configurations) > 0]
+  url_yaml_configs       = [for element in flatten(data.http.configurations[*].body) : try(yamldecode(element), null) if length(data.http.configurations) > 0]
+  file_yaml_configs      = [for element in var.local_config_file_paths : try(yamldecode(file(element)), null) if var.configuration_source == "file" && (lower(reverse(split(".", element))[0]) == "yaml" || lower(reverse(split(".", element))[0]) == "yml")]
+  all_yaml_configs       = concat(local.ocibucket_yaml_configs, local.github_yaml_configs, local.url_yaml_configs, local.file_yaml_configs)
 
   all_yaml_configs_keys = flatten([for value in local.all_yaml_configs : keys(value) if length(local.all_yaml_configs) > 0])
   all_yaml_configs_map = { for key in local.all_yaml_configs_keys :

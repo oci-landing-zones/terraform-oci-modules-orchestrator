@@ -1,3 +1,12 @@
+# March 25, 2026 Release Notes - 2.1.0
+
+## Updates
+
+1. Support for OCVS deployments.
+2. Full support for YAML-based configuration files, including YAML-based dependency files.
+3. *rms-facade* module is now the common module for RMS and Terraform CLI based deployments. See [Deploying with OCI Resource Manager Service (RMS)](./README.md#deploying-with-oci-resource-manager-service-rms) and [Deploying with Terraform CLI](./README.md#deploying-with-terraform-cli).
+4. [Modules references](./README.md#modules-versions) updated. 
+
 # February 9, 2026 Release Notes - 2.0.11
 
 ## Updates

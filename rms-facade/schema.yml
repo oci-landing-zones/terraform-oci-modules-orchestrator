@@ -42,6 +42,7 @@ variableGroups:
   - title: "Output Files"
     variables:
       - save_output
+      - output_format
       - oci_object_prefix
       - github_file_prefix
 
@@ -54,7 +55,10 @@ variableGroups:
       - private_key_path
       - private_key_password
       - region
-    
+      - local_config_file_paths
+      - output_folder_path
+      - local_dependency_file_paths
+      
 variables:
   region:
     type: oci:identity:region:name
@@ -301,7 +305,16 @@ variables:
     type: boolean
     title: "Save Output?"
     description: "Whether to save the stack output, that can be used as a dependency input on another stack. The output is saved in the same source defined above for the dependency files."
-    visible: true
+
+  output_format:
+    type: enum
+    title: "Output Format"
+    description: "The output files format."
+    enum:
+      - "json"
+      - "yaml"
+    default: "json"  
+    visible: save_output  
 
   oci_object_prefix:
     type: string
