@@ -127,6 +127,7 @@ resource "local_file" "network_output" {
     "dns_resolver" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_resolver : k => { "id" : v.ocid } }
     "dns_zones" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_zones : k => { "id" : v.ocid } }
     "dns_views" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_views : k => { "id" : v.ocid } }
+    "l7_load_balancers" : { for k, v in try(module.oci_lz_network[0].provisioned_networking_resources.l7_load_balancers.l7_load_balancers, {}) : k => { "id" : v.id } }
   } })
   filename = "${var.output_path}/network_output.json"
 }
