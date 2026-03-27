@@ -11,6 +11,7 @@ module "oci_lz_compute" {
   }
   tenancy_ocid            = var.tenancy_ocid
   instances_configuration = var.instances_configuration
+  storage_configuration   = var.storage_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
   kms_dependency          = local.kms_dependency
