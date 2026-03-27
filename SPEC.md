@@ -106,6 +106,7 @@
 | <a name="input_scanning_configuration"></a> [scanning\_configuration](#input\_scanning\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_security_zones_configuration"></a> [security\_zones\_configuration](#input\_security\_zones\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_service_connectors_configuration"></a> [service\_connectors\_configuration](#input\_service\_connectors\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_storage_configuration"></a> [storage\_configuration](#input\_storage\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_streams_configuration"></a> [streams\_configuration](#input\_streams\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_streams_dependency"></a> [streams\_dependency](#input\_streams\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_tags_configuration"></a> [tags\_configuration](#input\_tags\_configuration) | n/a | `any` | `null` | no |

@@ -100,6 +100,7 @@ locals {
 
   # Compute
   instances_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "instances_configuration") ? local.merged_input_configs.instances_configuration : null : null
+  storage_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "storage_configuration") ? local.merged_input_configs.storage_configuration : null : null
 
   # OKE
   oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "clusters_configuration") ? local.merged_input_configs.clusters_configuration : null : null
