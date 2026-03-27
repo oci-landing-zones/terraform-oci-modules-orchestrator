@@ -21,6 +21,7 @@ locals {
             "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.ocid}}
             "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.ocid}}
             "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.ocid}}
+            "l7_load_balancers" : {for k, v in try(module.oci_lz_orchestrator.network_resources.l7_load_balancers.l7_load_balancers, {}) : k => {"id" : v.id}}
         }    
     } : null
     topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
