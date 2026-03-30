@@ -44,25 +44,27 @@ locals {
   ocibucket_json_dependencies     = [for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : try(jsondecode(element), null) if length(data.oci_objectstorage_object.dependencies) > 0]
   github_json_dependencies        = [for element in flatten(data.github_repository_file.dependencies[*].content) : try(jsondecode(element), null) if length(data.github_repository_file.dependencies) > 0]
   local_file_json_dependencies    = [for element in var.local_dependency_file_paths : try(jsondecode(file(element)), null) if lower(reverse(split(".", element))[0]) == "json"]
-  all_json_dependencies = concat(local.url_ocibucket_json_dependencies, local.url_github_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies, local.local_file_json_dependencies)
+  all_json_dependencies           = concat(local.url_ocibucket_json_dependencies, local.url_github_json_dependencies, local.ocibucket_json_dependencies, local.github_json_dependencies, local.local_file_json_dependencies)
+  all_json_dependency_maps        = [for config in local.all_json_dependencies : config if can(keys(config))]
 
-  all_json_dependencies_keys = flatten([for value in local.all_json_dependencies : keys(value) if length(local.all_json_dependencies) > 0])
+  all_json_dependencies_keys = flatten([for value in local.all_json_dependency_maps : keys(value)])
 
   all_json_dependencies_map = { for key in local.all_json_dependencies_keys :
-    key => [for config in local.all_json_dependencies : config[key] if contains(keys(config), key)][0]
+    key => [for config in local.all_json_dependency_maps : config[key] if contains(keys(config), key)][0]
   if length(local.all_json_dependencies_keys) > 0 }
 
   url_ocibucket_yaml_dependencies = [for element in flatten(data.oci_objectstorage_object.url_dependencies[*].content) : try(yamldecode(element), null) if length(data.oci_objectstorage_object.url_dependencies) > 0]
   url_github_yaml_dependencies    = [for element in flatten(data.github_repository_file.url_dependencies[*].content) : try(yamldecode(element), null) if length(data.github_repository_file.url_dependencies) > 0]
   ocibucket_yaml_dependencies     = [for element in flatten(data.oci_objectstorage_object.dependencies[*].content) : try(yamldecode(element), null) if length(data.oci_objectstorage_object.dependencies) > 0]
   github_yaml_dependencies        = [for element in flatten(data.github_repository_file.dependencies[*].content) : try(yamldecode(element), null) if length(data.github_repository_file.dependencies) > 0]
-  local_file_yaml_dependencies    = [for element in var.local_dependency_file_paths : try(yamldecode(file(element)), null) if (lower(reverse(split(".", element))[0]) == "yaml" || lower(reverse(split(".", element))[0]) == "yml")]
-  all_yaml_dependencies = concat(local.url_ocibucket_yaml_dependencies, local.url_github_yaml_dependencies, local.ocibucket_yaml_dependencies, local.github_yaml_dependencies, local.local_file_yaml_dependencies)
+  local_file_yaml_dependencies    = [for element in var.local_dependency_file_paths : try(yamldecode(file(element)), null) if(lower(reverse(split(".", element))[0]) == "yaml" || lower(reverse(split(".", element))[0]) == "yml")]
+  all_yaml_dependencies           = concat(local.url_ocibucket_yaml_dependencies, local.url_github_yaml_dependencies, local.ocibucket_yaml_dependencies, local.github_yaml_dependencies, local.local_file_yaml_dependencies)
+  all_yaml_dependency_maps        = [for config in local.all_yaml_dependencies : config if can(keys(config))]
 
-  all_yaml_dependencies_keys = flatten([for value in local.all_yaml_dependencies : keys(value) if length(local.all_yaml_dependencies) > 0])
+  all_yaml_dependencies_keys = flatten([for value in local.all_yaml_dependency_maps : keys(value)])
 
   all_yaml_dependencies_map = { for key in local.all_yaml_dependencies_keys :
-    key => [for config in local.all_yaml_dependencies : config[key] if contains(keys(config), key)][0]
+    key => [for config in local.all_yaml_dependency_maps : config[key] if contains(keys(config), key)][0]
   if length(local.all_yaml_dependencies_keys) > 0 }
 
   merged_dependencies = merge(local.all_json_dependencies_map, local.all_yaml_dependencies_map)
@@ -80,4 +82,3 @@ locals {
   ocvs_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "clusters") ? { "clusters" : local.merged_dependencies.clusters } : null : null
   nlbs_dependency         = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }
-
