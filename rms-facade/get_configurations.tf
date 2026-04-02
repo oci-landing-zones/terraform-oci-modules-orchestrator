@@ -30,32 +30,43 @@ data "http" "configurations" {
 
 locals {
 
-  # JSON inputs
-  ocibucket_json_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : try(jsondecode(element), null) if length(data.oci_objectstorage_object.configurations) > 0]
-  github_json_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : try(jsondecode(element), null) if length(data.github_repository_file.configurations) > 0]
-  url_json_configs       = [for element in flatten(data.http.configurations[*].body) : try(jsondecode(element), null) if length(data.http.configurations) > 0]
-  file_json_configs      = [for element in var.local_config_file_paths : try(jsondecode(file(element)), null) if var.configuration_source == "file" && lower(reverse(split(".", element))[0]) == "json"]
-  all_json_configs       = concat(local.ocibucket_json_configs, local.github_json_configs, local.url_json_configs, local.file_json_configs)
+  all_configuration_documents = concat(
+    [for idx, object in data.oci_objectstorage_object.configurations : {
+      source    = var.oci_configuration_objects[idx]
+      extension = lower(reverse(split(".", var.oci_configuration_objects[idx]))[0])
+      content   = object.content
+    }],
+    [for idx, file in data.github_repository_file.configurations : {
+      source    = var.github_configuration_files[idx]
+      extension = lower(reverse(split(".", var.github_configuration_files[idx]))[0])
+      content   = file.content
+    }],
+    [for idx, response in data.http.configurations : {
+      source    = var.input_config_files_urls[idx]
+      extension = lower(reverse(split(".", split("?", split("#", var.input_config_files_urls[idx])[0])[0]))[0])
+      content   = response.body
+    }],
+    [for element in var.local_config_file_paths : {
+      source    = element
+      extension = lower(reverse(split(".", element))[0])
+      content   = file(element)
+    } if var.configuration_source == "file"]
+  )
 
-  all_json_configs_keys = flatten([for config in local.all_json_configs : keys(config) if length(local.all_json_configs) > 0])
-  all_json_configs_map = { for key in local.all_json_configs_keys :
-    key => [for config in local.all_json_configs : config[key] if contains(keys(config), key)][0]
-  if length(local.all_json_configs_keys) > 0 }
+  all_input_configs = [
+    for config in local.all_configuration_documents :
+    contains(["yaml", "yml"], config.extension) ? yamldecode(config.content) :
+    config.extension == "json" ? jsondecode(config.content) :
+    try(jsondecode(config.content), yamldecode(config.content))
+  ]
 
-  # YAML inputs
-  ocibucket_yaml_configs = [for element in flatten(data.oci_objectstorage_object.configurations[*].content) : try(yamldecode(element), null) if length(data.oci_objectstorage_object.configurations) > 0]
-  github_yaml_configs    = [for element in flatten(data.github_repository_file.configurations[*].content) : try(yamldecode(element), null) if length(data.github_repository_file.configurations) > 0]
-  url_yaml_configs       = [for element in flatten(data.http.configurations[*].body) : try(yamldecode(element), null) if length(data.http.configurations) > 0]
-  file_yaml_configs      = [for element in var.local_config_file_paths : try(yamldecode(file(element)), null) if var.configuration_source == "file" && (lower(reverse(split(".", element))[0]) == "yaml" || lower(reverse(split(".", element))[0]) == "yml")]
-  all_yaml_configs       = concat(local.ocibucket_yaml_configs, local.github_yaml_configs, local.url_yaml_configs, local.file_yaml_configs)
-
-  all_yaml_configs_keys = flatten([for value in local.all_yaml_configs : keys(value) if length(local.all_yaml_configs) > 0])
-  all_yaml_configs_map = { for key in local.all_yaml_configs_keys :
-    key => [for config in local.all_yaml_configs : config[key] if contains(keys(config), key)][0]
-  if length(local.all_yaml_configs_keys) > 0 }
+  all_input_configs_keys = flatten([for config in local.all_input_configs : keys(config) if length(local.all_input_configs) > 0])
+  all_input_configs_map = { for key in local.all_input_configs_keys :
+    key => [for config in local.all_input_configs : config[key] if contains(keys(config), key)][0]
+  if length(local.all_input_configs_keys) > 0 }
 
 
-  merged_input_configs = merge(local.all_json_configs_map, local.all_yaml_configs_map)
+  merged_input_configs = local.all_input_configs_map
 
   # IAM
   compartments_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "compartments_configuration") ? local.merged_input_configs.compartments_configuration : null : null
