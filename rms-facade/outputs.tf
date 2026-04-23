@@ -15,7 +15,7 @@ locals {
             "network_security_groups" : {for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => {"id" : v.id}}
             "dynamic_routing_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => {"id" : v.id}}
             "drg_attachments" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => {"id" : v.id}}
-            "remote_peering_connections" : {for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => {"id" : v.id}}
+            "remote_peering_connections" : {for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => {"id" : v.id, "region_name" : v.region_name}}
             "local_peering_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => {"id" : v.id}}
             "drg_route_tables" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => {"id" : v.id}}
             "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.ocid}}
