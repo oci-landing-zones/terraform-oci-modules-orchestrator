@@ -27,9 +27,23 @@ module "oci_lz_dynamic_groups" {
   dynamic_groups_configuration = var.dynamic_groups_configuration
 }
 
+resource "time_sleep" "iam_policy_group_propagation" {
+  count = var.policies_configuration != null ? 1 : 0
+
+  # Work around an OCI control-plane bug: policy creation can skip groups
+  # that have not propagated across the control plane yet.
+  create_duration = "10s"
+
+  depends_on = [
+    module.oci_lz_groups,
+    module.oci_lz_dynamic_groups,
+    module.oci_lz_identity_domains,
+  ]
+}
+
 module "oci_lz_policies" {
   count                   = var.policies_configuration != null ? 1 : 0
-  depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups]
+  depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups, module.oci_lz_identity_domains, time_sleep.iam_policy_group_propagation]
   source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.3.4"
   providers               = { oci = oci.home }
   tenancy_ocid            = var.tenancy_ocid
