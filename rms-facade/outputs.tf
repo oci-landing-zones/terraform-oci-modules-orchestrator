@@ -61,6 +61,7 @@ locals {
     oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
         "oke_clusters" : {for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => {"id" : v.id}},
         "oke_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => {"id" : v.id}},
+        "oke_nodes" : module.oci_lz_orchestrator.oke_resources.nodes,
         "oke_virtual_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => {"id" : v.id}}
     } : null
 
