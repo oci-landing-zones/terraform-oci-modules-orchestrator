@@ -191,6 +191,11 @@ variable "compartments_dependency" {
   default = null
 }
 
+variable "identity_domains_dependency" {
+  type    = any
+  default = null
+}
+
 variable "tags_dependency" {
   type    = any
   default = null

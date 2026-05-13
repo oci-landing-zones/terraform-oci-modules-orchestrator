@@ -59,8 +59,8 @@ variable "save_output" {
 }
 
 variable "output_format" {
-  type = string
-  default = "json"
+  type        = string
+  default     = "json"
   description = "The output files format. Valid values are \"json\" and \"yaml\" (or \"yml\")."
   validation {
     condition     = lower(trimspace(var.output_format)) == "json" || lower(trimspace(var.output_format == "yaml")) || lower(trimspace(var.output_format)) == "yml"
@@ -153,20 +153,20 @@ variable "url_dependency_source_github_dependency_files" {
 }
 
 variable "local_config_file_paths" {
-  type = list(string)
+  type        = list(string)
   description = "List of local configuration files in JSON or YAML format."
-  default = []
+  default     = []
 }
 
 variable "output_folder_path" {
-  type = string
+  type        = string
   description = "The path to the output folder for input configuration files."
-  default = null
+  default     = null
 }
 
 variable "local_dependency_file_paths" {
-  type = list(string)
+  type        = list(string)
   description = "List of local dependency files in JSON format."
-  default = []
+  default     = []
 }
 

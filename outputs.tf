@@ -4,12 +4,14 @@
 output "iam_resources" {
   description = "Provisioned identity resources"
   value = {
-    compartments     = length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {},
-    groups           = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].groups : {},
-    memberships      = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].memberships : {},
-    dynamic_groups   = length(module.oci_lz_dynamic_groups) > 0 ? module.oci_lz_dynamic_groups[0].dynamic_groups : {},
-    policies         = length(module.oci_lz_policies) > 0 ? module.oci_lz_policies[0].policies : {}
-    identity_domains = length(module.oci_lz_identity_domains) > 0 ? module.oci_lz_identity_domains[0].identity_domains : {}
+    compartments                   = length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {},
+    groups                         = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].groups : {},
+    memberships                    = length(module.oci_lz_groups) > 0 ? module.oci_lz_groups[0].memberships : {},
+    dynamic_groups                 = length(module.oci_lz_dynamic_groups) > 0 ? module.oci_lz_dynamic_groups[0].dynamic_groups : {},
+    policies                       = length(module.oci_lz_policies) > 0 ? module.oci_lz_policies[0].policies : {}
+    identity_domains               = length(module.oci_lz_identity_domains) > 0 ? module.oci_lz_identity_domains[0].identity_domains : {}
+    identity_domain_groups         = length(module.oci_lz_identity_domains) > 0 ? module.oci_lz_identity_domains[0].identity_domain_groups : {}
+    identity_domain_dynamic_groups = length(module.oci_lz_identity_domains) > 0 ? module.oci_lz_identity_domains[0].identity_domain_dynamic_groups : {}
   }
 }
 
@@ -108,8 +110,10 @@ resource "local_file" "compartments_output" {
   filename = "${var.output_path}/compartments_output.json"
 }
 
+# identity_domains_output is a producer dependency artifact. Group-only stacks
+# consume existing domains, so they must not publish an empty or misleading domain artifact.
 resource "local_file" "identity_domains_output" {
-  count    = var.output_path != null && length(module.oci_lz_identity_domains) > 0 ? 1 : 0
+  count    = var.output_path != null && try(length(var.identity_domains_configuration.identity_domains), 0) > 0 ? 1 : 0
   content  = jsonencode({ "identity_domains" : { for k, v in module.oci_lz_identity_domains[0].identity_domains : k => { "id" : v.id } } })
   filename = "${var.output_path}/identity_domains_output.json"
 }
@@ -122,12 +126,13 @@ resource "local_file" "network_output" {
     "network_security_groups" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.network_security_groups : k => { "id" : v.id } }
     "dynamic_routing_gateways" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dynamic_routing_gateways : k => { "id" : v.id } }
     "drg_attachments" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_attachments : k => { "id" : v.id } }
-    "remote_peering_connections" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => { "id" : v.id } }
+    "remote_peering_connections" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => { "id" : v.id, "region_name" : try(v.region_name, var.region) } }
     "local_peering_gateways" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.local_peering_gateways : k => { "id" : v.id } }
     "drg_route_tables" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_route_tables : k => { "id" : v.id } }
     "dns_resolver" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_resolver : k => { "id" : v.ocid } }
     "dns_zones" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_zones : k => { "id" : v.ocid } }
     "dns_views" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dns_views : k => { "id" : v.ocid } }
+    "private_service_access" : { for k, v in try(module.oci_lz_network[0].provisioned_networking_resources.private_service_access, {}) : k => { "id" : v.id } }
   } })
   filename = "${var.output_path}/network_output.json"
 }

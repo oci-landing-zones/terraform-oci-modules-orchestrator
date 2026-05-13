@@ -2,102 +2,107 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 locals {
-    compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
-        "compartments" : {for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => {"id" : v.id}}
-    } : null
-    identity_domains_output = length(module.oci_lz_orchestrator.iam_resources.identity_domains) > 0 ? {
-        "identity_domains" : {for k, v in module.oci_lz_orchestrator.iam_resources.identity_domains : k => {"id" : v.id}}
-    } : null
-    network_output = module.oci_lz_orchestrator.network_resources != null ? {
-        "network_resources" : {
-            "vcns" : {for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => {"id" : v.id}},
-            "subnets" : {for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => {"id" : v.id}},
-            "network_security_groups" : {for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => {"id" : v.id}}
-            "dynamic_routing_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => {"id" : v.id}}
-            "drg_attachments" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => {"id" : v.id}}
-            "remote_peering_connections" : {for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => {"id" : v.id, "region_name" : v.region_name}}
-            "local_peering_gateways" : {for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => {"id" : v.id}}
-            "drg_route_tables" : {for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => {"id" : v.id}}
-            "dns_resolver" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => {"id" : v.ocid}}
-            "dns_zones" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => {"id" : v.ocid}}
-            "dns_views" : {for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => {"id" : v.ocid}}
-        }    
-    } : null
-    topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
-        "topics" : {for k, v in module.oci_lz_orchestrator.observability_resources.notifications_topics : k => {"id" : v.id}}
-    } : null
-    streams_output = length(module.oci_lz_orchestrator.observability_resources.streams) > 0 ? {
-        "streams" : {for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => {"id" : v.id}}
-    } : null
-    custom_logs_output = length(module.oci_lz_orchestrator.observability_resources.custom_logs) > 0 ? {
-        "custom_logs" : {for k, v in module.oci_lz_orchestrator.observability_resources.custom_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}
-    } : null
-    service_logs_output = length(module.oci_lz_orchestrator.observability_resources.service_logs) > 0 ? {
-        "service_logs" : {for k, v in module.oci_lz_orchestrator.observability_resources.service_logs : k => {"id" : v.id, "compartment_id" : v.compartment_id}}
-    } : null
-    vaults_output = length(module.oci_lz_orchestrator.security_resources.vaults) > 0 ? {
-        "vaults" : {for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => {"management_endpoint" : v.management_endpoint}}
-    } : null
-    keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
-        "keys" : {for k, v in module.oci_lz_orchestrator.security_resources.keys : k => {"id" : v.id}}
-    } : null
-    bastions_output = length(module.oci_lz_orchestrator.security_resources.bastions) > 0 ? {
-        "bastions" : {for k, v in module.oci_lz_orchestrator.security_resources.bastions : k => {"id" : v.id}}
-    } : null
-    tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
-        "tags" : {for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => {"id" : v.id}}
-    } : null
-    instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
-        "instances" : {for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => {"id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip}},
-        "secondary_vnics" : {for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => {"id" : v.id, "private_ip" : v.private_ip_address}}
-    } : null
-    nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
-        "nlbs_private_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => {"id" : v.private_ips[0].id}},
-        "nlbs_public_ips" : {for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => {"private_ip_id" : v.private_ip_id, "id" : v.id}}
-    } : null
-    ocvs_output = length(module.oci_lz_orchestrator.ocvs_resources.clusters) > 0 ? {
-        "clusters" : { for k, v in module.oci_lz_orchestrator.ocvs_resources.clusters : k => { "id" : v.id } }
-    } : null
-    oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
-        "oke_clusters" : {for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => {"id" : v.id}},
-        "oke_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => {"id" : v.id}},
-        "oke_nodes" : module.oci_lz_orchestrator.oke_resources.nodes,
-        "oke_virtual_node_pools" : {for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => {"id" : v.id}}
-    } : null
+  # identity_domains_output is a producer dependency artifact. Group-only stacks
+  # consume existing domains, so they must not publish an empty or misleading domain artifact.
+  created_identity_domains = try(length(local.identity_domains_configuration.identity_domains), 0) > 0
 
-    output_format = lower(trimspace(var.output_format))
+  compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
+    "compartments" : { for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => { "id" : v.id } }
+  } : null
+  identity_domains_output = local.created_identity_domains ? {
+    "identity_domains" : { for k, v in module.oci_lz_orchestrator.iam_resources.identity_domains : k => { "id" : v.id } }
+  } : null
+  network_output = module.oci_lz_orchestrator.network_resources != null ? {
+    "network_resources" : {
+      "vcns" : { for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => { "id" : v.id } },
+      "subnets" : { for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => { "id" : v.id } },
+      "network_security_groups" : { for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => { "id" : v.id } }
+      "dynamic_routing_gateways" : { for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => { "id" : v.id } }
+      "drg_attachments" : { for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => { "id" : v.id } }
+      "remote_peering_connections" : { for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => { "id" : v.id, "region_name" : v.region_name } }
+      "local_peering_gateways" : { for k, v in module.oci_lz_orchestrator.network_resources.local_peering_gateways : k => { "id" : v.id } }
+      "drg_route_tables" : { for k, v in module.oci_lz_orchestrator.network_resources.drg_route_tables : k => { "id" : v.id } }
+      "dns_resolver" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => { "id" : v.ocid } }
+      "dns_zones" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => { "id" : v.ocid } }
+      "dns_views" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => { "id" : v.ocid } }
+      "private_service_access" : { for k, v in try(module.oci_lz_orchestrator.network_resources.private_service_access, {}) : k => { "id" : v.id } }
+    }
+  } : null
+  topics_output = length(module.oci_lz_orchestrator.observability_resources.notifications_topics) > 0 ? {
+    "topics" : { for k, v in module.oci_lz_orchestrator.observability_resources.notifications_topics : k => { "id" : v.id } }
+  } : null
+  streams_output = length(module.oci_lz_orchestrator.observability_resources.streams) > 0 ? {
+    "streams" : { for k, v in module.oci_lz_orchestrator.observability_resources.streams : k => { "id" : v.id } }
+  } : null
+  custom_logs_output = length(module.oci_lz_orchestrator.observability_resources.custom_logs) > 0 ? {
+    "custom_logs" : { for k, v in module.oci_lz_orchestrator.observability_resources.custom_logs : k => { "id" : v.id, "compartment_id" : v.compartment_id } }
+  } : null
+  service_logs_output = length(module.oci_lz_orchestrator.observability_resources.service_logs) > 0 ? {
+    "service_logs" : { for k, v in module.oci_lz_orchestrator.observability_resources.service_logs : k => { "id" : v.id, "compartment_id" : v.compartment_id } }
+  } : null
+  vaults_output = length(module.oci_lz_orchestrator.security_resources.vaults) > 0 ? {
+    "vaults" : { for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => { "management_endpoint" : v.management_endpoint } }
+  } : null
+  keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
+    "keys" : { for k, v in module.oci_lz_orchestrator.security_resources.keys : k => { "id" : v.id } }
+  } : null
+  bastions_output = length(module.oci_lz_orchestrator.security_resources.bastions) > 0 ? {
+    "bastions" : { for k, v in module.oci_lz_orchestrator.security_resources.bastions : k => { "id" : v.id } }
+  } : null
+  tags_output = length(module.oci_lz_orchestrator.governance_resources.tags) > 0 ? {
+    "tags" : { for k, v in module.oci_lz_orchestrator.governance_resources.tags : k => { "id" : v.id } }
+  } : null
+  instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
+    "instances" : { for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
+    "secondary_vnics" : { for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } }
+  } : null
+  nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
+    "nlbs_private_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => { "id" : v.private_ips[0].id } },
+    "nlbs_public_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_public_ips : k => { "private_ip_id" : v.private_ip_id, "id" : v.id } }
+  } : null
+  ocvs_output = length(module.oci_lz_orchestrator.ocvs_resources.clusters) > 0 ? {
+    "clusters" : { for k, v in module.oci_lz_orchestrator.ocvs_resources.clusters : k => { "id" : v.id } }
+  } : null
+  oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
+    "oke_clusters" : { for k, v in module.oci_lz_orchestrator.oke_resources.clusters : k => { "id" : v.id } },
+    "oke_node_pools" : { for k, v in module.oci_lz_orchestrator.oke_resources.node_pools : k => { "id" : v.id } },
+    "oke_nodes" : module.oci_lz_orchestrator.oke_resources.nodes,
+    "oke_virtual_node_pools" : { for k, v in module.oci_lz_orchestrator.oke_resources.virtual_node_pools : k => { "id" : v.id } }
+  } : null
 
-    compartments_output_file_name     = "compartments_output.${local.output_format}"
-    identity_domains_output_file_name = "identity_domains_output.${local.output_format}"
-    networking_output_file_name       = "network_output.${local.output_format}"
-    topics_output_file_name           = "topics_output.${local.output_format}"
-    streams_output_file_name          = "streams_output.${local.output_format}"
-    service_logs_output_file_name     = "service_logs_output.${local.output_format}"
-    custom_logs_output_file_name      = "custom_logs_output.${local.output_format}"
-    vaults_output_file_name           = "vaults_output.${local.output_format}"
-    keys_output_file_name             = "keys_output.${local.output_format}"
-    bastions_output_file_name         = "bastions_output.${local.output_format}"
-    tags_output_file_name             = "tags_output.${local.output_format}"
-    instances_output_file_name        = "instances_output.${local.output_format}"
-    nlbs_output_file_name             = "nlbs_output.${local.output_format}"
-    oke_output_file_name              = "oke_output.${local.output_format}"
-    ocvs_output_file_name             = "ocvs_output.${local.output_format}"
+  output_format = lower(trimspace(var.output_format))
 
-    compartments_content     = local.output_format == "json" ? jsonencode(local.compartments_output) : yamlencode(local.compartments_output)
-    identity_domains_content = local.output_format == "json" ? jsonencode(local.identity_domains_output) : yamlencode(local.identity_domains_output)
-    networking_content       = local.output_format == "json" ? jsonencode(local.network_output) : yamlencode(local.network_output)
-    topics_content           = local.output_format == "json" ? jsonencode(local.topics_output) : yamlencode(local.topics_output)
-    streams_content          = local.output_format == "json" ? jsonencode(local.streams_output) : yamlencode(local.streams_output)
-    service_logs_content     = local.output_format == "json" ? jsonencode(local.service_logs_output) : yamlencode(local.service_logs_output)
-    custom_logs_content      = local.output_format == "json" ? jsonencode(local.custom_logs_output) : yamlencode(local.custom_logs_output)
-    vaults_content           = local.output_format == "json" ? jsonencode(local.vaults_output) : yamlencode(local.vaults_output)
-    keys_content             = local.output_format == "json" ? jsonencode(local.keys_output) : yamlencode(local.keys_output)
-    bastions_content         = local.output_format == "json" ? jsonencode(local.bastions_output) : yamlencode(local.bastions_output)
-    tags_content             = local.output_format == "json" ? jsonencode(local.tags_output) : yamlencode(local.tags_output)
-    instances_content        = local.output_format == "json" ? jsonencode(local.instances_output) : yamlencode(local.instances_output)
-    nlbs_content             = local.output_format == "json" ? jsonencode(local.nlbs_output) : yamlencode(local.nlbs_output)
-    oke_content              = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
-    ocvs_content             = local.output_format == "json" ? jsonencode(local.ocvs_output) : yamlencode(local.ocvs_output)
+  compartments_output_file_name     = "compartments_output.${local.output_format}"
+  identity_domains_output_file_name = "identity_domains_output.${local.output_format}"
+  networking_output_file_name       = "network_output.${local.output_format}"
+  topics_output_file_name           = "topics_output.${local.output_format}"
+  streams_output_file_name          = "streams_output.${local.output_format}"
+  service_logs_output_file_name     = "service_logs_output.${local.output_format}"
+  custom_logs_output_file_name      = "custom_logs_output.${local.output_format}"
+  vaults_output_file_name           = "vaults_output.${local.output_format}"
+  keys_output_file_name             = "keys_output.${local.output_format}"
+  bastions_output_file_name         = "bastions_output.${local.output_format}"
+  tags_output_file_name             = "tags_output.${local.output_format}"
+  instances_output_file_name        = "instances_output.${local.output_format}"
+  nlbs_output_file_name             = "nlbs_output.${local.output_format}"
+  oke_output_file_name              = "oke_output.${local.output_format}"
+  ocvs_output_file_name             = "ocvs_output.${local.output_format}"
+
+  compartments_content     = local.output_format == "json" ? jsonencode(local.compartments_output) : yamlencode(local.compartments_output)
+  identity_domains_content = local.output_format == "json" ? jsonencode(local.identity_domains_output) : yamlencode(local.identity_domains_output)
+  networking_content       = local.output_format == "json" ? jsonencode(local.network_output) : yamlencode(local.network_output)
+  topics_content           = local.output_format == "json" ? jsonencode(local.topics_output) : yamlencode(local.topics_output)
+  streams_content          = local.output_format == "json" ? jsonencode(local.streams_output) : yamlencode(local.streams_output)
+  service_logs_content     = local.output_format == "json" ? jsonencode(local.service_logs_output) : yamlencode(local.service_logs_output)
+  custom_logs_content      = local.output_format == "json" ? jsonencode(local.custom_logs_output) : yamlencode(local.custom_logs_output)
+  vaults_content           = local.output_format == "json" ? jsonencode(local.vaults_output) : yamlencode(local.vaults_output)
+  keys_content             = local.output_format == "json" ? jsonencode(local.keys_output) : yamlencode(local.keys_output)
+  bastions_content         = local.output_format == "json" ? jsonencode(local.bastions_output) : yamlencode(local.bastions_output)
+  tags_content             = local.output_format == "json" ? jsonencode(local.tags_output) : yamlencode(local.tags_output)
+  instances_content        = local.output_format == "json" ? jsonencode(local.instances_output) : yamlencode(local.instances_output)
+  nlbs_content             = local.output_format == "json" ? jsonencode(local.nlbs_output) : yamlencode(local.nlbs_output)
+  oke_content              = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
+  ocvs_content             = local.output_format == "json" ? jsonencode(local.ocvs_output) : yamlencode(local.ocvs_output)
 
   github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -449,105 +454,105 @@ data "github_repository" "this" {
 ### Writing compartments output to file
 resource "local_file" "compartments" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.compartments_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.compartments_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.compartments_output_file_name}"
   content  = local.compartments_content
 }
 
 ### Writing identity_domains output to file
 resource "local_file" "identity_domains" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.identity_domains_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.identity_domains_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.identity_domains_output_file_name}"
   content  = local.identity_domains_content
 }
 
 ### Writing networking output to file
 resource "local_file" "networking" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.network_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.networking_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.networking_output_file_name}"
   content  = local.networking_content
 }
 
 ### Writing notification topics output to file
 resource "local_file" "topics" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.topics_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.topics_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.topics_output_file_name}"
   content  = local.topics_content
 }
 
 ### Writing streams output to file
 resource "local_file" "streams" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.streams_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.streams_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.streams_output_file_name}"
   content  = local.streams_content
 }
 
 ### Writing service logs output to file
 resource "local_file" "service_logs" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.service_logs_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.service_logs_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.service_logs_output_file_name}"
   content  = local.service_logs_content
 }
 
 ### Writing custom logs output to file
 resource "local_file" "custom_logs" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.custom_logs_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.custom_logs_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.custom_logs_output_file_name}"
   content  = local.custom_logs_content
 }
 
 ### Writing vaults output to file
 resource "local_file" "vaults" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.vaults_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.vaults_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.vaults_output_file_name}"
   content  = local.vaults_content
 }
 
 ### Writing keys output to file
 resource "local_file" "keys" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.keys_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.keys_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.keys_output_file_name}"
   content  = local.keys_content
-}  
+}
 
 ### Writing bastions output file
 resource "local_file" "bastions" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.bastions_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.bastions_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.bastions_output_file_name}"
   content  = local.bastions_content
 }
 
 ### Writing tags output to file
 resource "local_file" "tags" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.tags_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.tags_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.tags_output_file_name}"
   content  = local.tags_content
 }
 
 ### Writing instances output to file
 resource "local_file" "instances" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.instances_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.instances_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.instances_output_file_name}"
   content  = local.instances_content
 }
 
 ### Writing NLBs output to file
 resource "local_file" "nlbs" {
   count    = var.save_output && lower(var.configuration_source) == "file" && local.nlbs_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.nlbs_output_file_name}"
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.nlbs_output_file_name}"
   content  = local.nlbs_content
 }
 
 ### Writing OKE output to file
 resource "local_file" "oke" {
-  count = var.save_output && lower(var.configuration_source) == "file" && local.oke_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.oke_output_file_name}"
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.oke_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.oke_output_file_name}"
   content  = local.oke_content
 }
 
 ### Writing OCVS output to file
 resource "local_file" "ocvs" {
-  count = var.save_output && lower(var.configuration_source) == "file" && local.ocvs_output != null ? 1 : 0
-  filename = "${coalesce(var.output_folder_path,path.module)}/${local.ocvs_output_file_name}"
+  count    = var.save_output && lower(var.configuration_source) == "file" && local.ocvs_output != null ? 1 : 0
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.ocvs_output_file_name}"
   content  = local.ocvs_content
 }
 

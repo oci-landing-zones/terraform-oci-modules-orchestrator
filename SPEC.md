@@ -27,8 +27,8 @@
 | <a name="module_oci_lz_home_region_events"></a> [oci\_lz\_home\_region\_events](#module\_oci\_lz\_home\_region\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.3 |
 | <a name="module_oci_lz_identity_domains"></a> [oci\_lz\_identity\_domains](#module\_oci\_lz\_identity\_domains) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains | v0.3.0 |
 | <a name="module_oci_lz_logging"></a> [oci\_lz\_logging](#module\_oci\_lz\_logging) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging | v0.2.3 |
-| <a name="module_oci_lz_network"></a> [oci\_lz\_network](#module\_oci\_lz\_network) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git | v0.7.7 |
-| <a name="module_oci_lz_nlb"></a> [oci\_lz\_nlb](#module\_oci\_lz\_nlb) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git//modules/nlb | v0.7.7 |
+| <a name="module_oci_lz_network"></a> [oci\_lz\_network](#module\_oci\_lz\_network) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git | v0.8.2 |
+| <a name="module_oci_lz_nlb"></a> [oci\_lz\_nlb](#module\_oci\_lz\_nlb) | git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git//modules/nlb | v0.8.2 |
 | <a name="module_oci_lz_notifications"></a> [oci\_lz\_notifications](#module\_oci\_lz\_notifications) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications | v0.2.3 |
 | <a name="module_oci_lz_oke"></a> [oci\_lz\_oke](#module\_oci\_lz\_oke) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.2.1 |
 | <a name="module_oci_lz_ocvs"></a> [oci\_lz\_ocvs](#module\_oci\_lz\_ocvs) | git::https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs.git//ocvs/modules/ocvs | v1.1.0 |
@@ -85,6 +85,7 @@
 | <a name="input_identity_domain_groups_configuration"></a> [identity\_domain\_groups\_configuration](#input\_identity\_domain\_groups\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_identity_domain_identity_providers_configuration"></a> [identity\_domain\_identity\_providers\_configuration](#input\_identity\_domain\_identity\_providers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_identity_domains_configuration"></a> [identity\_domains\_configuration](#input\_identity\_domains\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_identity_domains_dependency"></a> [identity\_domains\_dependency](#input\_identity\_domains\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_instances_configuration"></a> [instances\_configuration](#input\_instances\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_instances_dependency"></a> [instances\_dependency](#input\_instances\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_kms_dependency"></a> [kms\_dependency](#input\_kms\_dependency) | n/a | `any` | `null` | no |
