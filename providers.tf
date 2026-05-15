@@ -53,5 +53,8 @@ terraform {
       source                = "oracle/oci"
       configuration_aliases = [oci.home]
     }
+    time = {
+      source = "hashicorp/time"
+    }
   }
 }
