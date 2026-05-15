@@ -6,7 +6,7 @@ region               = "us-phoenix-1"
 private_key_password = ""
 
 configuration_source    = "file"
-local_config_file_paths = ["../examples/vision/iam/config/iam-config.yaml","../examples/vision/security/config/zpr-config.yaml"]
+local_config_file_paths = ["../examples/vision/iam/config/iam-config.yaml", "../examples/vision/security/config/zpr-config.yaml"]
 save_output             = true
 output_format           = "yaml"
 output_folder_path      = "../examples/vision/iam/config"
