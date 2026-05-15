@@ -1,4 +1,4 @@
-# May 13, 2026 Release Notes - 2.1.1
+# May 15, 2026 Release Notes - 2.1.1
 
 ## Updates
 
@@ -7,7 +7,7 @@
 3. Identity domain groups and dynamic groups are now exposed in _iam_resources_. _identity_domains_output_ is written only when the stack creates identity domains.
 4. OKE outputs now include worker nodes in both base module outputs and _rms-facade_ output files.
 5. Policy creation now waits for IAM group propagation before creating policies that may reference groups.
-6. Supporting modules updated. Workloads module updated to _v0.2.7_ and Networking module updated to _v0.8.2_. Networking update includes Private Service Access support, RPC _region_name_ outputs, Network Load Balancer DNS health checks, and upstream fixes. See [Modules Versions](./README.md#modules-versions) for details.
+6. Supporting modules updated. Workloads module updated to _v0.2.7_, Networking module updated to _v0.8.2_, and Observability module updated to _v0.2.6_. Networking update includes Private Service Access support, RPC _region_name_ outputs, Network Load Balancer DNS health checks, and upstream fixes. See [Modules Versions](./README.md#modules-versions) for details.
 
 # March 25, 2026 Release Notes - 2.1.0
 

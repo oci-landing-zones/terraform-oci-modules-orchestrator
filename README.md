@@ -20,7 +20,7 @@ Repository | Referenced Tags/Branches
 [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.2 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.2)
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.5)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.5)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 
