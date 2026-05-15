@@ -31,12 +31,28 @@
 | [github_repository_file.keys](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.networking](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.nlbs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.ocvs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.oke](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.service_logs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.streams](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.tags](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.topics](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.vaults](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [local_file.bastions](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.compartments](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.custom_logs](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.identity_domains](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.instances](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.keys](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.networking](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.nlbs](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.ocvs](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.oke](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.service_logs](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.streams](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.tags](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.topics](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.vaults](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [oci_objectstorage_object.bastions](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.compartments](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.custom_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
@@ -45,6 +61,7 @@
 | [oci_objectstorage_object.keys](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.networking](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.nlbs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.ocvs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.oke](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.service_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.streams](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
@@ -75,10 +92,14 @@
 | <a name="input_github_file_prefix"></a> [github\_file\_prefix](#input\_github\_file\_prefix) | n/a | `string` | `null` | no |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | n/a | `string` | `null` | no |
 | <a name="input_input_config_files_urls"></a> [input\_config\_files\_urls](#input\_input\_config\_files\_urls) | List of URLs that point to the JSON configuration files. | `list(string)` | `null` | no |
+| <a name="input_local_config_file_paths"></a> [local\_config\_file\_paths](#input\_local\_config\_file\_paths) | List of local configuration files in JSON or YAML format. | `list(string)` | `[]` | no |
+| <a name="input_local_dependency_file_paths"></a> [local\_dependency\_file\_paths](#input\_local\_dependency\_file\_paths) | List of local dependency files in JSON format. | `list(string)` | `[]` | no |
 | <a name="input_oci_configuration_bucket"></a> [oci\_configuration\_bucket](#input\_oci\_configuration\_bucket) | The OCI Object Storage bucket where Landing Zone configuration files are kept. | `string` | `null` | no |
 | <a name="input_oci_configuration_objects"></a> [oci\_configuration\_objects](#input\_oci\_configuration\_objects) | The OCI Object Storage objects containing the Landing Zone configurations. | `list(string)` | `null` | no |
 | <a name="input_oci_dependency_objects"></a> [oci\_dependency\_objects](#input\_oci\_dependency\_objects) | The OCI Object Storage objects containing stack dependencies. | `list(string)` | `null` | no |
 | <a name="input_oci_object_prefix"></a> [oci\_object\_prefix](#input\_oci\_object\_prefix) | The OCI object prefix. Use this to organize the output and avoid overwriting when you run multiple instances of this stack. The object name is appended to the provided prefix, like oci\_object\_prefix/object\_name. | `string` | `null` | no |
+| <a name="input_output_folder_path"></a> [output\_folder\_path](#input\_output\_folder\_path) | The path to the output folder for input configuration files. | `string` | `null` | no |
+| <a name="input_output_format"></a> [output\_format](#input\_output\_format) | The output files format. Valid values are "json" and "yaml" (or "yml"). | `string` | `"json"` | no |
 | <a name="input_private_key_password"></a> [private\_key\_password](#input\_private\_key\_password) | n/a | `string` | `null` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | n/a | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `null` | no |

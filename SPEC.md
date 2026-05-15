@@ -32,14 +32,15 @@
 | <a name="module_oci_lz_notifications"></a> [oci\_lz\_notifications](#module\_oci\_lz\_notifications) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications | v0.2.3 |
 | <a name="module_oci_lz_oke"></a> [oci\_lz\_oke](#module\_oci\_lz\_oke) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.2.1 |
 | <a name="module_oci_lz_ocvs"></a> [oci\_lz\_ocvs](#module\_oci\_lz\_ocvs) | git::https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs.git//ocvs/modules/ocvs | v1.1.0 |
-| <a name="module_oci_lz_policies"></a> [oci\_lz\_policies](#module\_oci\_lz\_policies) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies | v0.3.0 |
-| <a name="module_oci_lz_scanning"></a> [oci\_lz\_scanning](#module\_oci\_lz\_scanning) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss | v0.2.2 |
-| <a name="module_oci_lz_security_zones"></a> [oci\_lz\_security\_zones](#module\_oci\_lz\_security\_zones) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones | v0.2.2 |
-| <a name="module_oci_lz_service_connectors"></a> [oci\_lz\_service\_connectors](#module\_oci\_lz\_service\_connectors) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors | v0.2.3 |
-| <a name="module_oci_lz_streams"></a> [oci\_lz\_streams](#module\_oci\_lz\_streams) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams | v0.2.3 |
-| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags | v0.1.5 |
-| <a name="module_oci_lz_vaults"></a> [oci\_lz\_vaults](#module\_oci\_lz\_vaults) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults | v0.2.2 |
-| <a name="module_oci_lz_zpr"></a> [oci\_lz\_zpr](#module\_oci\_lz\_zpr) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr | v0.2.2 |
+| <a name="module_oci_lz_oke"></a> [oci\_lz\_oke](#module\_oci\_lz\_oke) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.2.5 |
+| <a name="module_oci_lz_policies"></a> [oci\_lz\_policies](#module\_oci\_lz\_policies) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies | v0.3.4 |
+| <a name="module_oci_lz_scanning"></a> [oci\_lz\_scanning](#module\_oci\_lz\_scanning) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss | v0.2.3 |
+| <a name="module_oci_lz_security_zones"></a> [oci\_lz\_security\_zones](#module\_oci\_lz\_security\_zones) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones | v0.2.3 |
+| <a name="module_oci_lz_service_connectors"></a> [oci\_lz\_service\_connectors](#module\_oci\_lz\_service\_connectors) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors | v0.2.5 |
+| <a name="module_oci_lz_streams"></a> [oci\_lz\_streams](#module\_oci\_lz\_streams) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams | v0.2.5 |
+| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags | v0.1.6 |
+| <a name="module_oci_lz_vaults"></a> [oci\_lz\_vaults](#module\_oci\_lz\_vaults) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults | v0.2.3 |
+| <a name="module_oci_lz_zpr"></a> [oci\_lz\_zpr](#module\_oci\_lz\_zpr) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr | v0.2.3 |
 
 ## Resources
 
@@ -53,6 +54,7 @@
 | [local_file.keys_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.network_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.nlbs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.ocvs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.oke_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.service_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.streams_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -97,6 +99,8 @@
 | <a name="input_nlbs_dependency"></a> [nlbs\_dependency](#input\_nlbs\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_notifications_configuration"></a> [notifications\_configuration](#input\_notifications\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_object_storage_configuration"></a> [object\_storage\_configuration](#input\_object\_storage\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_ocvs_configuration"></a> [ocvs\_configuration](#input\_ocvs\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_ocvs_dependency"></a> [ocvs\_dependency](#input\_ocvs\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_oke_clusters_configuration"></a> [oke\_clusters\_configuration](#input\_oke\_clusters\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_oke_workers_configuration"></a> [oke\_workers\_configuration](#input\_oke\_workers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_output_path"></a> [output\_path](#input\_output\_path) | n/a | `string` | `null` | no |
@@ -129,5 +133,6 @@
 | <a name="output_network_resources"></a> [network\_resources](#output\_network\_resources) | Provisioned networking resources |
 | <a name="output_nlb_resources"></a> [nlb\_resources](#output\_nlb\_resources) | Provisioned NLB resources |
 | <a name="output_observability_resources"></a> [observability\_resources](#output\_observability\_resources) | Provisioned streaming resources |
+| <a name="output_ocvs_resources"></a> [ocvs\_resources](#output\_ocvs\_resources) | Provisioned OCVS resources |
 | <a name="output_oke_resources"></a> [oke\_resources](#output\_oke\_resources) | Provisioned OKE resources |
 | <a name="output_security_resources"></a> [security\_resources](#output\_security\_resources) | Provisioned security resources |

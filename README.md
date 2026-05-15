@@ -196,6 +196,9 @@ cd rms-facade
 terraform apply -destroy -var-file ../examples/vision/network/config/input-json.tfvars -state ../examples/vision/network/runtime/terraform.tfstate
 ```
 #### 4. Destroying IAM Resources
+
+Please note that ZPR namespaces must be manually retired before destruction.
+
 ```
 cd rms-facade
 ```

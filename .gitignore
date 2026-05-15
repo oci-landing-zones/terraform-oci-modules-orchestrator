@@ -16,3 +16,4 @@ test/**
 **/*auto.tfvars
 **/tf-facade-*
 **/*-example.json
+**/*.ignore
