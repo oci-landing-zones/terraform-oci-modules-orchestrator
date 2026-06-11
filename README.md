@@ -47,6 +47,11 @@ To account for these scenarios, the Orchestrator can generate and intake depende
 
 Below are the output file names that are generated for the respective configuration that can be used as a dependency:
 
+**Notes for Exadata Cloud Service:**
+
+- `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
+- For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
+
 Configuration | Output File Name
 --------------|------------------
 compartments_configuration | compartments_output.json
