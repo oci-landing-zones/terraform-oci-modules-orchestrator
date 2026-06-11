@@ -52,6 +52,12 @@ Below are the output file names that are generated for the respective configurat
 - `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
 - For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
 
+**Notes for Autonomous Database:**
+
+- Oracle-managed TDE encryption does not require `security.tde.existing_oci_vault_id` or `security.tde.existing_oci_encryption_key_id`.
+- For customer-managed TDE encryption with `terraform-oci-modules-exadata` v1.1.0, set `existing_oci_vault_id` to a Vault OCID. `existing_oci_encryption_key_id` can be either a key OCID or a logical key from `keys_output.json` / `kms_dependency`.
+- Creating a vault in the same stack and referencing it from Autonomous Database by logical vault key is not supported by this module integration today.
+
 Configuration | Output File Name
 --------------|------------------
 compartments_configuration | compartments_output.json
