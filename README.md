@@ -23,6 +23,7 @@ Repository | Referenced Tags/Branches
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.7)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
+[Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -61,6 +62,8 @@ instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
+cloud_exadata_database_configuration | cloud_exadata_database_output.json
+autonomous_databases_configuration | autonomous_databases_output.json
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets, plain URLs, or local file system. Dependencies can also be consumed from GitHub repositories, OCI buckets and local file system.
 

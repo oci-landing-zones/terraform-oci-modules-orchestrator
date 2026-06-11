@@ -39,3 +39,38 @@ module "oci_lz_ocvs" {
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
 }
+
+module "oci_lz_cloud_exadata_database" {
+  depends_on = [module.oci_lz_zpr] # cloud_exadata_database_configuration may have ZPR attributes that must exist up front.
+  count      = var.cloud_exadata_database_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database?ref=v1.1.0"
+
+  cloud_exadata_infrastructures_configuration = try(var.cloud_exadata_database_configuration.cloud_exadata_infrastructures_configuration, null)
+  cloud_vm_clusters_configuration             = try(var.cloud_exadata_database_configuration.cloud_vm_clusters_configuration, null)
+  cloud_db_homes_configuration                = try(var.cloud_exadata_database_configuration.cloud_db_homes_configuration, null)
+  databases_configuration                     = try(var.cloud_exadata_database_configuration.databases_configuration, null)
+  pluggable_databases_configuration           = try(var.cloud_exadata_database_configuration.pluggable_databases_configuration, null)
+  default_compartment_id                      = try(var.cloud_exadata_database_configuration.default_compartment_id, null)
+  default_defined_tags                        = try(var.cloud_exadata_database_configuration.default_defined_tags, {})
+  default_freeform_tags                       = try(var.cloud_exadata_database_configuration.default_freeform_tags, {})
+  compartments_dependency                     = local.compartments_dependency
+  subscription_dependency                     = local.subscription_dependency
+  network_dependency                          = local.network_dependency
+}
+
+module "oci_lz_autonomous_databases" {
+  depends_on = [module.oci_lz_zpr] # autonomous_databases_configuration may have ZPR attributes that must exist up front.
+  count      = var.autonomous_databases_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database?ref=v1.1.0"
+  providers = {
+    oci      = oci
+    oci.home = oci.home
+  }
+
+  tenancy_ocid                       = var.tenancy_ocid
+  autonomous_databases_configuration = var.autonomous_databases_configuration
+  compartments_dependency            = local.compartments_dependency
+  network_dependency                 = local.network_dependency
+  kms_dependency                     = local.kms_dependency
+  databases_dependency               = local.databases_dependency
+}

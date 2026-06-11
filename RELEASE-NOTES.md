@@ -1,3 +1,12 @@
+# June 11, 2026 Release Notes - 2.1.2
+
+## Updates
+
+1. Native workload integration added for the Cloud Exadata Database and Autonomous Database modules from `terraform-oci-modules-exadata`.
+2. Added `cloud_exadata_database_configuration` and `autonomous_databases_configuration` inputs, plus `subscription_dependency` and `databases_dependency`.
+3. Added output persistence for `cloud_exadata_database_output` and `autonomous_databases_output` in the base module and `rms-facade`, including JSON and YAML output formats in `rms-facade`.
+4. Modules references updated. See [Modules Versions](./README.md#modules-versions) for details.
+
 # May 15, 2026 Release Notes - 2.1.1
 
 ## Updates
