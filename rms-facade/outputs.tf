@@ -6,6 +6,23 @@ locals {
   # consume existing domains, so they must not publish an empty or misleading domain artifact.
   created_identity_domains = try(length(local.identity_domains_configuration.identity_domains), 0) > 0
 
+  writes_outputs_to_oci_bucket = lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket"
+  writes_outputs_to_github     = lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github"
+  writes_outputs_to_file       = lower(var.configuration_source) == "file"
+
+  # ADB and Exadata output maps are unknown during initial plans; use known input shape for artifact counts.
+  has_cloud_exadata_database_configuration = (
+    try(length(local.cloud_exadata_database_configuration.cloud_exadata_infrastructures_configuration.cloud_exadata_infrastructures), 0) > 0 ||
+    try(length(local.cloud_exadata_database_configuration.cloud_vm_clusters_configuration), 0) > 0 ||
+    try(length(local.cloud_exadata_database_configuration.cloud_db_homes_configuration), 0) > 0 ||
+    try(length(local.cloud_exadata_database_configuration.databases_configuration), 0) > 0 ||
+    try(length(local.cloud_exadata_database_configuration.pluggable_databases_configuration), 0) > 0
+  )
+  has_autonomous_databases_configuration = try(length(local.autonomous_databases_configuration.databases), 0) > 0
+
+  publish_cloud_exadata_database_output = var.save_output && local.has_cloud_exadata_database_configuration
+  publish_autonomous_databases_output   = var.save_output && local.has_autonomous_databases_configuration
+
   compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
     "compartments" : { for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => { "id" : v.id } }
   } : null
@@ -265,7 +282,7 @@ resource "oci_objectstorage_object" "ocvs" {
 
 ### Writing Cloud Exadata Database output to OCI bucket
 resource "oci_objectstorage_object" "cloud_exadata_database" {
-  count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.cloud_exadata_database_output != null ? 1 : 0
+  count     = local.publish_cloud_exadata_database_output && local.writes_outputs_to_oci_bucket ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
   content   = local.cloud_exadata_database_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
@@ -274,7 +291,7 @@ resource "oci_objectstorage_object" "cloud_exadata_database" {
 
 ### Writing Autonomous Database output to OCI bucket
 resource "oci_objectstorage_object" "autonomous_databases" {
-  count     = var.save_output && (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket") && local.autonomous_databases_output != null ? 1 : 0
+  count     = local.publish_autonomous_databases_output && local.writes_outputs_to_oci_bucket ? 1 : 0
   bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
   content   = local.autonomous_databases_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
@@ -487,7 +504,7 @@ resource "github_repository_file" "ocvs" {
 
 ### Writing Cloud Exadata Database output to GitHub repository
 resource "github_repository_file" "cloud_exadata_database" {
-  count               = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.cloud_exadata_database_output != null ? 1 : 0
+  count               = local.publish_cloud_exadata_database_output && local.writes_outputs_to_github ? 1 : 0
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.cloud_exadata_database_output_file_name}" : local.cloud_exadata_database_output_file_name
@@ -500,7 +517,7 @@ resource "github_repository_file" "cloud_exadata_database" {
 
 ### Writing Autonomous Database output to GitHub repository
 resource "github_repository_file" "autonomous_databases" {
-  count               = var.save_output && (lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github") && local.autonomous_databases_output != null ? 1 : 0
+  count               = local.publish_autonomous_databases_output && local.writes_outputs_to_github ? 1 : 0
   repository          = local.github_repository_name
   branch              = var.github_configuration_branch
   file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.autonomous_databases_output_file_name}" : local.autonomous_databases_output_file_name
@@ -623,14 +640,14 @@ resource "local_file" "ocvs" {
 
 ### Writing Cloud Exadata Database output to file
 resource "local_file" "cloud_exadata_database" {
-  count    = var.save_output && lower(var.configuration_source) == "file" && local.cloud_exadata_database_output != null ? 1 : 0
+  count    = local.publish_cloud_exadata_database_output && local.writes_outputs_to_file ? 1 : 0
   filename = "${coalesce(var.output_folder_path, path.module)}/${local.cloud_exadata_database_output_file_name}"
   content  = local.cloud_exadata_database_content
 }
 
 ### Writing Autonomous Database output to file
 resource "local_file" "autonomous_databases" {
-  count    = var.save_output && lower(var.configuration_source) == "file" && local.autonomous_databases_output != null ? 1 : 0
+  count    = local.publish_autonomous_databases_output && local.writes_outputs_to_file ? 1 : 0
   filename = "${coalesce(var.output_folder_path, path.module)}/${local.autonomous_databases_output_file_name}"
   content  = local.autonomous_databases_content
 }
