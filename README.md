@@ -31,9 +31,9 @@ Such approach allows for the build out of custom Landing Zones in a declarative 
 
 ## Requirements
 
-## Terraform Version >= 1.3.0
+## Terraform Version >= 1.5.0
 
-This module requires Terraform binary version 1.3.0 or greater, as it relies on Optional Object Type Attributes feature. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
+This module requires Terraform binary version 1.5.0 or greater.
 
 ### IAM Permissions
 

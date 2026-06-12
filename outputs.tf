@@ -100,9 +100,9 @@ locals {
   cloud_exadata_database_resources_output = {
     cloud_exadata_infrastructures = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.cloud_exadata_infrastructures, { for k, v in module.oci_lz_cloud_exadata_database[0].cloud_exadata_infrastructures : k => { "id" : v.id } }) : {}
     cloud_vm_clusters             = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.cloud_vm_clusters, { for k, v in module.oci_lz_cloud_exadata_database[0].cloud_vm_clusters : k => { "id" : v.id } }) : {}
-    database_homes                = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.database_homes, { for k, v in nonsensitive(module.oci_lz_cloud_exadata_database[0].database_homes) : k => { "id" : v.id } }) : {}
-    databases                     = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.databases, { for k, v in nonsensitive(module.oci_lz_cloud_exadata_database[0].databases) : k => { "id" : v.id } }) : {}
-    pluggable_databases           = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.pluggable_databases, { for k, v in nonsensitive(module.oci_lz_cloud_exadata_database[0].pluggable_databases) : k => { "id" : v.id } }) : {}
+    database_homes                = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.database_homes, { for k, v in module.oci_lz_cloud_exadata_database[0].database_homes : k => { "id" : v.id } }) : {}
+    databases                     = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.databases, { for k, v in module.oci_lz_cloud_exadata_database[0].databases : k => { "id" : v.id } }) : {}
+    pluggable_databases           = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.pluggable_databases, { for k, v in module.oci_lz_cloud_exadata_database[0].pluggable_databases : k => { "id" : v.id } }) : {}
   }
 
   autonomous_databases_resources_output = {
