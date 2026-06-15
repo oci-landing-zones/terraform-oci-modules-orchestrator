@@ -9,6 +9,21 @@ locals {
   compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
     "compartments" : { for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => { "id" : v.id } }
   } : null
+  provisioned_route_tables_dependency_map = module.oci_lz_orchestrator.network_resources != null ? {
+    for k, v in merge(
+      try(module.oci_lz_orchestrator.network_resources.default_route_tables.igw_natgw_specific_default_rts_attachable_to_igw_natgw_sgw_lpg_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.default_route_tables.sgw_specific_default_rts_attachable_to_sgw_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.default_route_tables.lpg_specific_default_rts_attachable_to_lpg_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.default_route_tables.drga_specific_default_rts_attachable_to_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.default_route_tables.non_gw_specific_remaining_default_rts_attachable_to_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.route_tables.igw_natgw_specific_rts_attachable_to_igw_natgw_sgw_lpg_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.route_tables.sgw_specific_rts_attachable_to_sgw_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.route_tables.lpg_specific_rts_attachable_to_lpg_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.route_tables.drga_specific_rts_attachable_to_drga_subnet, {}),
+      try(module.oci_lz_orchestrator.network_resources.route_tables.non_gw_specific_remaining_rts_attachable_to_drga_subnet, {})
+    ) : k => { "id" : v.id }
+  } : {}
+
   identity_domains_output = local.created_identity_domains ? {
     "identity_domains" : { for k, v in module.oci_lz_orchestrator.iam_resources.identity_domains : k => { "id" : v.id } }
   } : null
@@ -17,6 +32,7 @@ locals {
       "vcns" : { for k, v in module.oci_lz_orchestrator.network_resources.vcns : k => { "id" : v.id } },
       "subnets" : { for k, v in module.oci_lz_orchestrator.network_resources.subnets : k => { "id" : v.id } },
       "network_security_groups" : { for k, v in module.oci_lz_orchestrator.network_resources.network_security_groups : k => { "id" : v.id } }
+      "route_tables" : local.provisioned_route_tables_dependency_map
       "dynamic_routing_gateways" : { for k, v in module.oci_lz_orchestrator.network_resources.dynamic_routing_gateways : k => { "id" : v.id } }
       "drg_attachments" : { for k, v in module.oci_lz_orchestrator.network_resources.drg_attachments : k => { "id" : v.id } }
       "remote_peering_connections" : { for k, v in module.oci_lz_orchestrator.network_resources.remote_peering_connections : k => { "id" : v.id, "region_name" : v.region_name } }
@@ -25,7 +41,7 @@ locals {
       "dns_resolver" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_resolver : k => { "id" : v.ocid } }
       "dns_zones" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_zones : k => { "id" : v.ocid } }
       "dns_views" : { for k, v in module.oci_lz_orchestrator.network_resources.dns_views : k => { "id" : v.ocid } }
-      "l7_load_balancers" : {for k, v in try(module.oci_lz_orchestrator.network_resources.l7_load_balancers.l7_load_balancers, {}) : k => {"id" : v.id}}
+      "l7_load_balancers" : { for k, v in try(module.oci_lz_orchestrator.network_resources.l7_load_balancers.l7_load_balancers, {}) : k => { "id" : v.id } }
       "private_service_access" : { for k, v in try(module.oci_lz_orchestrator.network_resources.private_service_access, {}) : k => { "id" : v.id } }
     }
   } : null
