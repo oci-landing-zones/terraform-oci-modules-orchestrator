@@ -181,6 +181,16 @@ variable "ocvs_configuration" {
   default = null
 }
 
+variable "cloud_exadata_database_configuration" {
+  type    = any
+  default = null
+}
+
+variable "autonomous_databases_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null
@@ -202,6 +212,11 @@ variable "tags_dependency" {
 }
 
 variable "network_dependency" {
+  type    = any
+  default = null
+}
+
+variable "subscription_dependency" {
   type    = any
   default = null
 }
@@ -242,6 +257,11 @@ variable "instances_dependency" {
 }
 
 variable "ocvs_dependency" {
+  type    = any
+  default = null
+}
+
+variable "databases_dependency" {
   type    = any
   default = null
 }

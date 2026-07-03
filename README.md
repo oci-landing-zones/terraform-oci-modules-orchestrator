@@ -23,6 +23,7 @@ Repository | Referenced Tags/Branches
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.7)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
+[Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -30,9 +31,9 @@ Such approach allows for the build out of custom Landing Zones in a declarative 
 
 ## Requirements
 
-## Terraform Version >= 1.3.0
+## Terraform Version >= 1.5.0
 
-This module requires Terraform binary version 1.3.0 or greater, as it relies on Optional Object Type Attributes feature. The feature shortens the amount of input values in complex object types, by having Terraform automatically inserting a default value for any missing optional attributes.
+This module requires Terraform binary version 1.5.0 or greater.
 
 ### IAM Permissions
 
@@ -45,6 +46,17 @@ Landing Zones can be expressed in a single configuration or split in multiple se
 To account for these scenarios, the Orchestrator can generate and intake dependency files. The required dependencies for a given Orchestrator instance depends on what is expressed in its input configurations. For example, if you refer to a compartment key (instead of an OCID) in the *compartment_id* attribute of *network_configuration*, the *compartments_dependency* variable is required. If you refer to a subnet key (instead of an OCID) in the *subnet_id* attribute of *instances_configuration*, the *network_dependency* variable is required. Each underlying module specifies its supported dependencies, and the Orchestrator figures out the dependency files to generate for further consumption by other Orchestrator instances.
 
 Below are the output file names that are generated for the respective configuration that can be used as a dependency:
+
+**Notes for Exadata Cloud Service:**
+
+- `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
+- For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
+
+**Notes for Autonomous Database:**
+
+- Oracle-managed TDE encryption does not require `security.tde.existing_oci_vault_id` or `security.tde.existing_oci_encryption_key_id`.
+- For customer-managed TDE encryption with `terraform-oci-modules-exadata` v1.1.0, set `existing_oci_vault_id` to a Vault OCID. `existing_oci_encryption_key_id` can be either a key OCID or a logical key from `keys_output.json` / `kms_dependency`.
+- Creating a vault in the same stack and referencing it from Autonomous Database by logical vault key is not supported by this module integration today.
 
 Configuration | Output File Name
 --------------|------------------
@@ -61,6 +73,8 @@ instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
+cloud_exadata_database_configuration | cloud_exadata_database_output.json
+autonomous_databases_configuration | autonomous_databases_output.json
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets, plain URLs, or local file system. Dependencies can also be consumed from GitHub repositories, OCI buckets and local file system.
 

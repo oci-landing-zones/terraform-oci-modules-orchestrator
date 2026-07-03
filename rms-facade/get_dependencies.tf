@@ -86,6 +86,7 @@ locals {
   tags_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "tags") ? { "tags" : local.merged_dependencies.tags } : null : null
   network_dependency          = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "network_resources") ? { "network_resources" : local.merged_dependencies.network_resources } : null : null
   kms_dependency              = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "keys") ? { "keys" : local.merged_dependencies.keys } : null : null
+  subscription_dependency     = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "subscriptions") ? { "subscriptions" : local.merged_dependencies.subscriptions } : null : null
   streams_dependency          = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "streams") ? { "streams" : local.merged_dependencies.streams } : null : null
   topics_dependency           = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "topics") ? { "topics" : local.merged_dependencies.topics } : null : null
   logging_dependency          = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "service_logs") ? { "service_logs" : local.merged_dependencies.service_logs } : {}, contains(keys(local.merged_dependencies), "custom_logs") ? { "custom_logs" : local.merged_dependencies.custom_logs } : {}) : null
@@ -93,5 +94,6 @@ locals {
   vaults_dependency           = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "vaults") ? { "vaults" : local.merged_dependencies.vaults } : null : null
   instances_dependency        = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {}, contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {}) : null
   ocvs_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "clusters") ? { "clusters" : local.merged_dependencies.clusters } : null : null
+  databases_dependency        = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "container_databases") ? { "container_databases" : local.merged_dependencies.container_databases } : null : null
   nlbs_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }

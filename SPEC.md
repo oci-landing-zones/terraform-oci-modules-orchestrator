@@ -2,7 +2,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 
 ## Providers
 
@@ -17,6 +17,7 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_oci_lz_alarms"></a> [oci\_lz\_alarms](#module\_oci\_lz\_alarms) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms | v0.2.6 |
+| <a name="module_oci_lz_autonomous_databases"></a> [oci\_lz\_autonomous\_databases](#module\_oci\_lz\_autonomous\_databases) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database | v1.1.0 |
 | <a name="module_oci_lz_bastions"></a> [oci\_lz\_bastions](#module\_oci\_lz\_bastions) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion | v0.2.3 |
 | <a name="module_oci_lz_budgets"></a> [oci\_lz\_budgets](#module\_oci\_lz\_budgets) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//budgets | v0.1.6 |
 | <a name="module_oci_lz_cloud_guard"></a> [oci\_lz\_cloud\_guard](#module\_oci\_lz\_cloud\_guard) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard | v0.2.3 |
@@ -24,6 +25,7 @@
 | <a name="module_oci_lz_compute"></a> [oci\_lz\_compute](#module\_oci\_lz\_compute) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage | v0.2.7 |
 | <a name="module_oci_lz_dynamic_groups"></a> [oci\_lz\_dynamic\_groups](#module\_oci\_lz\_dynamic\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups | v0.3.4 |
 | <a name="module_oci_lz_events"></a> [oci\_lz\_events](#module\_oci\_lz\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.6 |
+| <a name="module_oci_lz_cloud_exadata_database"></a> [oci\_lz\_cloud\_exadata\_database](#module\_oci\_lz\_cloud\_exadata\_database) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database | v1.1.0 |
 | <a name="module_oci_lz_groups"></a> [oci\_lz\_groups](#module\_oci\_lz\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups | v0.3.4 |
 | <a name="module_oci_lz_home_region_events"></a> [oci\_lz\_home\_region\_events](#module\_oci\_lz\_home\_region\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.6 |
 | <a name="module_oci_lz_identity_domains"></a> [oci\_lz\_identity\_domains](#module\_oci\_lz\_identity\_domains) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains | v0.3.4 |
@@ -46,9 +48,11 @@
 
 | Name | Type |
 |------|------|
+| [local_file.autonomous_databases_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.bastions_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.compartments_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.custom_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.cloud_exadata_database_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.identity_domains_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.instances_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.keys_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -72,13 +76,16 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alarms_configuration"></a> [alarms\_configuration](#input\_alarms\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_autonomous_databases_configuration"></a> [autonomous\_databases\_configuration](#input\_autonomous\_databases\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_bastions_configuration"></a> [bastions\_configuration](#input\_bastions\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_budgets_configuration"></a> [budgets\_configuration](#input\_budgets\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_cloud_guard_configuration"></a> [cloud\_guard\_configuration](#input\_cloud\_guard\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_compartments_configuration"></a> [compartments\_configuration](#input\_compartments\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_compartments_dependency"></a> [compartments\_dependency](#input\_compartments\_dependency) | n/a | `any` | `null` | no |
+| <a name="input_databases_dependency"></a> [databases\_dependency](#input\_databases\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_dynamic_groups_configuration"></a> [dynamic\_groups\_configuration](#input\_dynamic\_groups\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_events_configuration"></a> [events\_configuration](#input\_events\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_cloud_exadata_database_configuration"></a> [cloud\_exadata\_database\_configuration](#input\_cloud\_exadata\_database\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | n/a | `string` | `null` | no |
 | <a name="input_functions_dependency"></a> [functions\_dependency](#input\_functions\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_groups_configuration"></a> [groups\_configuration](#input\_groups\_configuration) | n/a | `any` | `null` | no |
@@ -113,6 +120,7 @@
 | <a name="input_security_zones_configuration"></a> [security\_zones\_configuration](#input\_security\_zones\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_service_connectors_configuration"></a> [service\_connectors\_configuration](#input\_service\_connectors\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_storage_configuration"></a> [storage\_configuration](#input\_storage\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_subscription_dependency"></a> [subscription\_dependency](#input\_subscription\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_streams_configuration"></a> [streams\_configuration](#input\_streams\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_streams_dependency"></a> [streams\_dependency](#input\_streams\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_tags_configuration"></a> [tags\_configuration](#input\_tags\_configuration) | n/a | `any` | `null` | no |
@@ -128,7 +136,9 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_autonomous_databases_resources"></a> [autonomous\_databases\_resources](#output\_autonomous\_databases\_resources) | Provisioned Autonomous Database resources |
 | <a name="output_compute_resources"></a> [compute\_resources](#output\_compute\_resources) | Provisioned compute resources |
+| <a name="output_cloud_exadata_database_resources"></a> [cloud\_exadata\_database\_resources](#output\_cloud\_exadata\_database\_resources) | Provisioned Cloud Exadata Database resources |
 | <a name="output_governance_resources"></a> [governance\_resources](#output\_governance\_resources) | Provisioned governance resources |
 | <a name="output_iam_resources"></a> [iam\_resources](#output\_iam\_resources) | Provisioned identity resources |
 | <a name="output_network_resources"></a> [network\_resources](#output\_network\_resources) | Provisioned networking resources |
