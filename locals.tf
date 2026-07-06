@@ -134,6 +134,18 @@ locals {
     )
   }) : null
 
+  cloud_exadata_database_configuration = var.cloud_exadata_database_configuration == null ? null : merge(var.cloud_exadata_database_configuration, {
+    cloud_db_homes_configuration = try(var.cloud_exadata_database_configuration.cloud_db_homes_configuration, null) == null ? null : {
+      for db_home_key, db_home in var.cloud_exadata_database_configuration.cloud_db_homes_configuration :
+      db_home_key => merge(db_home, {
+        vm_cluster_id = try(
+          can(regex("^ocid1\\.", try(db_home.vm_cluster_id, ""))) ? db_home.vm_cluster_id : local.azure_oracle_database_dependency.azure_vm_clusters[db_home.vm_cluster_id].ocid,
+          try(db_home.vm_cluster_id, null)
+        )
+      })
+    }
+  })
+
   # var.nlbs_dependency
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
   nlbs_dependency  = { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } }
