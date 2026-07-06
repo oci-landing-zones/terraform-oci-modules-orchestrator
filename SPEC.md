@@ -8,6 +8,8 @@
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azapi"></a> [azapi](#provider\_azapi) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 4.9.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.7.0 |
 | <a name="provider_oci"></a> [oci](#provider\_oci) | 6.35.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.13.0 |
@@ -16,6 +18,10 @@
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_azure_lz_oracle_exadata_infrastructure"></a> [azure\_lz\_oracle\_exadata\_infrastructure](#module\_azure\_lz\_oracle\_exadata\_infrastructure) | git::https://github.com/oci-landing-zones/terraform-oci-multicloud-azure.git//modules/azurerm-ora-exadata-infra | v0.1.3 |
+| <a name="module_azure_lz_oracle_autonomous_database"></a> [azure\_lz\_oracle\_autonomous\_database](#module\_azure\_lz\_oracle\_autonomous\_database) | git::https://github.com/oci-landing-zones/terraform-oci-multicloud-azure.git//modules/azure-oracle-adbs | v0.1.3 |
+| <a name="module_azure_lz_oracle_vm_cluster"></a> [azure\_lz\_oracle\_vm\_cluster](#module\_azure\_lz\_oracle\_vm\_cluster) | git::https://github.com/oci-landing-zones/terraform-oci-multicloud-azure.git//modules/azurerm-ora-exadata-vmc | v0.1.3 |
+| <a name="module_azure_lz_oracle_vmc_network"></a> [azure\_lz\_oracle\_vmc\_network](#module\_azure\_lz\_oracle\_vmc\_network) | git::https://github.com/oci-landing-zones/terraform-oci-multicloud-azure.git//modules/azure-vnet-subnet | v0.1.3 |
 | <a name="module_oci_lz_alarms"></a> [oci\_lz\_alarms](#module\_oci\_lz\_alarms) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms | v0.2.6 |
 | <a name="module_oci_lz_autonomous_databases"></a> [oci\_lz\_autonomous\_databases](#module\_oci\_lz\_autonomous\_databases) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database | v1.1.0 |
 | <a name="module_oci_lz_bastions"></a> [oci\_lz\_bastions](#module\_oci\_lz\_bastions) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion | v0.2.3 |
@@ -49,6 +55,7 @@
 | Name | Type |
 |------|------|
 | [local_file.autonomous_databases_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.azure_oracle_database_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.bastions_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.compartments_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.custom_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -77,6 +84,8 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_alarms_configuration"></a> [alarms\_configuration](#input\_alarms\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_autonomous_databases_configuration"></a> [autonomous\_databases\_configuration](#input\_autonomous\_databases\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_azure_oracle_database_configuration"></a> [azure\_oracle\_database\_configuration](#input\_azure\_oracle\_database\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_azure_oracle_database_dependency"></a> [azure\_oracle\_database\_dependency](#input\_azure\_oracle\_database\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_bastions_configuration"></a> [bastions\_configuration](#input\_bastions\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_budgets_configuration"></a> [budgets\_configuration](#input\_budgets\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_cloud_guard_configuration"></a> [cloud\_guard\_configuration](#input\_cloud\_guard\_configuration) | n/a | `any` | `null` | no |
@@ -137,6 +146,7 @@
 | Name | Description |
 |------|-------------|
 | <a name="output_autonomous_databases_resources"></a> [autonomous\_databases\_resources](#output\_autonomous\_databases\_resources) | Provisioned Autonomous Database resources |
+| <a name="output_azure_oracle_database_resources"></a> [azure\_oracle\_database\_resources](#output\_azure\_oracle\_database\_resources) | Provisioned Oracle Database@Azure resources |
 | <a name="output_compute_resources"></a> [compute\_resources](#output\_compute\_resources) | Provisioned compute resources |
 | <a name="output_cloud_exadata_database_resources"></a> [cloud\_exadata\_database\_resources](#output\_cloud\_exadata\_database\_resources) | Provisioned Cloud Exadata Database resources |
 | <a name="output_governance_resources"></a> [governance\_resources](#output\_governance\_resources) | Provisioned governance resources |

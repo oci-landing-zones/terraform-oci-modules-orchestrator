@@ -53,8 +53,21 @@ terraform {
       source                = "oracle/oci"
       configuration_aliases = [oci.home]
     }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.9.0"
+    }
+    azapi = {
+      source = "Azure/azapi"
+    }
     time = {
       source = "hashicorp/time"
     }
   }
 }
+
+provider "azurerm" {
+  features {}
+}
+
+provider "azapi" {}

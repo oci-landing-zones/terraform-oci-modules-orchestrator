@@ -58,21 +58,24 @@ module "oci_lz_orchestrator" {
   cloud_exadata_database_configuration = local.cloud_exadata_database_configuration
   # Autonomous Database
   autonomous_databases_configuration = local.autonomous_databases_configuration
+  # Oracle Database@Azure
+  azure_oracle_database_configuration = local.azure_oracle_database_configuration
 
   # Dependencies
-  compartments_dependency     = local.compartments_dependency
-  identity_domains_dependency = local.identity_domains_dependency
-  network_dependency          = local.network_dependency
-  tags_dependency             = local.tags_dependency
-  kms_dependency              = local.kms_dependency
-  subscription_dependency     = local.subscription_dependency
-  streams_dependency          = local.streams_dependency
-  topics_dependency           = local.topics_dependency
-  logging_dependency          = local.logging_dependency
-  functions_dependency        = local.functions_dependency
-  vaults_dependency           = local.vaults_dependency
-  instances_dependency        = local.instances_dependency
-  ocvs_dependency             = local.ocvs_dependency
-  databases_dependency        = local.databases_dependency
-  nlbs_dependency             = local.nlbs_dependency
+  compartments_dependency          = local.compartments_dependency
+  identity_domains_dependency      = local.identity_domains_dependency
+  network_dependency               = local.network_dependency
+  tags_dependency                  = local.tags_dependency
+  kms_dependency                   = local.kms_dependency
+  subscription_dependency          = local.subscription_dependency
+  streams_dependency               = local.streams_dependency
+  topics_dependency                = local.topics_dependency
+  logging_dependency               = local.logging_dependency
+  functions_dependency             = local.functions_dependency
+  vaults_dependency                = local.vaults_dependency
+  instances_dependency             = local.instances_dependency
+  ocvs_dependency                  = local.ocvs_dependency
+  databases_dependency             = local.databases_dependency
+  azure_oracle_database_dependency = local.azure_oracle_database_dependency
+  nlbs_dependency                  = local.nlbs_dependency
 }

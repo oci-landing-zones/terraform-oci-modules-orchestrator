@@ -95,5 +95,11 @@ locals {
   instances_dependency        = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {}, contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {}) : null
   ocvs_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "clusters") ? { "clusters" : local.merged_dependencies.clusters } : null : null
   databases_dependency        = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "container_databases") ? { "container_databases" : local.merged_dependencies.container_databases } : null : null
-  nlbs_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
+  azure_oracle_database_dependency = local.merged_dependencies != null ? merge(
+    contains(keys(local.merged_dependencies), "azure_vmc_networks") ? { "azure_vmc_networks" : local.merged_dependencies.azure_vmc_networks } : {},
+    contains(keys(local.merged_dependencies), "azure_exadata_infrastructures") ? { "azure_exadata_infrastructures" : local.merged_dependencies.azure_exadata_infrastructures } : {},
+    contains(keys(local.merged_dependencies), "azure_vm_clusters") ? { "azure_vm_clusters" : local.merged_dependencies.azure_vm_clusters } : {},
+    contains(keys(local.merged_dependencies), "azure_autonomous_databases") ? { "azure_autonomous_databases" : local.merged_dependencies.azure_autonomous_databases } : {}
+  ) : null
+  nlbs_dependency = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }

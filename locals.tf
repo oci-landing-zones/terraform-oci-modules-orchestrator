@@ -67,6 +67,73 @@ locals {
   ext_dep_container_databases_map = var.databases_dependency != null ? try(var.databases_dependency.container_databases, jsondecode(file(var.databases_dependency)).container_databases, null) : null
   databases_dependency            = local.ext_dep_container_databases_map != null ? { "container_databases" : { for k, v in local.ext_dep_container_databases_map : k => { "id" : v.id } } } : null
 
+  # var.azure_oracle_database_dependency
+  ext_dep_azure_oracle_database_map = var.azure_oracle_database_dependency != null ? try(var.azure_oracle_database_dependency.azure_oracle_database_resources, jsondecode(file(var.azure_oracle_database_dependency)).azure_oracle_database_resources, var.azure_oracle_database_dependency, jsondecode(file(var.azure_oracle_database_dependency)), null) : null
+  azure_oracle_database_input_dependency = local.ext_dep_azure_oracle_database_map != null || length(module.azure_lz_oracle_vmc_network) > 0 || length(module.azure_lz_oracle_exadata_infrastructure) > 0 ? {
+    "azure_vmc_networks" : merge(
+      { for k, v in try(local.ext_dep_azure_oracle_database_map.azure_vmc_networks, {}) : k => {
+        "id"                  = v.id
+        "name"                = try(v.name, k)
+        "resource_group_name" = try(v.resource_group_name, null)
+        "subnets"             = { for subnet_key, subnet in try(v.subnets, {}) : subnet_key => { "id" = subnet.id, "name" = try(subnet.name, subnet_key) } }
+      } },
+      { for k, v in module.azure_lz_oracle_vmc_network : k => {
+        "id"                  = v.resource_id
+        "name"                = try(v.resource.name, k)
+        "resource_group_name" = v.resource_group_name
+        "subnets"             = { for subnet_key, subnet in try(v.subnets, {}) : subnet_key => { "id" = try(subnet.resource_id, subnet.id), "name" = try(subnet.name, subnet_key) } }
+      } }
+    )
+    "azure_exadata_infrastructures" : merge(
+      { for k, v in try(local.ext_dep_azure_oracle_database_map.azure_exadata_infrastructures, {}) : k => {
+        "id"                   = v.id
+        "name"                 = try(v.name, k)
+        "oci_region"           = try(v.oci_region, null)
+        "oci_compartment_ocid" = try(v.oci_compartment_ocid, null)
+      } },
+      { for k, v in module.azure_lz_oracle_exadata_infrastructure : k => {
+        "id"                   = v.resource_id
+        "name"                 = try(v.resource.name, k)
+        "oci_region"           = try(v.oci_region, null)
+        "oci_compartment_ocid" = try(v.oci_compartment_ocid, null)
+      } }
+    )
+  } : null
+  azure_oracle_database_dependency = local.azure_oracle_database_input_dependency != null || length(module.azure_lz_oracle_vm_cluster) > 0 || length(module.azure_lz_oracle_autonomous_database) > 0 ? merge(coalesce(local.azure_oracle_database_input_dependency, {}), {
+    "azure_vm_clusters" = merge(
+      { for k, v in try(local.ext_dep_azure_oracle_database_map.azure_vm_clusters, {}) : k => {
+        "id"                   = try(v.id, null)
+        "ocid"                 = try(v.ocid, v.vm_cluster_ocid, null)
+        "hostname_actual"      = try(v.hostname_actual, null)
+        "oci_region"           = try(v.oci_region, null)
+        "oci_compartment_ocid" = try(v.oci_compartment_ocid, null)
+        "oci_vcn_ocid"         = try(v.oci_vcn_ocid, null)
+        "oci_nsg_ocid"         = try(v.oci_nsg_ocid, null)
+      } },
+      { for k, v in module.azure_lz_oracle_vm_cluster : k => {
+        "id"                   = v.resource_id
+        "ocid"                 = v.vm_cluster_ocid
+        "hostname_actual"      = try(v.vm_cluster_hostname_actual, null)
+        "oci_region"           = try(v.oci_region, null)
+        "oci_compartment_ocid" = try(v.oci_compartment_ocid, null)
+        "oci_vcn_ocid"         = try(v.oci_vcn_ocid, null)
+        "oci_nsg_ocid"         = try(v.oci_nsg_ocid, null)
+      } }
+    )
+    "azure_autonomous_databases" = merge(
+      { for k, v in try(local.ext_dep_azure_oracle_database_map.azure_autonomous_databases, {}) : k => {
+        "id"         = try(v.id, v.autonomous_db_id, null)
+        "ocid"       = try(v.ocid, v.autonomous_db_ocid, null)
+        "properties" = try(v.properties, v.autonomous_db_properties, null)
+      } },
+      { for k, v in module.azure_lz_oracle_autonomous_database : k => {
+        "id"         = v.autonomous_db_id
+        "ocid"       = v.autonomous_db_ocid
+        "properties" = v.autonomous_db_properties
+      } }
+    )
+  }) : null
+
   # var.nlbs_dependency
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
   nlbs_dependency  = { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } }

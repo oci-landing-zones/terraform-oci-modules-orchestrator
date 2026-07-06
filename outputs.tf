@@ -108,6 +108,13 @@ locals {
   autonomous_databases_resources_output = {
     autonomous_databases = length(module.oci_lz_autonomous_databases) > 0 ? try(module.oci_lz_autonomous_databases[0].autonomous_databases_dependency.autonomous_databases, { for k, v in module.oci_lz_autonomous_databases[0].autonomous_databases : k => { "id" : try(v.id, v.ocid) } }) : {}
   }
+
+  azure_oracle_database_resources_output = merge({
+    azure_vmc_networks            = {}
+    azure_exadata_infrastructures = {}
+    azure_vm_clusters             = {}
+    azure_autonomous_databases    = {}
+  }, local.azure_oracle_database_dependency != null ? local.azure_oracle_database_dependency : {})
 }
 
 output "cloud_exadata_database_resources" {
@@ -118,6 +125,11 @@ output "cloud_exadata_database_resources" {
 output "autonomous_databases_resources" {
   description = "Provisioned Autonomous Database resources"
   value       = local.autonomous_databases_resources_output
+}
+
+output "azure_oracle_database_resources" {
+  description = "Provisioned Oracle Database@Azure resources"
+  value       = local.azure_oracle_database_resources_output
 }
 
 output "nlb_resources" {
@@ -249,4 +261,10 @@ resource "local_file" "autonomous_databases_output" {
   count    = var.output_path != null && length(module.oci_lz_autonomous_databases) > 0 ? 1 : 0
   content  = jsonencode(local.autonomous_databases_resources_output)
   filename = "${var.output_path}/autonomous_databases_output.json"
+}
+
+resource "local_file" "azure_oracle_database_output" {
+  count    = var.output_path != null && var.azure_oracle_database_configuration != null ? 1 : 0
+  content  = jsonencode(local.azure_oracle_database_resources_output)
+  filename = "${var.output_path}/azure_oracle_database_output.json"
 }

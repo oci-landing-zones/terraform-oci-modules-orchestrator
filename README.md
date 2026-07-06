@@ -24,6 +24,7 @@ Repository | Referenced Tags/Branches
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.7)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
+[Oracle Database@Azure](https://github.com/oci-landing-zones/terraform-oci-multicloud-azure) | v0.1.3 branch
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -52,6 +53,12 @@ Below are the output file names that are generated for the respective configurat
 - `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
 - For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
 
+**Notes for Oracle Database@Azure:**
+
+- `azure_oracle_database_configuration` provisions the Azure-side VMC network, Exadata infrastructure, VM clusters, and Autonomous Database Serverless resources. The VMC network uses `terraform-oci-multicloud-azure` module `azure-vnet-subnet`; Exadata infrastructure, VM clusters, and Autonomous Databases use `terraform-oci-multicloud-azure` modules `azurerm-ora-exadata-infra`, `azurerm-ora-exadata-vmc`, and `azure-oracle-adbs`.
+- Oracle Homes, Container Databases, and Pluggable Databases are not provisioned by `azure_oracle_database_configuration`. Use the `cloud_exadata_database_configuration` integration backed by `terraform-oci-modules-exadata` for those resources.
+- `azure_oracle_database_output.json` can be consumed through `azure_oracle_database_dependency`. VM cluster configurations can either provide literal Azure IDs or reference same-stack/dependency keys for `exadata_infrastructure_key`, `vmc_network_key`, and optionally `delegated_subnet_key`.
+
 **Notes for Autonomous Database:**
 
 - Oracle-managed TDE encryption does not require `security.tde.existing_oci_vault_id` or `security.tde.existing_oci_encryption_key_id`.
@@ -75,6 +82,7 @@ bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
 autonomous_databases_configuration | autonomous_databases_output.json
+azure_oracle_database_configuration | azure_oracle_database_output.json
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets, plain URLs, or local file system. Dependencies can also be consumed from GitHub repositories, OCI buckets and local file system.
 

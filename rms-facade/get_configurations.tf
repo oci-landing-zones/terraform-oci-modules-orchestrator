@@ -125,4 +125,7 @@ locals {
 
   # Autonomous Database
   autonomous_databases_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "autonomous_databases_configuration") ? local.merged_input_configs.autonomous_databases_configuration : null : null
+
+  # Oracle Database@Azure
+  azure_oracle_database_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "azure_oracle_database_configuration") ? local.merged_input_configs.azure_oracle_database_configuration : null : null
 }

@@ -191,6 +191,11 @@ variable "autonomous_databases_configuration" {
   default = null
 }
 
+variable "azure_oracle_database_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null
@@ -262,6 +267,11 @@ variable "ocvs_dependency" {
 }
 
 variable "databases_dependency" {
+  type    = any
+  default = null
+}
+
+variable "azure_oracle_database_dependency" {
   type    = any
   default = null
 }
