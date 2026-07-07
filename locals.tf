@@ -42,6 +42,41 @@ locals {
     "public_ips" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "public_ips") ? local.ext_dep_network_map["public_ips"] : {}) : {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_network) > 0 ? (contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "public_ips") ? module.oci_lz_network[0].provisioned_networking_resources["public_ips"] : {}) : {}) : k => { "id" : v.id } })
   } : null
 
+  # OCVS v1.1.0 expects resource-specific attributes instead of canonical { id } dependency entries.
+  ocvs_network_dependency_attributes = {
+    network_security_groups = [
+      "nsx_edge_uplink_1_nsg_id",
+      "nsx_edge_uplink_2_nsg_id",
+      "nsx_vtep_nsg_id",
+      "nsx_edge_vtep_nsg_id",
+      "vmotion_nsg_id",
+      "vsan_nsg_id",
+      "vsphere_nsg_id",
+      "hcx_nsg_id",
+      "replication_nsg_id",
+      "provisioning_nsg_id"
+    ]
+    route_tables = [
+      "nsx_edge_uplink_1_rt_id",
+      "nsx_edge_uplink_2_rt_id",
+      "nsx_vtep_rt_id",
+      "nsx_edge_vtep_rt_id",
+      "vmotion_rt_id",
+      "vsan_rt_id",
+      "vsphere_rt_id",
+      "hcx_rt_id",
+      "replication_rt_id",
+      "provisioning_rt_id"
+    ]
+  }
+  ocvs_network_dependency = local.network_dependency != null ? merge(local.network_dependency, {
+    for dependency_type, attributes in local.ocvs_network_dependency_attributes : dependency_type => {
+      for key, dependency in try(local.network_dependency[dependency_type], {}) : key => {
+        for attribute in attributes : attribute => dependency.id
+      }
+    }
+  }) : null
+
   # var.streams_dependency
   ext_dep_streams_map = var.streams_dependency != null ? try(var.streams_dependency.streams, jsondecode(file(var.streams_dependency)).streams, null) : null
   streams_dependency  = merge({ for k, v in coalesce(local.ext_dep_streams_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_streams) > 0 ? module.oci_lz_streams[0].streams : {}) : k => { "id" : v.id, "compartment_id" : v.compartment_id } })

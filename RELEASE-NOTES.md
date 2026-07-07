@@ -1,4 +1,4 @@
-# July 6, 2026 Release Notes - 2.1.3
+# July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes
 
@@ -13,8 +13,9 @@
 
 ## Bug Fixes
 
-1. Networking v0.8.3 fixes reserved private IP resolution for private Load Balancers.
-2. Networking v0.8.3 makes both NSG ingress and egress rules recognize `objectstorage` and `all-services`; other values continue to pass through to the OCI API unchanged.
+1. OCVS network dependencies now translate canonical NSG and route table `{ id }` entries into the resource-specific attributes expected by OCVS v1.1.0. This supports both resources created by the orchestrator and externally supplied dependencies.
+2. Networking v0.8.3 fixes reserved private IP resolution for private Load Balancers.
+3. Networking v0.8.3 makes both NSG ingress and egress rules recognize `objectstorage` and `all-services`; other values continue to pass through to the OCI API unchanged.
 
 # June 11, 2026 Release Notes - 2.1.2
 

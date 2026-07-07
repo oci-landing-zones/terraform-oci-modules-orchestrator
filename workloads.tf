@@ -37,7 +37,7 @@ module "oci_lz_ocvs" {
   tenancy_ocid            = var.tenancy_ocid
   ocvs_configuration      = var.ocvs_configuration
   compartments_dependency = local.compartments_dependency
-  network_dependency      = local.network_dependency
+  network_dependency      = local.ocvs_network_dependency
 }
 
 module "oci_lz_cloud_exadata_database" {
