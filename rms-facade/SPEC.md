@@ -91,6 +91,9 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_auth"></a> [auth](#input\_auth) | OCI provider authentication method. | `string` | `"APIKey"` | no |
+| <a name="input_config_file"></a> [config\_file](#input\_config\_file) | OCI CLI configuration file path to use when the selected authentication method requires it. | `string` | `null` | no |
+| <a name="input_config_file_profile"></a> [config\_file\_profile](#input\_config\_file\_profile) | OCI CLI configuration profile to use when the selected authentication method requires it. | `string` | `null` | no |
 | <a name="input_configuration_source"></a> [configuration\_source](#input\_configuration\_source) | The source where configuration files are pulled from. | `string` | `"url"` | no |
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | n/a | `string` | `null` | no |
 | <a name="input_github_base_url"></a> [github\_base\_url](#input\_github\_base\_url) | GitHub base API endpoint. Required when working with GitHub Enterprise. The value must end with a slash. E.g. https://example.com/ | `string` | `null` | no |

@@ -15,6 +15,9 @@ locals {
 }
 
 provider "oci" {
+  auth                 = var.auth
+  config_file_profile  = var.config_file_profile
+  config_file          = var.config_file
   region               = var.region
   tenancy_ocid         = var.tenancy_ocid
   user_ocid            = var.user_ocid
@@ -26,6 +29,9 @@ provider "oci" {
 
 provider "oci" {
   alias                = "home"
+  auth                 = var.auth
+  config_file_profile  = var.config_file_profile
+  config_file          = var.config_file
   region               = local.regions_map[local.home_region_key]
   tenancy_ocid         = var.tenancy_ocid
   user_ocid            = var.user_ocid
@@ -37,6 +43,9 @@ provider "oci" {
 
 provider "oci" {
   alias                = "secondary_region"
+  auth                 = var.auth
+  config_file_profile  = var.config_file_profile
+  config_file          = var.config_file
   region               = local.regions_map[local.home_region_key]
   tenancy_ocid         = var.tenancy_ocid
   user_ocid            = var.user_ocid

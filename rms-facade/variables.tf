@@ -5,6 +5,21 @@ variable "tenancy_ocid" {
   type    = string
   default = null
 }
+variable "auth" {
+  type        = string
+  default     = "APIKey"
+  description = "OCI provider authentication method."
+}
+variable "config_file_profile" {
+  type        = string
+  default     = null
+  description = "OCI CLI configuration profile to use when the selected authentication method requires it."
+}
+variable "config_file" {
+  type        = string
+  default     = null
+  description = "OCI CLI configuration file path to use when the selected authentication method requires it."
+}
 variable "user_ocid" {
   type    = string
   default = null
@@ -169,4 +184,3 @@ variable "local_dependency_file_paths" {
   description = "List of local dependency files in JSON format."
   default     = []
 }
-

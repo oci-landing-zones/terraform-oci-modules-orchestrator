@@ -83,6 +83,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alarms_configuration"></a> [alarms\_configuration](#input\_alarms\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_auth"></a> [auth](#input\_auth) | OCI provider authentication method. | `string` | `"APIKey"` | no |
 | <a name="input_autonomous_databases_configuration"></a> [autonomous\_databases\_configuration](#input\_autonomous\_databases\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_azure_oracle_database_configuration"></a> [azure\_oracle\_database\_configuration](#input\_azure\_oracle\_database\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_azure_oracle_database_dependency"></a> [azure\_oracle\_database\_dependency](#input\_azure\_oracle\_database\_dependency) | n/a | `any` | `null` | no |
@@ -91,6 +92,8 @@
 | <a name="input_cloud_guard_configuration"></a> [cloud\_guard\_configuration](#input\_cloud\_guard\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_compartments_configuration"></a> [compartments\_configuration](#input\_compartments\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_compartments_dependency"></a> [compartments\_dependency](#input\_compartments\_dependency) | n/a | `any` | `null` | no |
+| <a name="input_config_file"></a> [config\_file](#input\_config\_file) | OCI CLI configuration file path to use when the selected authentication method requires it. | `string` | `null` | no |
+| <a name="input_config_file_profile"></a> [config\_file\_profile](#input\_config\_file\_profile) | OCI CLI configuration profile to use when the selected authentication method requires it. | `string` | `null` | no |
 | <a name="input_databases_dependency"></a> [databases\_dependency](#input\_databases\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_dynamic_groups_configuration"></a> [dynamic\_groups\_configuration](#input\_dynamic\_groups\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_events_configuration"></a> [events\_configuration](#input\_events\_configuration) | n/a | `any` | `null` | no |

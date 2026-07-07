@@ -4,6 +4,9 @@
 module "oci_lz_orchestrator" {
   source = "../"
 
+  auth                 = var.auth
+  config_file_profile  = var.config_file_profile
+  config_file          = var.config_file
   tenancy_ocid         = var.tenancy_ocid
   region               = var.region
   user_ocid            = var.user_ocid

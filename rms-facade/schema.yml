@@ -50,6 +50,9 @@ variableGroups:
     visible: false
     variables:
       - tenancy_ocid
+      - auth
+      - config_file_profile
+      - config_file
       - user_ocid
       - fingerprint
       - private_key_path
@@ -347,6 +350,24 @@ variables:
             - "github" 
           
   # Hidden variables
+  tenancy_ocid:
+    type: string
+
+  auth:
+    type: enum
+    default: "APIKey"
+    enum:
+      - "APIKey"
+      - "SecurityToken"
+      - "InstancePrincipal"
+      - "ResourcePrincipal"
+
+  config_file_profile:
+    type: string
+
+  config_file:
+    type: string
+
   user_ocid:
     type: string
 

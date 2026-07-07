@@ -40,6 +40,10 @@ This module requires Terraform binary version 1.5.0 or greater.
 
 The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
 
+### OCI Authentication
+
+The OCI provider authentication method is configurable with `auth`. The default is `APIKey`, which preserves the existing API signing key behavior. For OCI CLI session authentication, set `auth = "SecurityToken"` and provide `config_file_profile` and, optionally, `config_file`. `tenancy_ocid` and `region` are still required by the orchestrator outside the provider block.
+
 ## External Dependencies
 
 Landing Zones can be expressed in a single configuration or split in multiple separate configurations potentially managed by different teams. Separate configurations require the usage of the output of one configuration as the input of another. The classic example is consuming compartments in other configurations, like networking. Other examples are consuming networking resources in Compute instances, or consuming encryption keys in Block volumes. There are many other dependencies examples.

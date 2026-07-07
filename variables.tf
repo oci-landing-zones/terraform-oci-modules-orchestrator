@@ -2,6 +2,21 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 # User Credentials 
+variable "auth" {
+  type        = string
+  default     = "APIKey"
+  description = "OCI provider authentication method."
+}
+variable "config_file_profile" {
+  type        = string
+  default     = null
+  description = "OCI CLI configuration profile to use when the selected authentication method requires it."
+}
+variable "config_file" {
+  type        = string
+  default     = null
+  description = "OCI CLI configuration file path to use when the selected authentication method requires it."
+}
 variable "tenancy_ocid" {
   type    = string
   default = null
