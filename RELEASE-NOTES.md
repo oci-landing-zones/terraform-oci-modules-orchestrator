@@ -1,3 +1,9 @@
+# Next release notes
+
+## Breaking Changes
+
+1. OKE configuration files consumed by the RMS facade must use `oke_clusters_configuration` and `oke_workers_configuration` instead of `clusters_configuration` and `workers_configuration`. See [Issue #60](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/60).
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes
