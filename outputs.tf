@@ -148,6 +148,7 @@ resource "local_file" "network_output" {
     "vcns" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.vcns : k => { "id" : v.id } },
     "subnets" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.subnets : k => { "id" : v.id } },
     "network_security_groups" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.network_security_groups : k => { "id" : v.id } }
+    "route_tables" : local.provisioned_route_tables_dependency_map
     "dynamic_routing_gateways" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.dynamic_routing_gateways : k => { "id" : v.id } }
     "drg_attachments" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.drg_attachments : k => { "id" : v.id } }
     "remote_peering_connections" : { for k, v in module.oci_lz_network[0].provisioned_networking_resources.remote_peering_connections : k => { "id" : v.id, "region_name" : try(v.region_name, var.region) } }

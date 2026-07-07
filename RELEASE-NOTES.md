@@ -1,3 +1,22 @@
+# July 7, 2026 Release Notes - 2.1.3
+
+## Breaking Changes
+
+1. The minimum supported OCI Terraform Provider version is now 6.29.0, as required by the Compute and Storage module in Workloads v0.2.8. Deployments locked to an older provider must run `terraform init -upgrade` and review the resulting plan before applying.
+
+## Updates
+
+1. Route tables created by the Networking module are now included in network dependency outputs and can be consumed by OCVS configurations. See [PR #59](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/pull/59).
+2. Networking updated to [v0.8.3](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.3), adding reserved private IP creation and allowing private Load Balancers to resolve reserved private IP keys from dependencies. Changing a reserved private IP on an existing Load Balancer remains subject to OCI/provider update behavior and may require Load Balancer replacement.
+3. Workloads updated to [v0.2.8](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8), adding instance creation and updates from existing or restored boot volumes, custom Block Volume backup policies, File Storage quotas, and managed OKE node pool metadata. Changing an existing instance's boot volume source replaces its attached boot volume; schedule downtime and preserve the replaced volume unless it can safely be deleted. OCI Terraform Provider 8.21.0 and earlier cannot toggle quota enforcement on an existing file system; use the workaround documented by the Workloads module.
+4. Module references updated. See [Modules Versions](./README.md#mod_versions) for details.
+
+## Bug Fixes
+
+1. OCVS network dependencies now translate canonical NSG and route table `{ id }` entries into the resource-specific attributes expected by OCVS v1.1.0. This supports both resources created by the orchestrator and externally supplied dependencies.
+2. Networking v0.8.3 fixes reserved private IP resolution for private Load Balancers.
+3. Networking v0.8.3 makes both NSG ingress and egress rules recognize `objectstorage` and `all-services`; other values continue to pass through to the OCI API unchanged.
+
 # June 11, 2026 Release Notes - 2.1.2
 
 ## Updates

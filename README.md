@@ -17,11 +17,11 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.4 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.4)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.2 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.2)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.3)
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
-[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.7)
+[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 
@@ -34,6 +34,8 @@ Such approach allows for the build out of custom Landing Zones in a declarative 
 ## Terraform Version >= 1.5.0
 
 This module requires Terraform binary version 1.5.0 or greater.
+
+The OCI Terraform Provider version must be 6.29.0 or greater.
 
 ### IAM Permissions
 
