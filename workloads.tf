@@ -43,7 +43,7 @@ module "oci_lz_ocvs" {
 module "oci_lz_cloud_exadata_database" {
   depends_on = [module.oci_lz_zpr] # cloud_exadata_database_configuration may have ZPR attributes that must exist up front.
   count      = var.cloud_exadata_database_configuration != null ? 1 : 0
-  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database?ref=v1.1.0"
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database?ref=main"
 
   cloud_exadata_infrastructures_configuration = try(local.cloud_exadata_database_configuration.cloud_exadata_infrastructures_configuration, null)
   cloud_vm_clusters_configuration             = try(local.cloud_exadata_database_configuration.cloud_vm_clusters_configuration, null)
@@ -56,6 +56,17 @@ module "oci_lz_cloud_exadata_database" {
   compartments_dependency                     = local.compartments_dependency
   subscription_dependency                     = local.subscription_dependency
   network_dependency                          = local.network_dependency
+  recovery_service_dependency                 = local.recovery_service_dependency
+}
+
+module "oci_lz_autonomous_recovery_service" {
+  depends_on = [module.oci_lz_zpr]
+  count      = var.autonomous_recovery_service_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-recovery-service?ref=main"
+
+  autonomous_recovery_service_configuration = var.autonomous_recovery_service_configuration
+  compartments_dependency                   = local.compartments_dependency
+  network_dependency                        = local.network_dependency
 }
 
 module "oci_lz_autonomous_databases" {

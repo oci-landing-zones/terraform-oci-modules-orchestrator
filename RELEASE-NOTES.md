@@ -1,3 +1,11 @@
+# Unreleased
+
+## Updates
+
+1. Native Autonomous Recovery Service integration added through `autonomous_recovery_service_configuration`, backed by `terraform-oci-modules-exadata//autonomous-recovery-service`.
+2. Added `recovery_service_dependency` input and `autonomous_recovery_service_output` persistence. The output contains `protection_policies` and `recovery_service_subnets` for downstream stacks.
+3. Cloud Exadata Database integration now passes `recovery_service_dependency`, enabling Container Database backup configurations to use ARS protection policy keys created in the same stack or supplied by dependency file.
+
 # June 11, 2026 Release Notes - 2.1.2
 
 ## Updates

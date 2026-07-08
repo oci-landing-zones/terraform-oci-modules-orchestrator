@@ -201,6 +201,11 @@ variable "cloud_exadata_database_configuration" {
   default = null
 }
 
+variable "autonomous_recovery_service_configuration" {
+  type    = any
+  default = null
+}
+
 variable "autonomous_databases_configuration" {
   type    = any
   default = null
@@ -282,6 +287,11 @@ variable "ocvs_dependency" {
 }
 
 variable "databases_dependency" {
+  type    = any
+  default = null
+}
+
+variable "recovery_service_dependency" {
   type    = any
   default = null
 }

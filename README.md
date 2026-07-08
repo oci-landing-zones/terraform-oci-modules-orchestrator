@@ -23,7 +23,7 @@ Repository | Referenced Tags/Branches
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.7 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.7)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
-[Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
+[Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0) for Autonomous Database; `main` branch for Cloud Exadata Database ARS integration and Autonomous Recovery Service until the next module release
 [Oracle Database@Azure](https://github.com/oci-landing-zones/terraform-oci-multicloud-azure) | v0.1.3 branch
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
@@ -54,8 +54,14 @@ Below are the output file names that are generated for the respective configurat
 
 **Notes for Exadata Cloud Service:**
 
-- `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
+- `cloud_exadata_database_output.json` is emitted for inventory and dependency handoff of Exadata Database resources created by the stack.
+- Container Database backup configurations can set `backup_destination_details.dbrs_policy_id` to either a Recovery Service protection policy OCID or a protection policy key from `recovery_service_dependency`. When `autonomous_recovery_service_configuration` and `cloud_exadata_database_configuration` are provided in the same stack, same-stack ARS protection policy keys are supported.
 - For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
+
+**Notes for Autonomous Recovery Service:**
+
+- `autonomous_recovery_service_configuration` provisions Recovery Service subnets and protection policies through the `terraform-oci-modules-exadata` Autonomous Recovery Service module.
+- `autonomous_recovery_service_output.json` contains `protection_policies` and `recovery_service_subnets`. Downstream stacks can consume it through `recovery_service_dependency`.
 
 **Notes for Oracle Database@Azure:**
 
@@ -86,6 +92,7 @@ bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
 autonomous_databases_configuration | autonomous_databases_output.json
+autonomous_recovery_service_configuration | autonomous_recovery_service_output.json
 azure_oracle_database_configuration | azure_oracle_database_output.json
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets, plain URLs, or local file system. Dependencies can also be consumed from GitHub repositories, OCI buckets and local file system.

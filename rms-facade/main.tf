@@ -59,6 +59,8 @@ module "oci_lz_orchestrator" {
   ocvs_configuration = local.ocvs_configuration
   # Cloud Exadata Database
   cloud_exadata_database_configuration = local.cloud_exadata_database_configuration
+  # Autonomous Recovery Service
+  autonomous_recovery_service_configuration = local.autonomous_recovery_service_configuration
   # Autonomous Database
   autonomous_databases_configuration = local.autonomous_databases_configuration
   # Oracle Database@Azure
@@ -79,6 +81,7 @@ module "oci_lz_orchestrator" {
   instances_dependency             = local.instances_dependency
   ocvs_dependency                  = local.ocvs_dependency
   databases_dependency             = local.databases_dependency
+  recovery_service_dependency      = local.recovery_service_dependency
   azure_oracle_database_dependency = local.azure_oracle_database_dependency
   nlbs_dependency                  = local.nlbs_dependency
 }

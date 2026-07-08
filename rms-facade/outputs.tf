@@ -19,6 +19,10 @@ locals {
     try(length(local.cloud_exadata_database_configuration.pluggable_databases_configuration), 0) > 0
   )
   has_autonomous_databases_configuration = try(length(local.autonomous_databases_configuration.databases), 0) > 0
+  has_autonomous_recovery_service_configuration = (
+    try(length(local.autonomous_recovery_service_configuration.recovery_service_subnets), 0) > 0 ||
+    try(length(local.autonomous_recovery_service_configuration.protection_policies), 0) > 0
+  )
   has_azure_oracle_database_configuration = (
     try(length(local.azure_oracle_database_configuration.vmc_networks_configuration), 0) > 0 ||
     try(length(local.azure_oracle_database_configuration.exadata_infrastructures_configuration), 0) > 0 ||
@@ -26,9 +30,10 @@ locals {
     try(length(local.azure_oracle_database_configuration.autonomous_databases_configuration), 0) > 0
   )
 
-  publish_cloud_exadata_database_output = var.save_output && local.has_cloud_exadata_database_configuration
-  publish_autonomous_databases_output   = var.save_output && local.has_autonomous_databases_configuration
-  publish_azure_oracle_database_output  = var.save_output && local.has_azure_oracle_database_configuration
+  publish_cloud_exadata_database_output      = var.save_output && local.has_cloud_exadata_database_configuration
+  publish_autonomous_databases_output        = var.save_output && local.has_autonomous_databases_configuration
+  publish_autonomous_recovery_service_output = var.save_output && local.has_autonomous_recovery_service_configuration
+  publish_azure_oracle_database_output       = var.save_output && local.has_azure_oracle_database_configuration
 
   compartments_output = length(module.oci_lz_orchestrator.iam_resources.compartments) > 0 ? {
     "compartments" : { for k, v in module.oci_lz_orchestrator.iam_resources.compartments : k => { "id" : v.id } }
@@ -104,6 +109,13 @@ locals {
   autonomous_databases_output = length(module.oci_lz_orchestrator.autonomous_databases_resources.autonomous_databases) > 0 ? {
     "autonomous_databases" : { for k, v in module.oci_lz_orchestrator.autonomous_databases_resources.autonomous_databases : k => { "id" : try(v.id, v.ocid) } }
   } : null
+  autonomous_recovery_service_output = (
+    length(module.oci_lz_orchestrator.autonomous_recovery_service_resources.protection_policies) > 0 ||
+    length(module.oci_lz_orchestrator.autonomous_recovery_service_resources.recovery_service_subnets) > 0
+    ) ? {
+    "protection_policies" : { for k, v in module.oci_lz_orchestrator.autonomous_recovery_service_resources.protection_policies : k => { "id" : v.id } },
+    "recovery_service_subnets" : { for k, v in module.oci_lz_orchestrator.autonomous_recovery_service_resources.recovery_service_subnets : k => { "id" : v.id } }
+  } : null
   azure_oracle_database_output = (
     length(module.oci_lz_orchestrator.azure_oracle_database_resources.azure_vmc_networks) > 0 ||
     length(module.oci_lz_orchestrator.azure_oracle_database_resources.azure_exadata_infrastructures) > 0 ||
@@ -146,43 +158,45 @@ locals {
 
   output_format = lower(trimspace(var.output_format))
 
-  compartments_output_file_name           = "compartments_output.${local.output_format}"
-  identity_domains_output_file_name       = "identity_domains_output.${local.output_format}"
-  networking_output_file_name             = "network_output.${local.output_format}"
-  topics_output_file_name                 = "topics_output.${local.output_format}"
-  streams_output_file_name                = "streams_output.${local.output_format}"
-  service_logs_output_file_name           = "service_logs_output.${local.output_format}"
-  custom_logs_output_file_name            = "custom_logs_output.${local.output_format}"
-  vaults_output_file_name                 = "vaults_output.${local.output_format}"
-  keys_output_file_name                   = "keys_output.${local.output_format}"
-  bastions_output_file_name               = "bastions_output.${local.output_format}"
-  tags_output_file_name                   = "tags_output.${local.output_format}"
-  instances_output_file_name              = "instances_output.${local.output_format}"
-  nlbs_output_file_name                   = "nlbs_output.${local.output_format}"
-  oke_output_file_name                    = "oke_output.${local.output_format}"
-  ocvs_output_file_name                   = "ocvs_output.${local.output_format}"
-  cloud_exadata_database_output_file_name = "cloud_exadata_database_output.${local.output_format}"
-  autonomous_databases_output_file_name   = "autonomous_databases_output.${local.output_format}"
-  azure_oracle_database_output_file_name  = "azure_oracle_database_output.${local.output_format}"
+  compartments_output_file_name                = "compartments_output.${local.output_format}"
+  identity_domains_output_file_name            = "identity_domains_output.${local.output_format}"
+  networking_output_file_name                  = "network_output.${local.output_format}"
+  topics_output_file_name                      = "topics_output.${local.output_format}"
+  streams_output_file_name                     = "streams_output.${local.output_format}"
+  service_logs_output_file_name                = "service_logs_output.${local.output_format}"
+  custom_logs_output_file_name                 = "custom_logs_output.${local.output_format}"
+  vaults_output_file_name                      = "vaults_output.${local.output_format}"
+  keys_output_file_name                        = "keys_output.${local.output_format}"
+  bastions_output_file_name                    = "bastions_output.${local.output_format}"
+  tags_output_file_name                        = "tags_output.${local.output_format}"
+  instances_output_file_name                   = "instances_output.${local.output_format}"
+  nlbs_output_file_name                        = "nlbs_output.${local.output_format}"
+  oke_output_file_name                         = "oke_output.${local.output_format}"
+  ocvs_output_file_name                        = "ocvs_output.${local.output_format}"
+  cloud_exadata_database_output_file_name      = "cloud_exadata_database_output.${local.output_format}"
+  autonomous_databases_output_file_name        = "autonomous_databases_output.${local.output_format}"
+  autonomous_recovery_service_output_file_name = "autonomous_recovery_service_output.${local.output_format}"
+  azure_oracle_database_output_file_name       = "azure_oracle_database_output.${local.output_format}"
 
-  compartments_content           = local.output_format == "json" ? jsonencode(local.compartments_output) : yamlencode(local.compartments_output)
-  identity_domains_content       = local.output_format == "json" ? jsonencode(local.identity_domains_output) : yamlencode(local.identity_domains_output)
-  networking_content             = local.output_format == "json" ? jsonencode(local.network_output) : yamlencode(local.network_output)
-  topics_content                 = local.output_format == "json" ? jsonencode(local.topics_output) : yamlencode(local.topics_output)
-  streams_content                = local.output_format == "json" ? jsonencode(local.streams_output) : yamlencode(local.streams_output)
-  service_logs_content           = local.output_format == "json" ? jsonencode(local.service_logs_output) : yamlencode(local.service_logs_output)
-  custom_logs_content            = local.output_format == "json" ? jsonencode(local.custom_logs_output) : yamlencode(local.custom_logs_output)
-  vaults_content                 = local.output_format == "json" ? jsonencode(local.vaults_output) : yamlencode(local.vaults_output)
-  keys_content                   = local.output_format == "json" ? jsonencode(local.keys_output) : yamlencode(local.keys_output)
-  bastions_content               = local.output_format == "json" ? jsonencode(local.bastions_output) : yamlencode(local.bastions_output)
-  tags_content                   = local.output_format == "json" ? jsonencode(local.tags_output) : yamlencode(local.tags_output)
-  instances_content              = local.output_format == "json" ? jsonencode(local.instances_output) : yamlencode(local.instances_output)
-  nlbs_content                   = local.output_format == "json" ? jsonencode(local.nlbs_output) : yamlencode(local.nlbs_output)
-  oke_content                    = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
-  ocvs_content                   = local.output_format == "json" ? jsonencode(local.ocvs_output) : yamlencode(local.ocvs_output)
-  cloud_exadata_database_content = local.output_format == "json" ? jsonencode(local.cloud_exadata_database_output) : yamlencode(local.cloud_exadata_database_output)
-  autonomous_databases_content   = local.output_format == "json" ? jsonencode(local.autonomous_databases_output) : yamlencode(local.autonomous_databases_output)
-  azure_oracle_database_content  = local.output_format == "json" ? jsonencode(local.azure_oracle_database_output) : yamlencode(local.azure_oracle_database_output)
+  compartments_content                = local.output_format == "json" ? jsonencode(local.compartments_output) : yamlencode(local.compartments_output)
+  identity_domains_content            = local.output_format == "json" ? jsonencode(local.identity_domains_output) : yamlencode(local.identity_domains_output)
+  networking_content                  = local.output_format == "json" ? jsonencode(local.network_output) : yamlencode(local.network_output)
+  topics_content                      = local.output_format == "json" ? jsonencode(local.topics_output) : yamlencode(local.topics_output)
+  streams_content                     = local.output_format == "json" ? jsonencode(local.streams_output) : yamlencode(local.streams_output)
+  service_logs_content                = local.output_format == "json" ? jsonencode(local.service_logs_output) : yamlencode(local.service_logs_output)
+  custom_logs_content                 = local.output_format == "json" ? jsonencode(local.custom_logs_output) : yamlencode(local.custom_logs_output)
+  vaults_content                      = local.output_format == "json" ? jsonencode(local.vaults_output) : yamlencode(local.vaults_output)
+  keys_content                        = local.output_format == "json" ? jsonencode(local.keys_output) : yamlencode(local.keys_output)
+  bastions_content                    = local.output_format == "json" ? jsonencode(local.bastions_output) : yamlencode(local.bastions_output)
+  tags_content                        = local.output_format == "json" ? jsonencode(local.tags_output) : yamlencode(local.tags_output)
+  instances_content                   = local.output_format == "json" ? jsonencode(local.instances_output) : yamlencode(local.instances_output)
+  nlbs_content                        = local.output_format == "json" ? jsonencode(local.nlbs_output) : yamlencode(local.nlbs_output)
+  oke_content                         = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
+  ocvs_content                        = local.output_format == "json" ? jsonencode(local.ocvs_output) : yamlencode(local.ocvs_output)
+  cloud_exadata_database_content      = local.output_format == "json" ? jsonencode(local.cloud_exadata_database_output) : yamlencode(local.cloud_exadata_database_output)
+  autonomous_databases_content        = local.output_format == "json" ? jsonencode(local.autonomous_databases_output) : yamlencode(local.autonomous_databases_output)
+  autonomous_recovery_service_content = local.output_format == "json" ? jsonencode(local.autonomous_recovery_service_output) : yamlencode(local.autonomous_recovery_service_output)
+  azure_oracle_database_content       = local.output_format == "json" ? jsonencode(local.azure_oracle_database_output) : yamlencode(local.azure_oracle_database_output)
 
   github_repository_name = var.github_configuration_repo != null ? split("/", var.github_configuration_repo)[1] : null # Use only repository name
 }
@@ -338,6 +352,15 @@ resource "oci_objectstorage_object" "autonomous_databases" {
   content   = local.autonomous_databases_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.autonomous_databases_output_file_name}" : local.autonomous_databases_output_file_name
+}
+
+### Writing Autonomous Recovery Service output to OCI bucket
+resource "oci_objectstorage_object" "autonomous_recovery_service" {
+  count     = local.publish_autonomous_recovery_service_output && local.writes_outputs_to_oci_bucket ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
+  content   = local.autonomous_recovery_service_content
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.autonomous_recovery_service_output_file_name}" : local.autonomous_recovery_service_output_file_name
 }
 
 ### Writing Oracle Database@Azure output to OCI bucket
@@ -579,6 +602,19 @@ resource "github_repository_file" "autonomous_databases" {
   overwrite_on_create = true
 }
 
+### Writing Autonomous Recovery Service output to GitHub repository
+resource "github_repository_file" "autonomous_recovery_service" {
+  count               = local.publish_autonomous_recovery_service_output && local.writes_outputs_to_github ? 1 : 0
+  repository          = local.github_repository_name
+  branch              = var.github_configuration_branch
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.autonomous_recovery_service_output_file_name}" : local.autonomous_recovery_service_output_file_name
+  content             = local.autonomous_recovery_service_content
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 ### Writing Oracle Database@Azure output to GitHub repository
 resource "github_repository_file" "azure_oracle_database" {
   count               = local.publish_azure_oracle_database_output && local.writes_outputs_to_github ? 1 : 0
@@ -716,6 +752,13 @@ resource "local_file" "autonomous_databases" {
   content  = local.autonomous_databases_content
 }
 
+### Writing Autonomous Recovery Service output to file
+resource "local_file" "autonomous_recovery_service" {
+  count    = local.publish_autonomous_recovery_service_output && local.writes_outputs_to_file ? 1 : 0
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.autonomous_recovery_service_output_file_name}"
+  content  = local.autonomous_recovery_service_content
+}
+
 ### Writing Oracle Database@Azure output to file
 resource "local_file" "azure_oracle_database" {
   count    = local.publish_azure_oracle_database_output && local.writes_outputs_to_file ? 1 : 0
@@ -724,9 +767,9 @@ resource "local_file" "azure_oracle_database" {
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.ocvs[0].object, ""), try(oci_objectstorage_object.cloud_exadata_database[0].object, ""), try(oci_objectstorage_object.autonomous_databases[0].object, ""), try(oci_objectstorage_object.azure_oracle_database[0].object, "")]))}"
-  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.ocvs[0].file, ""), try(github_repository_file.cloud_exadata_database[0].file, ""), try(github_repository_file.autonomous_databases[0].file, ""), try(github_repository_file.azure_oracle_database[0].file, "")]))}"
-  local_file_output_string     = "Files saved to local file system: ${join(",", compact([try(local_file.compartments[0].filename, ""), try(local_file.identity_domains[0].filename, ""), try(local_file.networking[0].filename, ""), try(local_file.topics[0].filename, ""), try(local_file.streams[0].filename, ""), try(local_file.service_logs[0].filename, ""), try(local_file.custom_logs[0].filename, ""), try(local_file.vaults[0].filename, ""), try(local_file.keys[0].filename, ""), try(local_file.bastions[0].filename, ""), try(local_file.tags[0].filename, ""), try(local_file.instances[0].filename, ""), try(local_file.nlbs[0].filename, ""), try(local_file.oke[0].filename, ""), try(local_file.ocvs[0].filename, ""), try(local_file.cloud_exadata_database[0].filename, ""), try(local_file.autonomous_databases[0].filename, ""), try(local_file.azure_oracle_database[0].filename, "")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.ocvs[0].object, ""), try(oci_objectstorage_object.cloud_exadata_database[0].object, ""), try(oci_objectstorage_object.autonomous_databases[0].object, ""), try(oci_objectstorage_object.autonomous_recovery_service[0].object, ""), try(oci_objectstorage_object.azure_oracle_database[0].object, "")]))}"
+  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.ocvs[0].file, ""), try(github_repository_file.cloud_exadata_database[0].file, ""), try(github_repository_file.autonomous_databases[0].file, ""), try(github_repository_file.autonomous_recovery_service[0].file, ""), try(github_repository_file.azure_oracle_database[0].file, "")]))}"
+  local_file_output_string     = "Files saved to local file system: ${join(",", compact([try(local_file.compartments[0].filename, ""), try(local_file.identity_domains[0].filename, ""), try(local_file.networking[0].filename, ""), try(local_file.topics[0].filename, ""), try(local_file.streams[0].filename, ""), try(local_file.service_logs[0].filename, ""), try(local_file.custom_logs[0].filename, ""), try(local_file.vaults[0].filename, ""), try(local_file.keys[0].filename, ""), try(local_file.bastions[0].filename, ""), try(local_file.tags[0].filename, ""), try(local_file.instances[0].filename, ""), try(local_file.nlbs[0].filename, ""), try(local_file.oke[0].filename, ""), try(local_file.ocvs[0].filename, ""), try(local_file.cloud_exadata_database[0].filename, ""), try(local_file.autonomous_databases[0].filename, ""), try(local_file.autonomous_recovery_service[0].filename, ""), try(local_file.azure_oracle_database[0].filename, "")]))}"
   output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : lower(var.configuration_source) == "file" ? local.local_file_output_string : "") : null
 }
 

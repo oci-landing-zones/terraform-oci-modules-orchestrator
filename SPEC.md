@@ -24,6 +24,7 @@
 | <a name="module_azure_lz_oracle_vmc_network"></a> [azure\_lz\_oracle\_vmc\_network](#module\_azure\_lz\_oracle\_vmc\_network) | git::https://github.com/oci-landing-zones/terraform-oci-multicloud-azure.git//modules/azure-vnet-subnet | v0.1.3 |
 | <a name="module_oci_lz_alarms"></a> [oci\_lz\_alarms](#module\_oci\_lz\_alarms) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms | v0.2.6 |
 | <a name="module_oci_lz_autonomous_databases"></a> [oci\_lz\_autonomous\_databases](#module\_oci\_lz\_autonomous\_databases) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database | v1.1.0 |
+| <a name="module_oci_lz_autonomous_recovery_service"></a> [oci\_lz\_autonomous\_recovery\_service](#module\_oci\_lz\_autonomous\_recovery\_service) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-recovery-service | main |
 | <a name="module_oci_lz_bastions"></a> [oci\_lz\_bastions](#module\_oci\_lz\_bastions) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion | v0.2.3 |
 | <a name="module_oci_lz_budgets"></a> [oci\_lz\_budgets](#module\_oci\_lz\_budgets) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//budgets | v0.1.6 |
 | <a name="module_oci_lz_cloud_guard"></a> [oci\_lz\_cloud\_guard](#module\_oci\_lz\_cloud\_guard) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard | v0.2.3 |
@@ -31,7 +32,7 @@
 | <a name="module_oci_lz_compute"></a> [oci\_lz\_compute](#module\_oci\_lz\_compute) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage | v0.2.7 |
 | <a name="module_oci_lz_dynamic_groups"></a> [oci\_lz\_dynamic\_groups](#module\_oci\_lz\_dynamic\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups | v0.3.4 |
 | <a name="module_oci_lz_events"></a> [oci\_lz\_events](#module\_oci\_lz\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.6 |
-| <a name="module_oci_lz_cloud_exadata_database"></a> [oci\_lz\_cloud\_exadata\_database](#module\_oci\_lz\_cloud\_exadata\_database) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database | v1.1.0 |
+| <a name="module_oci_lz_cloud_exadata_database"></a> [oci\_lz\_cloud\_exadata\_database](#module\_oci\_lz\_cloud\_exadata\_database) | git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database | main |
 | <a name="module_oci_lz_groups"></a> [oci\_lz\_groups](#module\_oci\_lz\_groups) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups | v0.3.4 |
 | <a name="module_oci_lz_home_region_events"></a> [oci\_lz\_home\_region\_events](#module\_oci\_lz\_home\_region\_events) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events | v0.2.6 |
 | <a name="module_oci_lz_identity_domains"></a> [oci\_lz\_identity\_domains](#module\_oci\_lz\_identity\_domains) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains | v0.3.4 |
@@ -55,6 +56,7 @@
 | Name | Type |
 |------|------|
 | [local_file.autonomous_databases_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.autonomous_recovery_service_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.azure_oracle_database_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.bastions_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.compartments_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -85,6 +87,7 @@
 | <a name="input_alarms_configuration"></a> [alarms\_configuration](#input\_alarms\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_auth"></a> [auth](#input\_auth) | OCI provider authentication method. | `string` | `"APIKey"` | no |
 | <a name="input_autonomous_databases_configuration"></a> [autonomous\_databases\_configuration](#input\_autonomous\_databases\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_autonomous_recovery_service_configuration"></a> [autonomous\_recovery\_service\_configuration](#input\_autonomous\_recovery\_service\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_azure_oracle_database_configuration"></a> [azure\_oracle\_database\_configuration](#input\_azure\_oracle\_database\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_azure_oracle_database_dependency"></a> [azure\_oracle\_database\_dependency](#input\_azure\_oracle\_database\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_bastions_configuration"></a> [bastions\_configuration](#input\_bastions\_configuration) | n/a | `any` | `null` | no |
@@ -128,6 +131,7 @@
 | <a name="input_private_key_password"></a> [private\_key\_password](#input\_private\_key\_password) | n/a | `string` | `null` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | n/a | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `null` | no |
+| <a name="input_recovery_service_dependency"></a> [recovery\_service\_dependency](#input\_recovery\_service\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_scanning_configuration"></a> [scanning\_configuration](#input\_scanning\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_security_zones_configuration"></a> [security\_zones\_configuration](#input\_security\_zones\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_service_connectors_configuration"></a> [service\_connectors\_configuration](#input\_service\_connectors\_configuration) | n/a | `any` | `null` | no |
@@ -149,6 +153,7 @@
 | Name | Description |
 |------|-------------|
 | <a name="output_autonomous_databases_resources"></a> [autonomous\_databases\_resources](#output\_autonomous\_databases\_resources) | Provisioned Autonomous Database resources |
+| <a name="output_autonomous_recovery_service_resources"></a> [autonomous\_recovery\_service\_resources](#output\_autonomous\_recovery\_service\_resources) | Provisioned Autonomous Recovery Service resources |
 | <a name="output_azure_oracle_database_resources"></a> [azure\_oracle\_database\_resources](#output\_azure\_oracle\_database\_resources) | Provisioned Oracle Database@Azure resources |
 | <a name="output_compute_resources"></a> [compute\_resources](#output\_compute\_resources) | Provisioned compute resources |
 | <a name="output_cloud_exadata_database_resources"></a> [cloud\_exadata\_database\_resources](#output\_cloud\_exadata\_database\_resources) | Provisioned Cloud Exadata Database resources |

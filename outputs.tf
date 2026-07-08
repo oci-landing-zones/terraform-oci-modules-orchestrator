@@ -109,6 +109,11 @@ locals {
     autonomous_databases = length(module.oci_lz_autonomous_databases) > 0 ? try(module.oci_lz_autonomous_databases[0].autonomous_databases_dependency.autonomous_databases, { for k, v in module.oci_lz_autonomous_databases[0].autonomous_databases : k => { "id" : try(v.id, v.ocid) } }) : {}
   }
 
+  autonomous_recovery_service_resources_output = {
+    protection_policies      = length(module.oci_lz_autonomous_recovery_service) > 0 ? { for k, v in module.oci_lz_autonomous_recovery_service[0].protection_policies : k => { "id" : v.id } } : {}
+    recovery_service_subnets = length(module.oci_lz_autonomous_recovery_service) > 0 ? { for k, v in module.oci_lz_autonomous_recovery_service[0].recovery_service_subnets : k => { "id" : v.id } } : {}
+  }
+
   azure_oracle_database_resources_output = merge({
     azure_vmc_networks            = {}
     azure_exadata_infrastructures = {}
@@ -125,6 +130,11 @@ output "cloud_exadata_database_resources" {
 output "autonomous_databases_resources" {
   description = "Provisioned Autonomous Database resources"
   value       = local.autonomous_databases_resources_output
+}
+
+output "autonomous_recovery_service_resources" {
+  description = "Provisioned Autonomous Recovery Service resources"
+  value       = local.autonomous_recovery_service_resources_output
 }
 
 output "azure_oracle_database_resources" {
@@ -261,6 +271,12 @@ resource "local_file" "autonomous_databases_output" {
   count    = var.output_path != null && length(module.oci_lz_autonomous_databases) > 0 ? 1 : 0
   content  = jsonencode(local.autonomous_databases_resources_output)
   filename = "${var.output_path}/autonomous_databases_output.json"
+}
+
+resource "local_file" "autonomous_recovery_service_output" {
+  count    = var.output_path != null && length(module.oci_lz_autonomous_recovery_service) > 0 ? 1 : 0
+  content  = jsonencode(local.autonomous_recovery_service_resources_output)
+  filename = "${var.output_path}/autonomous_recovery_service_output.json"
 }
 
 resource "local_file" "azure_oracle_database_output" {
