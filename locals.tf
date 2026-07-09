@@ -100,7 +100,7 @@ locals {
 
   # var.vaults_dependency
   ext_dep_vaults_map = var.vaults_dependency != null ? try(var.vaults_dependency.vaults, jsondecode(file(var.vaults_dependency)).vaults, null) : null
-  vaults_dependency  = merge({ for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => { "management_endpoint" : v.management_endpoint } })
+  vaults_dependency  = merge({ for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => { "id" : v.id, "management_endpoint" : v.management_endpoint } })
 
   # var.tags_dependency
   ext_dep_tags_map = var.tags_dependency != null ? try(var.tags_dependency.tags, jsondecode(file(var.tags_dependency)).tags, null) : null
@@ -117,6 +117,23 @@ locals {
   # var.databases_dependency
   ext_dep_container_databases_map = var.databases_dependency != null ? try(var.databases_dependency.container_databases, jsondecode(file(var.databases_dependency)).container_databases, null) : null
   databases_dependency            = local.ext_dep_container_databases_map != null ? { "container_databases" : { for k, v in local.ext_dep_container_databases_map : k => { "id" : v.id } } } : null
+
+  # var.exadata_database_dependency can be provided either as a module-native object or as a cloud_exadata_database_output.json file.
+  exadata_database_dependency = var.exadata_database_dependency != null ? try(jsondecode(file(var.exadata_database_dependency)), var.exadata_database_dependency, null) : null
+
+  # var.recovery_service_dependency can be provided as a module-native object, a direct protection policy map, or an autonomous_recovery_service_output.json file.
+  ext_dep_recovery_service_protection_policies = var.recovery_service_dependency != null ? try(
+    var.recovery_service_dependency.protection_policies,
+    jsondecode(file(var.recovery_service_dependency)).protection_policies,
+    var.recovery_service_dependency,
+    null
+  ) : null
+  recovery_service_dependency = {
+    protection_policies = merge(
+      coalesce(local.ext_dep_recovery_service_protection_policies, {}),
+      length(module.oci_lz_autonomous_recovery_service) > 0 ? module.oci_lz_autonomous_recovery_service[0].autonomous_recovery_service_dependency.protection_policies : {}
+    )
+  }
 
   # var.nlbs_dependency
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null

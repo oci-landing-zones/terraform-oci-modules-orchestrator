@@ -1,3 +1,21 @@
+# July 8, 2026 Release Notes - 2.1.4
+
+## Updates
+
+1. Exadata Database, Autonomous Database, and Autonomous Recovery Service now reference the `release-1.2.0` module branch. Workload-specific dependency resolution and validation remain owned by the backing modules.
+2. Added the root `exadata_database_dependency` input. It accepts the module-native dependency object or a `cloud_exadata_database_output.json` file path and passes the normalized object to Exadata Database.
+3. RMS Facade now loads the five Exadata Database dependency families from JSON or YAML dependency files for multi-stack VM Cluster, DB Home, CDB, and PDB chaining.
+4. Exadata Database now receives `kms_dependency`, allowing DB Home and CDB `kms_key_id` values to use logical keys from `keys_output.json` as well as literal key OCIDs.
+5. Autonomous Database now receives `vaults_dependency` as well as `kms_dependency`, including vaults created in the same Orchestrator stack.
+6. Root and RMS Exadata and Autonomous Database outputs now preserve the backing modules' native dependency shapes.
+7. Added the root `autonomous_recovery_service_configuration` and `recovery_service_dependency` inputs and the module-owned `autonomous_recovery_service_resources` output for Recovery Service subnets and protection policies.
+8. Exadata Database CDBs can resolve DBRS protection-policy keys from Autonomous Recovery Service resources created in the same stack or from a separate stack's canonical dependency artifact.
+9. RMS Facade loads Autonomous Recovery Service configuration and dependencies from JSON or YAML and persists `autonomous_recovery_service_output.json` or `.yaml` to the local file system, GitHub, or OCI Object Storage.
+
+## Bug Fixes
+
+1. RMS output persistence no longer drops module-owned metadata such as `compartment_id` from Exadata DB Homes and VM Clusters or from Autonomous Databases.
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes

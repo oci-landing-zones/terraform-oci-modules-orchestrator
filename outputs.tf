@@ -97,16 +97,21 @@ output "ocvs_resources" {
 }
 
 locals {
-  cloud_exadata_database_resources_output = {
-    cloud_exadata_infrastructures = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.cloud_exadata_infrastructures, { for k, v in module.oci_lz_cloud_exadata_database[0].cloud_exadata_infrastructures : k => { "id" : v.id } }) : {}
-    cloud_vm_clusters             = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.cloud_vm_clusters, { for k, v in module.oci_lz_cloud_exadata_database[0].cloud_vm_clusters : k => { "id" : v.id } }) : {}
-    database_homes                = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.database_homes, { for k, v in module.oci_lz_cloud_exadata_database[0].database_homes : k => { "id" : v.id } }) : {}
-    databases                     = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.databases, { for k, v in module.oci_lz_cloud_exadata_database[0].databases : k => { "id" : v.id } }) : {}
-    pluggable_databases           = length(module.oci_lz_cloud_exadata_database) > 0 ? try(module.oci_lz_cloud_exadata_database[0].exadata_database_dependency.pluggable_databases, { for k, v in module.oci_lz_cloud_exadata_database[0].pluggable_databases : k => { "id" : v.id } }) : {}
+  cloud_exadata_database_resources_output = length(module.oci_lz_cloud_exadata_database) > 0 ? module.oci_lz_cloud_exadata_database[0].exadata_database_dependency : {
+    cloud_exadata_infrastructures = {}
+    cloud_vm_clusters             = {}
+    database_homes                = {}
+    databases                     = {}
+    pluggable_databases           = {}
   }
 
-  autonomous_databases_resources_output = {
-    autonomous_databases = length(module.oci_lz_autonomous_databases) > 0 ? try(module.oci_lz_autonomous_databases[0].autonomous_databases_dependency.autonomous_databases, { for k, v in module.oci_lz_autonomous_databases[0].autonomous_databases : k => { "id" : try(v.id, v.ocid) } }) : {}
+  autonomous_databases_resources_output = length(module.oci_lz_autonomous_databases) > 0 ? module.oci_lz_autonomous_databases[0].autonomous_databases_dependency : {
+    autonomous_databases = {}
+  }
+
+  autonomous_recovery_service_resources_output = length(module.oci_lz_autonomous_recovery_service) > 0 ? module.oci_lz_autonomous_recovery_service[0].autonomous_recovery_service_dependency : {
+    recovery_service_subnets = {}
+    protection_policies      = {}
   }
 }
 
@@ -118,6 +123,11 @@ output "cloud_exadata_database_resources" {
 output "autonomous_databases_resources" {
   description = "Provisioned Autonomous Database resources"
   value       = local.autonomous_databases_resources_output
+}
+
+output "autonomous_recovery_service_resources" {
+  description = "Provisioned Autonomous Recovery Service resources"
+  value       = local.autonomous_recovery_service_resources_output
 }
 
 output "nlb_resources" {
@@ -250,4 +260,10 @@ resource "local_file" "autonomous_databases_output" {
   count    = var.output_path != null && length(module.oci_lz_autonomous_databases) > 0 ? 1 : 0
   content  = jsonencode(local.autonomous_databases_resources_output)
   filename = "${var.output_path}/autonomous_databases_output.json"
+}
+
+resource "local_file" "autonomous_recovery_service_output" {
+  count    = var.output_path != null && length(module.oci_lz_autonomous_recovery_service) > 0 ? 1 : 0
+  content  = jsonencode(local.autonomous_recovery_service_resources_output)
+  filename = "${var.output_path}/autonomous_recovery_service_output.json"
 }

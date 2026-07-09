@@ -1,33 +1,36 @@
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.0 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_github"></a> [github](#provider\_github) | ~> 5.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | n/a |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
 | <a name="provider_oci"></a> [oci](#provider\_oci) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_oci_lz_orchestrator"></a> [oci\_lz\_orchestrator](#module\_oci\_lz\_orchestrator) | ../ | n/a |
 
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [github_repository_file.autonomous_databases](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.autonomous_recovery_service](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.bastions](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_file.cloud_exadata_database](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.compartments](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.custom_logs](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
-| [github_repository_file.cloud_exadata_database](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.identity_domains](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.instances](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.keys](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
@@ -41,10 +44,11 @@
 | [github_repository_file.topics](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.vaults](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [local_file.autonomous_databases](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.autonomous_recovery_service](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.bastions](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.cloud_exadata_database](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.compartments](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.custom_logs](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
-| [local_file.cloud_exadata_database](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.identity_domains](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.instances](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.keys](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -58,10 +62,11 @@
 | [local_file.topics](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.vaults](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [oci_objectstorage_object.autonomous_databases](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.autonomous_recovery_service](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.bastions](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
+| [oci_objectstorage_object.cloud_exadata_database](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.compartments](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.custom_logs](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
-| [oci_objectstorage_object.cloud_exadata_database](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.identity_domains](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.instances](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
 | [oci_objectstorage_object.keys](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_object) | resource |
@@ -87,7 +92,7 @@
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_configuration_source"></a> [configuration\_source](#input\_configuration\_source) | The source where configuration files are pulled from. | `string` | `"url"` | no |
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | n/a | `string` | `null` | no |
 | <a name="input_github_base_url"></a> [github\_base\_url](#input\_github\_base\_url) | GitHub base API endpoint. Required when working with GitHub Enterprise. The value must end with a slash. E.g. https://example.com/ | `string` | `null` | no |
@@ -99,7 +104,7 @@
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | n/a | `string` | `null` | no |
 | <a name="input_input_config_files_urls"></a> [input\_config\_files\_urls](#input\_input\_config\_files\_urls) | List of URLs that point to the JSON configuration files. | `list(string)` | `null` | no |
 | <a name="input_local_config_file_paths"></a> [local\_config\_file\_paths](#input\_local\_config\_file\_paths) | List of local configuration files in JSON or YAML format. | `list(string)` | `[]` | no |
-| <a name="input_local_dependency_file_paths"></a> [local\_dependency\_file\_paths](#input\_local\_dependency\_file\_paths) | List of local dependency files in JSON format. | `list(string)` | `[]` | no |
+| <a name="input_local_dependency_file_paths"></a> [local\_dependency\_file\_paths](#input\_local\_dependency\_file\_paths) | List of local dependency files in JSON or YAML format. | `list(string)` | `[]` | no |
 | <a name="input_oci_configuration_bucket"></a> [oci\_configuration\_bucket](#input\_oci\_configuration\_bucket) | The OCI Object Storage bucket where Landing Zone configuration files are kept. | `string` | `null` | no |
 | <a name="input_oci_configuration_objects"></a> [oci\_configuration\_objects](#input\_oci\_configuration\_objects) | The OCI Object Storage objects containing the Landing Zone configurations. | `list(string)` | `null` | no |
 | <a name="input_oci_dependency_objects"></a> [oci\_dependency\_objects](#input\_oci\_dependency\_objects) | The OCI Object Storage objects containing stack dependencies. | `list(string)` | `null` | no |
@@ -123,6 +128,7 @@
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_output_string"></a> [output\_string](#output\_output\_string) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
+<!-- END_TF_DOCS -->
