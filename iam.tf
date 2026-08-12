@@ -9,6 +9,9 @@ module "oci_lz_compartments" {
   compartments_configuration = var.compartments_configuration
   compartments_dependency    = local.ext_dep_compartments_map
   tags_dependency            = local.tags_dependency
+
+  # Wait for newly created OCI tags before creating compartments that use defined_tags.
+  depends_on                 = [time_sleep.tag_propagation]
 }
 
 module "oci_lz_groups" {
