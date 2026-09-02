@@ -27,53 +27,76 @@ locals {
     ) : k => { "id" : v.id }
   } : {}
 
-  # Project rich networking module outputs to their stable dependency shapes before
-  # applying conditional fallbacks. This keeps collection value types stable when newly
-  # planned resources contain unknown or differently shaped nested attributes.
-  provisioned_vcns_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["vcns"] : k => { "id" : v.id }
-  } : {}
-  provisioned_subnets_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["subnets"] : k => { "id" : v.id }
-  } : {}
-  provisioned_network_security_groups_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["network_security_groups"] : k => { "id" : v.id }
-  } : {}
-  provisioned_dynamic_routing_gateways_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["dynamic_routing_gateways"] : k => { "id" : v.id }
-  } : {}
-  provisioned_drg_attachments_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["drg_attachments"] : k => { "id" : v.id }
-  } : {}
-  provisioned_remote_peering_connections_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["remote_peering_connections"] : k => {
-      "id" : v.id
-      "region_name" : try(v.region_name, var.region)
-    }
-  } : {}
-  provisioned_local_peering_gateways_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["local_peering_gateways"] : k => { "id" : v.id }
-  } : {}
-  provisioned_dns_private_views_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["dns_views"] : k => { "id" : v.id }
-  } : {}
-  provisioned_public_ips_dependency_map = length(module.oci_lz_network) > 0 ? {
-    for k, v in module.oci_lz_network[0].provisioned_networking_resources["public_ips"] : k => { "id" : v.id }
-  } : {}
+  # Networking module outputs contain heterogeneous resource objects. Normalizing each
+  # populated collection inside its conditional branch gives Terraform a stable value type.
+  provisioned_vcns_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "vcns") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["vcns"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  provisioned_subnets_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "subnets") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["subnets"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  provisioned_network_security_groups_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "network_security_groups") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["network_security_groups"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  provisioned_dynamic_routing_gateways_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "dynamic_routing_gateways") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["dynamic_routing_gateways"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  provisioned_drg_attachments_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "drg_attachments") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["drg_attachments"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  # RPC dependencies also identify the region containing the exported connection. The
+  # networking output does not currently expose that value, so it defaults to var.region.
+  provisioned_remote_peering_connections_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "remote_peering_connections") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["remote_peering_connections"] : k => {
+        "id" : v.id
+        "region_name" : try(v.region_name, var.region)
+      }
+    } : {}
+  ) : {}
+  provisioned_local_peering_gateways_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "local_peering_gateways") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["local_peering_gateways"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
+  # DNS view outputs use ocid instead of the id attribute used by other network resources.
+  provisioned_dns_private_views_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "dns_views") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["dns_views"] : k => { "id" : try(v.id, v.ocid) }
+    } : {}
+  ) : {}
+  provisioned_public_ips_dependency_map = length(module.oci_lz_network) > 0 ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "public_ips") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_resources["public_ips"] : k => { "id" : v.id }
+    } : {}
+  ) : {}
 
+  # network_dependency accepts any input type. Direct map/key evaluation makes malformed
+  # dependency data fail validation instead of silently converting it to an empty map.
+  # Module-provisioned resources take precedence over external entries with the same key.
   network_dependency = local.ext_dep_network_map != null || length(module.oci_lz_network) > 0 ? {
-    "vcns" : merge({ for k, v in try(local.ext_dep_network_map["vcns"], {}) : k => { "id" : v.id } }, local.provisioned_vcns_dependency_map),
-    "subnets" : merge({ for k, v in try(local.ext_dep_network_map["subnets"], {}) : k => { "id" : v.id } }, local.provisioned_subnets_dependency_map),
-    "network_security_groups" : merge({ for k, v in try(local.ext_dep_network_map["network_security_groups"], {}) : k => { "id" : v.id } }, local.provisioned_network_security_groups_dependency_map)
+    "vcns" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "vcns") ? local.ext_dep_network_map["vcns"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_vcns_dependency_map),
+    "subnets" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "subnets") ? local.ext_dep_network_map["subnets"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_subnets_dependency_map),
+    "network_security_groups" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "network_security_groups") ? local.ext_dep_network_map["network_security_groups"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_network_security_groups_dependency_map)
     "route_tables" : merge({ for k, v in try(local.ext_dep_network_map.route_tables, {}) : k => { "id" : v.id } }, local.provisioned_route_tables_dependency_map)
-    "dynamic_routing_gateways" : merge({ for k, v in try(local.ext_dep_network_map["dynamic_routing_gateways"], {}) : k => { "id" : v.id } }, local.provisioned_dynamic_routing_gateways_dependency_map),
-    "drg_attachments" : merge({ for k, v in try(local.ext_dep_network_map["drg_attachments"], {}) : k => { "id" : v.id } }, local.provisioned_drg_attachments_dependency_map),
-    # Networking module v0.8.2 adds RPC region_name output; keep it for cross-region RPC dependencies and fall back to var.region for older dependency files.
-    "remote_peering_connections" : merge({ for k, v in try(local.ext_dep_network_map["remote_peering_connections"], {}) : k => { "id" : v.id, "region_name" : try(v.region_name, var.region) } }, local.provisioned_remote_peering_connections_dependency_map),
-    "local_peering_gateways" : merge({ for k, v in try(local.ext_dep_network_map["local_peering_gateways"], {}) : k => { "id" : v.id } }, local.provisioned_local_peering_gateways_dependency_map)
+    "dynamic_routing_gateways" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "dynamic_routing_gateways") ? local.ext_dep_network_map["dynamic_routing_gateways"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_dynamic_routing_gateways_dependency_map),
+    "drg_attachments" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "drg_attachments") ? local.ext_dep_network_map["drg_attachments"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_drg_attachments_dependency_map),
+    # An external RPC without region_name is treated as belonging to the current region.
+    "remote_peering_connections" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "remote_peering_connections") ? local.ext_dep_network_map["remote_peering_connections"] : {}) : {}) : k => { "id" : v.id, "region_name" : try(v.region_name, var.region) } }, local.provisioned_remote_peering_connections_dependency_map),
+    "local_peering_gateways" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "local_peering_gateways") ? local.ext_dep_network_map["local_peering_gateways"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_local_peering_gateways_dependency_map)
     "l7_load_balancers" : merge({ for k, v in try(local.ext_dep_network_map["l7_load_balancers"]["l7_load_balancers"], local.ext_dep_network_map["l7_load_balancers"], {}) : k => { "id" : v.id } }, { for k, v in try(module.oci_lz_network[0].provisioned_networking_resources["l7_load_balancers"]["l7_load_balancers"], {}) : k => { "id" : v.id } })
-    "dns_private_views" : merge({ for k, v in try(local.ext_dep_network_map["dns_private_views"], {}) : k => { "id" : v.id } }, local.provisioned_dns_private_views_dependency_map),
-    "public_ips" : merge({ for k, v in try(local.ext_dep_network_map["public_ips"], {}) : k => { "id" : v.id } }, local.provisioned_public_ips_dependency_map)
+    "dns_private_views" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "dns_private_views") ? local.ext_dep_network_map["dns_private_views"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_dns_private_views_dependency_map),
+    "public_ips" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "public_ips") ? local.ext_dep_network_map["public_ips"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_public_ips_dependency_map)
   } : null
 
   # OCVS v1.1.0 expects resource-specific attributes instead of canonical { id } dependency entries.
