@@ -1,3 +1,9 @@
+# Next release notes
+
+## Bug Fixes
+
+1. Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. See [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63).
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes
