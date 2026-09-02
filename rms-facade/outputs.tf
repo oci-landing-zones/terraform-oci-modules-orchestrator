@@ -75,7 +75,7 @@ locals {
     "service_logs" : { for k, v in module.oci_lz_orchestrator.observability_resources.service_logs : k => { "id" : v.id, "compartment_id" : v.compartment_id } }
   } : null
   vaults_output = length(module.oci_lz_orchestrator.security_resources.vaults) > 0 ? {
-    "vaults" : { for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => { "management_endpoint" : v.management_endpoint } }
+    "vaults" : { for k, v in module.oci_lz_orchestrator.security_resources.vaults : k => { "id" : v.id, "management_endpoint" : v.management_endpoint } }
   } : null
   keys_output = length(module.oci_lz_orchestrator.security_resources.keys) > 0 ? {
     "keys" : { for k, v in module.oci_lz_orchestrator.security_resources.keys : k => { "id" : v.id } }

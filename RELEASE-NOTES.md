@@ -1,3 +1,9 @@
+# Next release notes
+
+## Bug Fixes
+
+1. Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated. See [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66).
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes
