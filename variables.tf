@@ -191,6 +191,11 @@ variable "autonomous_databases_configuration" {
   default = null
 }
 
+variable "autonomous_recovery_service_configuration" {
+  type    = any
+  default = null
+}
+
 variable "object_storage_configuration" {
   type    = any
   default = null
@@ -264,6 +269,18 @@ variable "ocvs_dependency" {
 variable "databases_dependency" {
   type    = any
   default = null
+}
+
+variable "exadata_database_dependency" {
+  description = "Module-native Exadata Database dependency object or path to cloud_exadata_database_output.json."
+  type        = any
+  default     = null
+}
+
+variable "recovery_service_dependency" {
+  description = "Module-native Autonomous Recovery Service dependency object, direct protection policy map, or path to autonomous_recovery_service_output.json."
+  type        = any
+  default     = null
 }
 
 variable "nlbs_dependency" {

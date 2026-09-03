@@ -23,7 +23,9 @@ Repository | Referenced Tags/Branches
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
-[Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
+[Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/exadata-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
+[Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
+[Autonomous Recovery Service](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-recovery-service) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
@@ -51,14 +53,25 @@ Below are the output file names that are generated for the respective configurat
 
 **Notes for Exadata Cloud Service:**
 
-- `cloud_exadata_database_output.json` is currently emitted for inventory and future dependency handoff. With `terraform-oci-modules-exadata` v1.1.0, downstream Exadata stacks cannot consume this file as a dependency artifact; use literal OCIDs for Exadata resources created by another stack until the backing module exposes an Exadata dependency input.
+- With Exadata Database v1.2.0, `cloud_exadata_database_output.json` is a dependency artifact for downstream Exadata stacks. It contains the canonical `cloud_exadata_infrastructures`, `cloud_vm_clusters`, `database_homes`, `databases`, and `pluggable_databases` maps.
+- Terraform root callers can pass either that JSON file path or the equivalent HCL object through `exadata_database_dependency`. RMS Facade callers add the JSON or YAML output file to the dependency files configured for their selected dependency source.
+- Downstream configurations may then reference upstream Exadata resources by logical key wherever the backing module accepts an Exadata dependency, including VM Cluster infrastructure, DB Home VM Cluster, CDB DB Home or source database, and PDB container or clone source.
+- DB Home and CDB `kms_key_id` values may be literal key OCIDs or logical keys from `keys_output.json` / `kms_dependency`; the Orchestrator forwards the normalized KMS dependency to Exadata Database without owning its resolution or validation semantics.
 - For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
 
 **Notes for Autonomous Database:**
 
 - Oracle-managed TDE encryption does not require `security.tde.existing_oci_vault_id` or `security.tde.existing_oci_encryption_key_id`.
-- For customer-managed TDE encryption with `terraform-oci-modules-exadata` v1.1.0, set `existing_oci_vault_id` to a Vault OCID. `existing_oci_encryption_key_id` can be either a key OCID or a logical key from `keys_output.json` / `kms_dependency`.
-- Creating a vault in the same stack and referencing it from Autonomous Database by logical vault key is not supported by this module integration today.
+- With Autonomous Database v1.2.0, customer-managed TDE accepts a Vault OCID or a logical vault key from `vaults_output.json` / `vaults_dependency`; the encryption key accepts a key OCID or a logical key from `keys_output.json` / `kms_dependency`.
+- Vaults created in the same Orchestrator stack can be referenced by logical vault key because the Orchestrator passes the module-native vault `id` to Autonomous Database.
+- `autonomous_databases_output.json` preserves the module-owned dependency fields for downstream stacks instead of reducing each database to only its `id`.
+
+**Notes for Autonomous Recovery Service:**
+
+- Configure Recovery Service subnets and protection policies under `autonomous_recovery_service_configuration`. Resource-specific normalization and validation remain owned by the Autonomous Recovery Service module.
+- `autonomous_recovery_service_output.json` contains the module-owned `recovery_service_subnets` and `protection_policies` dependency maps. RMS Facade can persist the same contract as JSON or YAML to the local file system, GitHub, or OCI Object Storage.
+- Terraform root callers can pass the output file path, its `protection_policies` wrapper, or the direct protection-policy map through `recovery_service_dependency`. RMS Facade callers add the JSON or YAML output file to their dependency files.
+- An Exadata Database CDB can reference an Autonomous Recovery Service protection policy by logical key in its DBRS backup destination. Policies created in the same stack are chained automatically; separate stacks consume the persisted dependency artifact.
 
 Configuration | Output File Name
 --------------|------------------
@@ -77,6 +90,7 @@ bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
 autonomous_databases_configuration | autonomous_databases_output.json
+autonomous_recovery_service_configuration | autonomous_recovery_service_output.json
 
 The Orchestrator provides an [RMS Facade](./rms-facade/) module allowing for the usage of configuration files stored in private GitHub repositories, private OCI buckets, plain URLs, or local file system. Dependencies can also be consumed from GitHub repositories, OCI buckets and local file system.
 
