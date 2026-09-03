@@ -114,8 +114,11 @@ locals {
   storage_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "storage_configuration") ? local.merged_input_configs.storage_configuration : null : null
 
   # OKE
-  oke_clusters_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "clusters_configuration") ? local.merged_input_configs.clusters_configuration : null : null
-  oke_workers_configuration  = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "workers_configuration") ? local.merged_input_configs.workers_configuration : null : null
+  # Prefer the canonical oke_* keys while retaining the unprefixed keys used by existing v2.x configurations.
+  # TODO(next major release): after a documented deprecation period, remove the clusters_configuration and
+  # workers_configuration fallbacks and accept only oke_clusters_configuration and oke_workers_configuration.
+  oke_clusters_configuration = local.merged_input_configs != null ? try(local.merged_input_configs.oke_clusters_configuration, local.merged_input_configs.clusters_configuration, null) : null
+  oke_workers_configuration  = local.merged_input_configs != null ? try(local.merged_input_configs.oke_workers_configuration, local.merged_input_configs.workers_configuration, null) : null
 
   # OCVS
   ocvs_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "ocvs_configuration") ? local.merged_input_configs.ocvs_configuration : null : null
