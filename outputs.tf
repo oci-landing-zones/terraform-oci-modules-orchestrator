@@ -199,7 +199,7 @@ resource "local_file" "custom_logs_output" {
 
 resource "local_file" "vaults_output" {
   count    = var.output_path != null && length(module.oci_lz_vaults) > 0 ? 1 : 0
-  content  = jsonencode({ "vaults" : { for k, v in module.oci_lz_vaults[0].vaults : k => { "management_endpoint" : v.management_endpoint } } })
+  content  = jsonencode({ "vaults" : { for k, v in module.oci_lz_vaults[0].vaults : k => { "id" : v.id, "management_endpoint" : v.management_endpoint } } })
   filename = "${var.output_path}/vaults_output.json"
 }
 

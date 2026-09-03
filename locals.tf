@@ -100,7 +100,12 @@ locals {
 
   # var.vaults_dependency
   ext_dep_vaults_map = var.vaults_dependency != null ? try(var.vaults_dependency.vaults, jsondecode(file(var.vaults_dependency)).vaults, null) : null
-  vaults_dependency  = merge({ for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => { "id" : v.id, "management_endpoint" : v.management_endpoint } })
+  # The security module uses vault_id internally; keep the external dependency artifact's canonical id field at the orchestrator boundary.
+  ext_dep_vaults_security_map = { for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => {
+    "vault_id" : v.id
+    "management_endpoint" : try(v.management_endpoint, null)
+  } }
+  vaults_dependency = merge({ for k, v in coalesce(local.ext_dep_vaults_map, {}) : k => { "id" : v.id, "management_endpoint" : try(v.management_endpoint, null) } }, { for k, v in(length(module.oci_lz_vaults) > 0 ? module.oci_lz_vaults[0].vaults : {}) : k => { "id" : v.id, "management_endpoint" : v.management_endpoint } })
 
   # var.tags_dependency
   ext_dep_tags_map = var.tags_dependency != null ? try(var.tags_dependency.tags, jsondecode(file(var.tags_dependency)).tags, null) : null
