@@ -74,8 +74,9 @@ output "governance_resources" {
 output "compute_resources" {
   description = "Provisioned compute resources"
   value = {
-    instances       = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}
-    secondary_vnics = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}
+    instances                  = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}
+    secondary_vnics            = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}
+    primary_private_ip_targets = length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].primary_private_ip_targets : {}
   }
 }
 
@@ -223,8 +224,11 @@ resource "local_file" "tags_output" {
 
 resource "local_file" "instances_output" {
   count = var.output_path != null && length(module.oci_lz_compute) > 0 ? 1 : 0
-  content = jsonencode({ "instances" : { for k, v in module.oci_lz_compute[0].instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
-  "secondary_vnics" : { for k, v in module.oci_lz_compute[0].secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } } })
+  content = jsonencode({
+    "instances" : local.provisioned_instances_dependency_map,
+    "secondary_vnics" : local.provisioned_secondary_vnics_dependency_map,
+    "primary_private_ip_targets" : local.provisioned_primary_private_ip_targets_dependency_map
+  })
   filename = "${var.output_path}/instances_output.json"
 }
 

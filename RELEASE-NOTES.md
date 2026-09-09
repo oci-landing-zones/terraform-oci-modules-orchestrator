@@ -6,6 +6,18 @@
 2. [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63): Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. Existing external-dependency validation, missing-output guards, merge precedence, RPC region fallback, and DNS view `ocid` compatibility are preserved
 3. [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66): Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated.
 
+## Updates
+
+1. Networking updated to [v0.8.5](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.5) and Workloads to [v0.2.9](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9). Network configuration, third-party firewall compute instances, and private NLBs can now be deployed in one Terraform apply; separate preliminary and final network configurations are no longer required.
+2. Compute and NLB modules use the Networking foundation output, while same-stack NLB private IPs are supplied to Networking for route-target resolution.
+3. NLB backends can refer to a workload private IP with `target_id`: use `<instance-key>` for a primary VNIC or `<instance-key>.<vnic-key>` for a secondary VNIC. Existing literal `ip_address` backends and OCID-based targets remain supported.
+4. `instances_output.json` retains its existing `instances` and `secondary_vnics` maps and additively includes `primary_private_ip_targets`. This map contains canonical private-IP OCIDs for primary VNICs keyed as `<instance-key>` and secondary VNICs keyed as `<instance-key>.<vnic-key>`; RMS Facade also reads both maps from dependency files.
+
+## Upgrade notes
+
+1. No orchestrator-level state moves are required. Networking v0.8.5 performs 11 internal whole-resource moves; review the first upgrade plan before applying.
+2. OCI Terraform Provider 7.27.0 or later is required by Networking v0.8.5. Existing literal backend IP addresses and private-IP OCIDs continue to work and do not require migration.
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes

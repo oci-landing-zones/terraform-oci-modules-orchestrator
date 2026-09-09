@@ -92,7 +92,12 @@ locals {
   logging_dependency          = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "service_logs") ? { "service_logs" : local.merged_dependencies.service_logs } : {}, contains(keys(local.merged_dependencies), "custom_logs") ? { "custom_logs" : local.merged_dependencies.custom_logs } : {}) : null
   functions_dependency        = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "functions") ? { "functions" : local.merged_dependencies.functions } : null : null
   vaults_dependency           = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "vaults") ? { "vaults" : local.merged_dependencies.vaults } : null : null
-  instances_dependency        = local.merged_dependencies != null ? merge(contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {}, contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {}) : null
+  instances_dependency = local.merged_dependencies != null ? merge(
+    contains(keys(local.merged_dependencies), "instances") ? { "instances" : local.merged_dependencies.instances } : {},
+    contains(keys(local.merged_dependencies), "secondary_vnics") ? { "secondary_vnics" : local.merged_dependencies.secondary_vnics } : {},
+    contains(keys(local.merged_dependencies), "private_ips") ? { "private_ips" : local.merged_dependencies.private_ips } : {},
+    contains(keys(local.merged_dependencies), "primary_private_ip_targets") ? { "primary_private_ip_targets" : local.merged_dependencies.primary_private_ip_targets } : {}
+  ) : null
   ocvs_dependency             = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "clusters") ? { "clusters" : local.merged_dependencies.clusters } : null : null
   databases_dependency        = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "container_databases") ? { "container_databases" : local.merged_dependencies.container_databases } : null : null
   recovery_service_dependency = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "protection_policies") ? { "protection_policies" : local.merged_dependencies.protection_policies } : null : null
