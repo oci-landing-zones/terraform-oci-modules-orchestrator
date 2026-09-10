@@ -2,6 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 locals {
+  networking_enabled = var.network_configuration != null
+  compute_enabled    = var.instances_configuration != null
+  nlb_enabled        = var.nlb_configuration != null
+
   # var.compartments_dependency can be provided either as an HCL map or as an JSON file. 
   ext_dep_compartments_map = var.compartments_dependency != null ? try(var.compartments_dependency.compartments, jsondecode(file(var.compartments_dependency)).compartments, null) : null
   # compartments_dependency includes the compartments provided by the user as an external dependency (computed in ext_dep_compartments_map) and the compartments provisioned by this module itself. The line below merges these two maps together.
@@ -12,7 +16,7 @@ locals {
 
   # as var.compartments_dependency, same goes for var.network_dependency
   ext_dep_network_map = var.network_dependency != null ? try(var.network_dependency.network_resources, jsondecode(file(var.network_dependency)).network_resources, null) : null
-  provisioned_route_tables_dependency_map = length(module.oci_lz_network) > 0 ? {
+  provisioned_route_tables_dependency_map = local.networking_enabled ? {
     for k, v in merge(
       try(module.oci_lz_network[0].provisioned_networking_resources.default_route_tables.igw_natgw_specific_default_rts_attachable_to_igw_natgw_sgw_lpg_drga_subnet, {}),
       try(module.oci_lz_network[0].provisioned_networking_resources.default_route_tables.sgw_specific_default_rts_attachable_to_sgw_subnet, {}),
@@ -29,19 +33,19 @@ locals {
 
   # Networking module outputs contain heterogeneous resource objects. Normalizing each
   # populated collection inside its conditional branch gives Terraform a stable value type.
-  provisioned_vcns_dependency_map = length(module.oci_lz_network) > 0 ? (
-    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "vcns") ? {
-      for k, v in module.oci_lz_network[0].provisioned_networking_resources["vcns"] : k => { "id" : v.id }
+  provisioned_vcns_dependency_map = local.networking_enabled ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_foundation_resources), "vcns") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_foundation_resources["vcns"] : k => { "id" : v.id }
     } : {}
   ) : {}
-  provisioned_subnets_dependency_map = length(module.oci_lz_network) > 0 ? (
-    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "subnets") ? {
-      for k, v in module.oci_lz_network[0].provisioned_networking_resources["subnets"] : k => { "id" : v.id }
+  provisioned_subnets_dependency_map = local.networking_enabled ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_foundation_resources), "subnets") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_foundation_resources["subnets"] : k => { "id" : v.id }
     } : {}
   ) : {}
-  provisioned_network_security_groups_dependency_map = length(module.oci_lz_network) > 0 ? (
-    contains(keys(module.oci_lz_network[0].provisioned_networking_resources), "network_security_groups") ? {
-      for k, v in module.oci_lz_network[0].provisioned_networking_resources["network_security_groups"] : k => { "id" : v.id }
+  provisioned_network_security_groups_dependency_map = local.networking_enabled ? (
+    contains(keys(module.oci_lz_network[0].provisioned_networking_foundation_resources), "network_security_groups") ? {
+      for k, v in module.oci_lz_network[0].provisioned_networking_foundation_resources["network_security_groups"] : k => { "id" : v.id }
     } : {}
   ) : {}
   provisioned_dynamic_routing_gateways_dependency_map = length(module.oci_lz_network) > 0 ? (
@@ -84,7 +88,15 @@ locals {
   # network_dependency accepts any input type. Direct map/key evaluation makes malformed
   # dependency data fail validation instead of silently converting it to an empty map.
   # Module-provisioned resources take precedence over external entries with the same key.
-  network_dependency = local.ext_dep_network_map != null || length(module.oci_lz_network) > 0 ? {
+  # Compute and NLB resources are upstream of route completion, so they consume only
+  # VCN, subnet, and NSG identifiers from the network foundation output.
+  network_foundation_dependency = local.ext_dep_network_map != null || local.networking_enabled ? {
+    "vcns" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "vcns") ? local.ext_dep_network_map["vcns"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_vcns_dependency_map),
+    "subnets" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "subnets") ? local.ext_dep_network_map["subnets"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_subnets_dependency_map),
+    "network_security_groups" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "network_security_groups") ? local.ext_dep_network_map["network_security_groups"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_network_security_groups_dependency_map)
+  } : null
+
+  network_dependency = local.ext_dep_network_map != null || local.networking_enabled ? {
     "vcns" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "vcns") ? local.ext_dep_network_map["vcns"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_vcns_dependency_map),
     "subnets" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "subnets") ? local.ext_dep_network_map["subnets"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_subnets_dependency_map),
     "network_security_groups" : merge({ for k, v in(local.ext_dep_network_map != null ? (contains(keys(local.ext_dep_network_map), "network_security_groups") ? local.ext_dep_network_map["network_security_groups"] : {}) : {}) : k => { "id" : v.id } }, local.provisioned_network_security_groups_dependency_map)
@@ -169,8 +181,34 @@ locals {
   tags_dependency  = merge({ for k, v in coalesce(local.ext_dep_tags_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_tags) > 0 ? module.oci_lz_tags[0].tags : {}) : k => { "id" : v.id } })
 
   # var.instances_dependency
-  ext_dep_instances_map = var.instances_dependency != null ? try(var.instances_dependency.instances, jsondecode(file(var.instances_dependency)).instances, null) : null
-  instances_dependency  = merge({ for k, v in coalesce(local.ext_dep_instances_map, {}) : k => { "id" : v.id, "private_ip" : v.private_ip } }, { for k, v in(length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].instances : {}) : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } }, { for k, v in(length(module.oci_lz_compute) > 0 ? module.oci_lz_compute[0].secondary_vnics : {}) : k => { "id" : v.id, "private_ip" : v.private_ip_address } })
+  ext_dep_instances_map                  = var.instances_dependency != null ? try(var.instances_dependency.instances, jsondecode(file(var.instances_dependency)).instances, null) : null
+  ext_dep_secondary_vnics_map            = var.instances_dependency != null ? try(var.instances_dependency.secondary_vnics, jsondecode(file(var.instances_dependency)).secondary_vnics, null) : null
+  ext_dep_primary_private_ip_targets_map = var.instances_dependency != null ? try(var.instances_dependency.primary_private_ip_targets, jsondecode(file(var.instances_dependency)).primary_private_ip_targets, null) : null
+  provisioned_instances_dependency_map = local.compute_enabled ? {
+    for k, v in module.oci_lz_compute[0].instances : k => {
+      "id" : v.id
+      "private_ip" : v.create_vnic_details[0].private_ip
+    }
+  } : {}
+  provisioned_secondary_vnics_dependency_map = local.compute_enabled ? {
+    for k, v in module.oci_lz_compute[0].secondary_vnics : k => {
+      "id" : v.id
+      "private_ip" : v.private_ip_address
+    }
+  } : {}
+  instances_dependency = merge(
+    { for k, v in coalesce(local.ext_dep_instances_map, {}) : k => { "id" : v.id, "private_ip" : v.private_ip } },
+    { for k, v in coalesce(local.ext_dep_secondary_vnics_map, {}) : k => { "id" : v.id, "private_ip" : v.private_ip } },
+    local.provisioned_instances_dependency_map,
+    local.provisioned_secondary_vnics_dependency_map,
+  )
+  provisioned_primary_private_ip_targets_dependency_map = local.compute_enabled ? {
+    for k, v in coalesce(module.oci_lz_compute[0].primary_private_ip_targets, {}) : k => { "id" : v.id }
+  } : {}
+  primary_private_ip_targets_dependency = merge(
+    { for k, v in coalesce(local.ext_dep_primary_private_ip_targets_map, {}) : k => { "id" : v.id } },
+    local.provisioned_primary_private_ip_targets_dependency_map,
+  )
 
   # var.ocvs_dependency
   ext_dep_ocvs_map = var.ocvs_dependency != null ? try(var.ocvs_dependency.clusters, jsondecode(file(var.ocvs_dependency)).clusters, null) : null
@@ -199,5 +237,12 @@ locals {
 
   # var.nlbs_dependency
   ext_dep_nlbs_map = var.nlbs_dependency != null ? try(var.nlbs_dependency.nlbs_private_ips, jsondecode(file(var.nlbs_dependency)).nlbs_private_ips, null) : null
-  nlbs_dependency  = { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } }
+  provisioned_nlbs_dependency_map = local.nlb_enabled ? {
+    for k, v in module.oci_lz_nlb[0].route_target_private_ips : k => { "id" : v.id }
+  } : {}
+  # Same-stack NLBs take precedence over matching external dependency keys.
+  nlbs_dependency = merge(
+    { for k, v in coalesce(local.ext_dep_nlbs_map, {}) : k => { "id" : v.id } },
+    local.provisioned_nlbs_dependency_map
+  )
 }
