@@ -19,15 +19,29 @@ module "oci_lz_compute" {
   #  file_system_dependency  = TBD
 }
 
+module "oke_compatibility" {
+  source                 = "./modules/oke-compatibility"
+  clusters_configuration = var.oke_clusters_configuration
+  workers_configuration  = var.oke_workers_configuration
+}
+
 module "oci_lz_oke" {
-  depends_on              = [module.oci_lz_zpr] # clusters_configuration may have ZPR attributes that must exist up front.
-  count                   = var.oke_clusters_configuration != null || var.oke_workers_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.8"
-  clusters_configuration  = var.oke_clusters_configuration
-  workers_configuration   = var.oke_workers_configuration
+  # Discovery must not depend on apply-time validation/ZPR resources.
+  for_each                = module.oke_compatibility.clusters
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=036b6eac9e365535dddcdf382a888baaebe635ea"
+  providers               = { oci = oci }
+  cluster_configuration   = each.value
+  workers_configuration   = module.oke_compatibility.workers[each.key]
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
   kms_dependency          = local.kms_dependency
+}
+
+locals {
+  oke_clusters           = { for k, m in module.oci_lz_oke : k => m.cluster }
+  oke_node_pools         = merge({}, [for m in values(module.oci_lz_oke) : m.node_pools]...)
+  oke_nodes              = merge({}, [for m in values(module.oci_lz_oke) : m.nodes]...)
+  oke_virtual_node_pools = merge({}, [for m in values(module.oci_lz_oke) : m.virtual_node_pools]...)
 }
 
 module "oci_lz_ocvs" {
