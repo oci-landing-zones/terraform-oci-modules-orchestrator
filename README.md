@@ -14,6 +14,9 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 ### <a name="mod_versions">Modules Versions</a>
 
+For the OKE migration candidate, read the [adapter and migration notes](OKE-REFACTOR-MIGRATION.md)
+before using this branch, especially with existing Terraform state.
+
 Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.4 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.4)
@@ -21,7 +24,8 @@ Repository | Referenced Tags/Branches
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
-[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
+[Compute Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
+[OKE Workloads (migration candidate)](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [036b6ea](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/commit/036b6eac9e365535dddcdf382a888baaebe635ea)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 

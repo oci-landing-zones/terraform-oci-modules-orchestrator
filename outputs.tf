@@ -82,10 +82,10 @@ output "compute_resources" {
 output "oke_resources" {
   description = "Provisioned OKE resources"
   value = {
-    clusters           = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}
-    node_pools         = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}
-    nodes              = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].nodes : {}
-    virtual_node_pools = length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].virtual_node_pools : {}
+    clusters           = local.oke_clusters
+    node_pools         = local.oke_node_pools
+    nodes              = local.oke_nodes
+    virtual_node_pools = local.oke_virtual_node_pools
   }
 }
 
@@ -227,10 +227,10 @@ resource "local_file" "nlbs_output" {
 
 resource "local_file" "oke_output" {
   count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
-  content = jsonencode({ "clusters" : { for k, v in module.oci_lz_oke[0].clusters : k => { "id" : v.id } },
-    "node_pools" : { for k, v in module.oci_lz_oke[0].node_pools : k => { "id" : v.id } },
-    "nodes" : module.oci_lz_oke[0].nodes,
-  "virtual_node_pools" : { for k, v in module.oci_lz_oke[0].virtual_node_pools : k => { "id" : v.id } } })
+  content = jsonencode({ "clusters" : { for k, v in local.oke_clusters : k => { "id" : v.id } },
+    "node_pools" : { for k, v in local.oke_node_pools : k => { "id" : v.id } },
+    "nodes" : local.oke_nodes,
+  "virtual_node_pools" : { for k, v in local.oke_virtual_node_pools : k => { "id" : v.id } } })
   filename = "${var.output_path}/oke_output.json"
 }
 
