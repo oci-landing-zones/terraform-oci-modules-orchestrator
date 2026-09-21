@@ -59,7 +59,7 @@ module "oci_lz_identity_domains" {
     var.identity_domain_identity_providers_configuration != null ||
     var.identity_domain_applications_configuration != null
   ) ? 1 : 0
-  source                         = "git::https://github.com/oci-landing-zones/terraform-oci-modules-iam.git//identity-domains?ref=e9ec7b8c0836579f4accc2b29412d0f26fe52e87"
+  source                         = "git::https://github.com/oci-landing-zones/terraform-oci-modules-iam.git//identity-domains?ref=746d18c599c9b18c9cb81b4b0f981b7d0353d3e2"
   providers                      = { oci = oci.home }
   tenancy_ocid                   = var.tenancy_ocid
   identity_domains_configuration = var.identity_domains_configuration
