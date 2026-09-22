@@ -1,14 +1,25 @@
 # September 22, 2026 Release Notes - 2.1.4
 
-## Bug Fixes
-
-1. [Issue #60](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/60): The RMS facade now prefers the canonical OKE keys `oke_clusters_configuration` and `oke_workers_configuration`, while continuing to accept the legacy `clusters_configuration` and `workers_configuration` keys for backward compatibility. The legacy keys are deprecated and should be migrated before the next major release.
-2. [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63): Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. Existing external-dependency validation, missing-output guards, merge precedence, RPC region fallback, and DNS view `ocid` compatibility are preserved
-3. [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66): Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated.
-
 ## Updates
 
-1. IAM module references updated to [v0.3.5](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5). Requestable identity domain groups are now disabled by default. Existing landing-zone-managed groups that need to be updated must be changed manually in the OCI Console by disabling **User can request access** for each group.
+1. Exadata Database, Autonomous Database, and Autonomous Recovery Service now reference the `release-1.2.0` module branch. Workload-specific dependency resolution and validation remain owned by the backing modules.
+2. Added the root `exadata_database_dependency` input. It accepts the module-native dependency object or a `cloud_exadata_database_output.json` file path and passes the normalized object to Exadata Database.
+3. RMS Facade now loads the five Exadata Database dependency families from JSON or YAML dependency files for multi-stack VM Cluster, DB Home, CDB, and PDB chaining.
+4. Exadata Database now receives `kms_dependency`, allowing DB Home and CDB `kms_key_id` values to use logical keys from `keys_output.json` as well as literal key OCIDs.
+5. Autonomous Database now receives `vaults_dependency` as well as `kms_dependency`, including vaults created in the same Orchestrator stack.
+6. Root and RMS Exadata and Autonomous Database outputs now preserve the backing modules' native dependency shapes.
+7. Added the root `autonomous_recovery_service_configuration` and `recovery_service_dependency` inputs and the module-owned `autonomous_recovery_service_resources` output for Recovery Service subnets and protection policies.
+8. Exadata Database CDBs can resolve DBRS protection-policy keys from Autonomous Recovery Service resources created in the same stack or from a separate stack's canonical dependency artifact.
+9. RMS Facade loads Autonomous Recovery Service configuration and dependencies from JSON or YAML and persists `autonomous_recovery_service_output.json` or `.yaml` to the local file system, GitHub, or OCI Object Storage.
+10. IAM module references updated to [v0.3.5](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5). Requestable identity domain groups are now disabled by default. Existing landing-zone-managed groups that need to be updated must be changed manually in the OCI Console by disabling **User can request access** for each group.
+
+## Bug Fixes
+
+1. RMS output persistence no longer drops module-owned metadata such as `compartment_id` from Exadata DB Homes and VM Clusters or from Autonomous Databases.
+2. [Issue #67](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/67): Compartment creation now waits 10 seconds for newly created tags to propagate before applying `defined_tags`, preventing tag propagation timing failures.
+3. [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66): Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated.
+4. [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63): Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. Existing external-dependency validation, missing-output guards, merge precedence, RPC region fallback, and DNS view `ocid` compatibility are preserved.
+5. [Issue #60](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/60): The RMS facade now prefers the canonical OKE keys `oke_clusters_configuration` and `oke_workers_configuration`, while continuing to accept the legacy `clusters_configuration` and `workers_configuration` keys for backward compatibility. The legacy keys are deprecated and should be migrated before the next major release.
 
 # July 7, 2026 Release Notes - 2.1.3
 
