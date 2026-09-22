@@ -1,10 +1,14 @@
-# Next release notes
+# September 22, 2026 Release Notes - 2.1.4
 
 ## Bug Fixes
 
 1. [Issue #60](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/60): The RMS facade now prefers the canonical OKE keys `oke_clusters_configuration` and `oke_workers_configuration`, while continuing to accept the legacy `clusters_configuration` and `workers_configuration` keys for backward compatibility. The legacy keys are deprecated and should be migrated before the next major release.
 2. [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63): Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. Existing external-dependency validation, missing-output guards, merge precedence, RPC region fallback, and DNS view `ocid` compatibility are preserved
 3. [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66): Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated.
+
+## Updates
+
+1. IAM module references updated to [v0.3.5](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5). Requestable identity domain groups are now disabled by default. Existing landing-zone-managed groups that need to be updated must be changed manually in the OCI Console by disabling **User can request access** for each group.
 
 # July 7, 2026 Release Notes - 2.1.3
 
