@@ -16,7 +16,7 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.4 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.4)
+[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.5)
 [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.3)
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
