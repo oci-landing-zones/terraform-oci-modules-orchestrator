@@ -33,7 +33,7 @@ module "oci_lz_vaults" {
   }
   vaults_configuration    = var.vaults_configuration
   compartments_dependency = local.compartments_dependency
-  vaults_dependency       = local.ext_dep_vaults_map
+  vaults_dependency       = local.ext_dep_vaults_security_map
 }
 
 module "oci_lz_zpr" {
@@ -54,4 +54,3 @@ module "oci_lz_bastions" {
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
 }
-

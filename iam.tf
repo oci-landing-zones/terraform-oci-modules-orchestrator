@@ -3,17 +3,20 @@
 
 module "oci_lz_compartments" {
   count                      = var.compartments_configuration != null ? 1 : 0
-  source                     = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments?ref=v0.3.4"
+  source                     = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//compartments?ref=v0.3.5"
   providers                  = { oci = oci.home }
   tenancy_ocid               = var.tenancy_ocid
   compartments_configuration = var.compartments_configuration
   compartments_dependency    = local.ext_dep_compartments_map
   tags_dependency            = local.tags_dependency
+
+  # Wait for newly created OCI tags before creating compartments that use defined_tags.
+  depends_on = [time_sleep.tag_propagation]
 }
 
 module "oci_lz_groups" {
   count                = var.groups_configuration != null ? 1 : 0
-  source               = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups?ref=v0.3.4"
+  source               = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//groups?ref=v0.3.5"
   providers            = { oci = oci.home }
   tenancy_ocid         = var.tenancy_ocid
   groups_configuration = var.groups_configuration
@@ -21,7 +24,7 @@ module "oci_lz_groups" {
 
 module "oci_lz_dynamic_groups" {
   count                        = var.dynamic_groups_configuration != null ? 1 : 0
-  source                       = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups?ref=v0.3.4"
+  source                       = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//dynamic-groups?ref=v0.3.5"
   providers                    = { oci = oci.home }
   tenancy_ocid                 = var.tenancy_ocid
   dynamic_groups_configuration = var.dynamic_groups_configuration
@@ -44,7 +47,7 @@ resource "time_sleep" "iam_policy_group_propagation" {
 module "oci_lz_policies" {
   count                   = var.policies_configuration != null ? 1 : 0
   depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups, module.oci_lz_identity_domains, time_sleep.iam_policy_group_propagation]
-  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.3.4"
+  source                  = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies?ref=v0.3.5"
   providers               = { oci = oci.home }
   tenancy_ocid            = var.tenancy_ocid
   policies_configuration  = var.policies_configuration
@@ -59,7 +62,7 @@ module "oci_lz_identity_domains" {
     var.identity_domain_identity_providers_configuration != null ||
     var.identity_domain_applications_configuration != null
   ) ? 1 : 0
-  source                         = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains?ref=v0.3.4"
+  source                         = "git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//identity-domains?ref=v0.3.5"
   providers                      = { oci = oci.home }
   tenancy_ocid                   = var.tenancy_ocid
   identity_domains_configuration = var.identity_domains_configuration

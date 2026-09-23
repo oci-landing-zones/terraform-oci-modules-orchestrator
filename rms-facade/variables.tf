@@ -166,7 +166,6 @@ variable "output_folder_path" {
 
 variable "local_dependency_file_paths" {
   type        = list(string)
-  description = "List of local dependency files in JSON format."
+  description = "List of local dependency files in JSON or YAML format."
   default     = []
 }
-
