@@ -99,15 +99,30 @@ locals {
   exadata_database_dependency = local.merged_dependencies != null ? (
     contains(keys(local.merged_dependencies), "cloud_exadata_infrastructures") ||
     contains(keys(local.merged_dependencies), "cloud_vm_clusters") ||
+    contains(keys(local.merged_dependencies), "exascale_db_storage_vaults") ||
     contains(keys(local.merged_dependencies), "database_homes") ||
     contains(keys(local.merged_dependencies), "databases") ||
     contains(keys(local.merged_dependencies), "pluggable_databases")
     ) ? {
     cloud_exadata_infrastructures = try(local.merged_dependencies.cloud_exadata_infrastructures, {})
     cloud_vm_clusters             = try(local.merged_dependencies.cloud_vm_clusters, {})
+    exascale_db_storage_vaults    = try(local.merged_dependencies.exascale_db_storage_vaults, {})
     database_homes                = try(local.merged_dependencies.database_homes, {})
     databases                     = try(local.merged_dependencies.databases, {})
     pluggable_databases           = try(local.merged_dependencies.pluggable_databases, {})
+  } : null : null
+  exadb_xs_dependency = local.merged_dependencies != null ? (
+    contains(keys(local.merged_dependencies), "exadb_vm_clusters") ||
+    contains(keys(local.merged_dependencies), "exascale_db_storage_vaults") ||
+    contains(keys(local.merged_dependencies), "database_homes") ||
+    contains(keys(local.merged_dependencies), "databases") ||
+    contains(keys(local.merged_dependencies), "pluggable_databases")
+    ) ? {
+    exascale_db_storage_vaults = try(local.merged_dependencies.exascale_db_storage_vaults, {})
+    exadb_vm_clusters          = try(local.merged_dependencies.exadb_vm_clusters, {})
+    database_homes             = try(local.merged_dependencies.database_homes, {})
+    databases                  = try(local.merged_dependencies.databases, {})
+    pluggable_databases        = try(local.merged_dependencies.pluggable_databases, {})
   } : null : null
   nlbs_dependency = local.merged_dependencies != null ? contains(keys(local.merged_dependencies), "nlbs_private_ips") ? { "nlbs_private_ips" : local.merged_dependencies.nlbs_private_ips } : null : null
 }

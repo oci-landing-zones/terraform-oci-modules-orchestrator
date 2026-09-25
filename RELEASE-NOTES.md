@@ -1,3 +1,9 @@
+## Unreleased
+
+1. Added native `exadb_xs_configuration` support. The Orchestrator now invokes the ExaDB-XS module and persists its dependency-shaped `exadb_xs_output.json` artifact through Terraform CLI and RMS Facade execution paths.
+2. Cloud Exadata Database configuration and dependency outputs now include `exascale_db_storage_vaults` for ExaDB-D vault creation and downstream logical-key references.
+3. This integration branch consumes `terraform-oci-modules-oracle-database` at `exascale-v1`. A released Orchestrator version must replace the branch reference with a published immutable module tag.
+
 # September 22, 2026 Release Notes - 2.1.4
 
 ## Updates

@@ -100,9 +100,18 @@ locals {
   cloud_exadata_database_resources_output = length(module.oci_lz_cloud_exadata_database) > 0 ? module.oci_lz_cloud_exadata_database[0].exadata_database_dependency : {
     cloud_exadata_infrastructures = {}
     cloud_vm_clusters             = {}
+    exascale_db_storage_vaults    = {}
     database_homes                = {}
     databases                     = {}
     pluggable_databases           = {}
+  }
+
+  exadb_xs_resources_output = length(module.oci_lz_exadb_xs) > 0 ? module.oci_lz_exadb_xs[0].exadb_xs_dependency : {
+    exascale_db_storage_vaults = {}
+    exadb_vm_clusters          = {}
+    database_homes             = {}
+    databases                  = {}
+    pluggable_databases        = {}
   }
 
   autonomous_databases_resources_output = length(module.oci_lz_autonomous_databases) > 0 ? module.oci_lz_autonomous_databases[0].autonomous_databases_dependency : {
@@ -118,6 +127,11 @@ locals {
 output "cloud_exadata_database_resources" {
   description = "Provisioned Cloud Exadata Database resources"
   value       = local.cloud_exadata_database_resources_output
+}
+
+output "exadb_xs_resources" {
+  description = "Provisioned ExaDB-XS resources"
+  value       = local.exadb_xs_resources_output
 }
 
 output "autonomous_databases_resources" {
@@ -254,6 +268,12 @@ resource "local_file" "cloud_exadata_database_output" {
   count    = var.output_path != null && length(module.oci_lz_cloud_exadata_database) > 0 ? 1 : 0
   content  = jsonencode(local.cloud_exadata_database_resources_output)
   filename = "${var.output_path}/cloud_exadata_database_output.json"
+}
+
+resource "local_file" "exadb_xs_output" {
+  count    = var.output_path != null && length(module.oci_lz_exadb_xs) > 0 ? 1 : 0
+  content  = jsonencode(local.exadb_xs_resources_output)
+  filename = "${var.output_path}/exadb_xs_output.json"
 }
 
 resource "local_file" "autonomous_databases_output" {

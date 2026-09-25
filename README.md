@@ -23,7 +23,8 @@ Repository | Referenced Tags/Branches
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
-[Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/exadata-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
+[Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database/tree/exascale-v1/exadata-database) | [exascale-v1 integration branch](https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database/tree/exascale-v1)
+[ExaDB-XS](https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database/tree/exascale-v1/exadb-xs) | [exascale-v1 integration branch](https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database/tree/exascale-v1)
 [Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 [Autonomous Recovery Service](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-recovery-service) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 
@@ -53,11 +54,20 @@ Below are the output file names that are generated for the respective configurat
 
 **Notes for Exadata Cloud Service:**
 
-- With Exadata Database v1.2.0, `cloud_exadata_database_output.json` is a dependency artifact for downstream Exadata stacks. It contains the canonical `cloud_exadata_infrastructures`, `cloud_vm_clusters`, `database_homes`, `databases`, and `pluggable_databases` maps.
+- The integration branch uses `terraform-oci-modules-oracle-database` at `exascale-v1`. Replace that branch reference with a published module tag before releasing the Orchestrator.
+- `cloud_exadata_database_configuration` accepts `exascale_db_storage_vaults_configuration` in addition to the existing infrastructure, VM Cluster, DB Home, CDB, and PDB configuration objects.
+- `cloud_exadata_database_output.json` is a dependency artifact for downstream Exadata stacks. It contains the canonical `cloud_exadata_infrastructures`, `cloud_vm_clusters`, `exascale_db_storage_vaults`, `database_homes`, `databases`, and `pluggable_databases` maps.
 - Terraform root callers can pass either that JSON file path or the equivalent HCL object through `exadata_database_dependency`. RMS Facade callers add the JSON or YAML output file to the dependency files configured for their selected dependency source.
 - Downstream configurations may then reference upstream Exadata resources by logical key wherever the backing module accepts an Exadata dependency, including VM Cluster infrastructure, DB Home VM Cluster, CDB DB Home or source database, and PDB container or clone source.
 - DB Home and CDB `kms_key_id` values may be literal key OCIDs or logical keys from `keys_output.json` / `kms_dependency`; the Orchestrator forwards the normalized KMS dependency to Exadata Database without owning its resolution or validation semantics.
-- For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. Upstream `terraform-oci-modules-exadata` examples expose `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
+- For Orchestrator usage, Exadata Cloud Service module inputs must be nested under `cloud_exadata_database_configuration`. The backing module exposes `cloud_exadata_infrastructures_configuration`, `cloud_vm_clusters_configuration`, `exascale_db_storage_vaults_configuration`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration` as top-level module variables; when using this Orchestrator/RMS facade, wrap those objects under `cloud_exadata_database_configuration`.
+
+**Notes for ExaDB-XS:**
+
+- Configure ExaDB-XS resources under `exadb_xs_configuration`. It is separate from `cloud_exadata_database_configuration`: ExaDB-XS does not create or consume a Cloud Exadata Infrastructure.
+- The configuration can contain `exascale_db_storage_vaults`, `exadb_vm_clusters`, `cloud_db_homes_configuration`, `databases_configuration`, and `pluggable_databases_configuration`.
+- `exadb_xs_output.json` contains the backing module's dependency maps: `exascale_db_storage_vaults`, `exadb_vm_clusters`, `database_homes`, `databases`, and `pluggable_databases`.
+- Terraform root callers can pass either that JSON file path or the equivalent HCL object through `exadb_xs_dependency`. RMS Facade callers add the JSON or YAML output file to their dependency files.
 
 **Notes for Autonomous Database:**
 
@@ -89,6 +99,7 @@ oke_clusters_configuration | oke_clusters_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
+exadb_xs_configuration | exadb_xs_output.json
 autonomous_databases_configuration | autonomous_databases_output.json
 autonomous_recovery_service_configuration | autonomous_recovery_service_output.json
 

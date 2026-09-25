@@ -14,9 +14,17 @@ locals {
   has_cloud_exadata_database_configuration = (
     try(length(local.cloud_exadata_database_configuration.cloud_exadata_infrastructures_configuration.cloud_exadata_infrastructures), 0) > 0 ||
     try(length(local.cloud_exadata_database_configuration.cloud_vm_clusters_configuration), 0) > 0 ||
+    try(length(local.cloud_exadata_database_configuration.exascale_db_storage_vaults_configuration), 0) > 0 ||
     try(length(local.cloud_exadata_database_configuration.cloud_db_homes_configuration), 0) > 0 ||
     try(length(local.cloud_exadata_database_configuration.databases_configuration), 0) > 0 ||
     try(length(local.cloud_exadata_database_configuration.pluggable_databases_configuration), 0) > 0
+  )
+  has_exadb_xs_configuration = (
+    try(length(local.exadb_xs_configuration.exascale_db_storage_vaults), 0) > 0 ||
+    try(length(local.exadb_xs_configuration.exadb_vm_clusters), 0) > 0 ||
+    try(length(local.exadb_xs_configuration.cloud_db_homes_configuration), 0) > 0 ||
+    try(length(local.exadb_xs_configuration.databases_configuration), 0) > 0 ||
+    try(length(local.exadb_xs_configuration.pluggable_databases_configuration), 0) > 0
   )
   has_autonomous_databases_configuration = try(length(local.autonomous_databases_configuration.databases), 0) > 0
   has_autonomous_recovery_service_configuration = (
@@ -25,6 +33,7 @@ locals {
   )
 
   publish_cloud_exadata_database_output      = var.save_output && local.has_cloud_exadata_database_configuration
+  publish_exadb_xs_output                    = var.save_output && local.has_exadb_xs_configuration
   publish_autonomous_databases_output        = var.save_output && local.has_autonomous_databases_configuration
   publish_autonomous_recovery_service_output = var.save_output && local.has_autonomous_recovery_service_configuration
 
@@ -103,6 +112,7 @@ locals {
     "clusters" : { for k, v in module.oci_lz_orchestrator.ocvs_resources.clusters : k => { "id" : v.id } }
   } : null
   cloud_exadata_database_output      = local.has_cloud_exadata_database_configuration ? module.oci_lz_orchestrator.cloud_exadata_database_resources : null
+  exadb_xs_output                    = local.has_exadb_xs_configuration ? module.oci_lz_orchestrator.exadb_xs_resources : null
   autonomous_databases_output        = local.has_autonomous_databases_configuration ? module.oci_lz_orchestrator.autonomous_databases_resources : null
   autonomous_recovery_service_output = local.has_autonomous_recovery_service_configuration ? module.oci_lz_orchestrator.autonomous_recovery_service_resources : null
   oke_output = length(module.oci_lz_orchestrator.oke_resources.clusters) > 0 ? {
@@ -130,6 +140,7 @@ locals {
   oke_output_file_name                         = "oke_output.${local.output_format}"
   ocvs_output_file_name                        = "ocvs_output.${local.output_format}"
   cloud_exadata_database_output_file_name      = "cloud_exadata_database_output.${local.output_format}"
+  exadb_xs_output_file_name                    = "exadb_xs_output.${local.output_format}"
   autonomous_databases_output_file_name        = "autonomous_databases_output.${local.output_format}"
   autonomous_recovery_service_output_file_name = "autonomous_recovery_service_output.${local.output_format}"
 
@@ -149,6 +160,7 @@ locals {
   oke_content                         = local.output_format == "json" ? jsonencode(local.oke_output) : yamlencode(local.oke_output)
   ocvs_content                        = local.output_format == "json" ? jsonencode(local.ocvs_output) : yamlencode(local.ocvs_output)
   cloud_exadata_database_content      = local.output_format == "json" ? jsonencode(local.cloud_exadata_database_output) : yamlencode(local.cloud_exadata_database_output)
+  exadb_xs_content                    = local.output_format == "json" ? jsonencode(local.exadb_xs_output) : yamlencode(local.exadb_xs_output)
   autonomous_databases_content        = local.output_format == "json" ? jsonencode(local.autonomous_databases_output) : yamlencode(local.autonomous_databases_output)
   autonomous_recovery_service_content = local.output_format == "json" ? jsonencode(local.autonomous_recovery_service_output) : yamlencode(local.autonomous_recovery_service_output)
 
@@ -297,6 +309,15 @@ resource "oci_objectstorage_object" "cloud_exadata_database" {
   content   = local.cloud_exadata_database_content
   namespace = data.oci_objectstorage_namespace.this[0].namespace
   object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.cloud_exadata_database_output_file_name}" : local.cloud_exadata_database_output_file_name
+}
+
+### Writing ExaDB-XS output to OCI bucket
+resource "oci_objectstorage_object" "exadb_xs" {
+  count     = local.publish_exadb_xs_output && local.writes_outputs_to_oci_bucket ? 1 : 0
+  bucket    = coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")
+  content   = local.exadb_xs_content
+  namespace = data.oci_objectstorage_namespace.this[0].namespace
+  object    = var.oci_object_prefix != null ? "${var.oci_object_prefix}/${local.exadb_xs_output_file_name}" : local.exadb_xs_output_file_name
 }
 
 ### Writing Autonomous Database output to OCI bucket
@@ -534,6 +555,19 @@ resource "github_repository_file" "cloud_exadata_database" {
   overwrite_on_create = true
 }
 
+### Writing ExaDB-XS output to GitHub repository
+resource "github_repository_file" "exadb_xs" {
+  count               = local.publish_exadb_xs_output && local.writes_outputs_to_github ? 1 : 0
+  repository          = local.github_repository_name
+  branch              = var.github_configuration_branch
+  file                = var.github_file_prefix != null ? "${var.github_file_prefix}/${local.exadb_xs_output_file_name}" : local.exadb_xs_output_file_name
+  content             = local.exadb_xs_content
+  commit_message      = "Managed by OCI Landing Zones Orchestrator."
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}
+
 ### Writing Autonomous Database output to GitHub repository
 resource "github_repository_file" "autonomous_databases" {
   count               = local.publish_autonomous_databases_output && local.writes_outputs_to_github ? 1 : 0
@@ -677,6 +711,13 @@ resource "local_file" "cloud_exadata_database" {
   content  = local.cloud_exadata_database_content
 }
 
+### Writing ExaDB-XS output to file
+resource "local_file" "exadb_xs" {
+  count    = local.publish_exadb_xs_output && local.writes_outputs_to_file ? 1 : 0
+  filename = "${coalesce(var.output_folder_path, path.module)}/${local.exadb_xs_output_file_name}"
+  content  = local.exadb_xs_content
+}
+
 ### Writing Autonomous Database output to file
 resource "local_file" "autonomous_databases" {
   count    = local.publish_autonomous_databases_output && local.writes_outputs_to_file ? 1 : 0
@@ -692,9 +733,9 @@ resource "local_file" "autonomous_recovery_service" {
 }
 
 locals {
-  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.ocvs[0].object, ""), try(oci_objectstorage_object.cloud_exadata_database[0].object, ""), try(oci_objectstorage_object.autonomous_databases[0].object, ""), try(oci_objectstorage_object.autonomous_recovery_service[0].object, "")]))}"
-  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.ocvs[0].file, ""), try(github_repository_file.cloud_exadata_database[0].file, ""), try(github_repository_file.autonomous_databases[0].file, ""), try(github_repository_file.autonomous_recovery_service[0].file, "")]))}"
-  local_file_output_string     = "Files saved to local file system: ${join(",", compact([try(local_file.compartments[0].filename, ""), try(local_file.identity_domains[0].filename, ""), try(local_file.networking[0].filename, ""), try(local_file.topics[0].filename, ""), try(local_file.streams[0].filename, ""), try(local_file.service_logs[0].filename, ""), try(local_file.custom_logs[0].filename, ""), try(local_file.vaults[0].filename, ""), try(local_file.keys[0].filename, ""), try(local_file.bastions[0].filename, ""), try(local_file.tags[0].filename, ""), try(local_file.instances[0].filename, ""), try(local_file.nlbs[0].filename, ""), try(local_file.oke[0].filename, ""), try(local_file.ocvs[0].filename, ""), try(local_file.cloud_exadata_database[0].filename, ""), try(local_file.autonomous_databases[0].filename, ""), try(local_file.autonomous_recovery_service[0].filename, "")]))}"
+  object_storage_output_string = "Files saved to OCI bucket ${coalesce(var.oci_configuration_bucket, var.url_dependency_source_oci_bucket, "__void__")}: ${join(",", compact([try(oci_objectstorage_object.compartments[0].object, ""), try(oci_objectstorage_object.identity_domains[0].object, ""), try(oci_objectstorage_object.networking[0].object, ""), try(oci_objectstorage_object.topics[0].object, ""), try(oci_objectstorage_object.streams[0].object, ""), try(oci_objectstorage_object.service_logs[0].object, ""), try(oci_objectstorage_object.custom_logs[0].object, ""), try(oci_objectstorage_object.vaults[0].object, ""), try(oci_objectstorage_object.keys[0].object, ""), try(oci_objectstorage_object.bastions[0].object, ""), try(oci_objectstorage_object.tags[0].object, ""), try(oci_objectstorage_object.instances[0].object, ""), try(oci_objectstorage_object.nlbs[0].object, ""), try(oci_objectstorage_object.oke[0].object, ""), try(oci_objectstorage_object.ocvs[0].object, ""), try(oci_objectstorage_object.cloud_exadata_database[0].object, ""), try(oci_objectstorage_object.exadb_xs[0].object, ""), try(oci_objectstorage_object.autonomous_databases[0].object, ""), try(oci_objectstorage_object.autonomous_recovery_service[0].object, "")]))}"
+  github_output_string         = "Files saved to GitHub repository ${coalesce(var.github_configuration_repo, "__void__")}, branch ${coalesce(var.github_configuration_branch, "__void__")}: ${join(",", compact([try(github_repository_file.compartments[0].file, ""), try(github_repository_file.identity_domains[0].file, ""), try(github_repository_file.networking[0].file, ""), try(github_repository_file.topics[0].file, ""), try(github_repository_file.streams[0].file, ""), try(github_repository_file.service_logs[0].file, ""), try(github_repository_file.custom_logs[0].file, ""), try(github_repository_file.vaults[0].file, ""), try(github_repository_file.keys[0].file, ""), try(github_repository_file.bastions[0].file, ""), try(github_repository_file.tags[0].file, ""), try(github_repository_file.instances[0].file, ""), try(github_repository_file.nlbs[0].file, ""), try(github_repository_file.oke[0].file, ""), try(github_repository_file.ocvs[0].file, ""), try(github_repository_file.cloud_exadata_database[0].file, ""), try(github_repository_file.exadb_xs[0].file, ""), try(github_repository_file.autonomous_databases[0].file, ""), try(github_repository_file.autonomous_recovery_service[0].file, "")]))}"
+  local_file_output_string     = "Files saved to local file system: ${join(",", compact([try(local_file.compartments[0].filename, ""), try(local_file.identity_domains[0].filename, ""), try(local_file.networking[0].filename, ""), try(local_file.topics[0].filename, ""), try(local_file.streams[0].filename, ""), try(local_file.service_logs[0].filename, ""), try(local_file.custom_logs[0].filename, ""), try(local_file.vaults[0].filename, ""), try(local_file.keys[0].filename, ""), try(local_file.bastions[0].filename, ""), try(local_file.tags[0].filename, ""), try(local_file.instances[0].filename, ""), try(local_file.nlbs[0].filename, ""), try(local_file.oke[0].filename, ""), try(local_file.ocvs[0].filename, ""), try(local_file.cloud_exadata_database[0].filename, ""), try(local_file.exadb_xs[0].filename, ""), try(local_file.autonomous_databases[0].filename, ""), try(local_file.autonomous_recovery_service[0].filename, "")]))}"
   output_string                = var.save_output ? (lower(var.configuration_source) == "ocibucket" || lower(var.url_dependency_source) == "ocibucket" ? local.object_storage_output_string : lower(var.configuration_source) == "github" || lower(var.url_dependency_source) == "github" ? local.github_output_string : lower(var.configuration_source) == "file" ? local.local_file_output_string : "") : null
 }
 

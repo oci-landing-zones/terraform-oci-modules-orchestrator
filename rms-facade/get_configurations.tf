@@ -126,6 +126,9 @@ locals {
   # Cloud Exadata Database
   cloud_exadata_database_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "cloud_exadata_database_configuration") ? local.merged_input_configs.cloud_exadata_database_configuration : null : null
 
+  # ExaDB-XS
+  exadb_xs_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "exadb_xs_configuration") ? local.merged_input_configs.exadb_xs_configuration : null : null
+
   # Autonomous Database
   autonomous_databases_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "autonomous_databases_configuration") ? local.merged_input_configs.autonomous_databases_configuration : null : null
 

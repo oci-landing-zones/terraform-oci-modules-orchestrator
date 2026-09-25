@@ -183,6 +183,9 @@ locals {
   # var.exadata_database_dependency can be provided either as a module-native object or as a cloud_exadata_database_output.json file.
   exadata_database_dependency = var.exadata_database_dependency != null ? try(jsondecode(file(var.exadata_database_dependency)), var.exadata_database_dependency, null) : null
 
+  # var.exadb_xs_dependency can be provided either as a module-native object or as an exadb_xs_output.json file.
+  exadb_xs_dependency = var.exadb_xs_dependency != null ? try(jsondecode(file(var.exadb_xs_dependency)), var.exadb_xs_dependency, null) : null
+
   # var.recovery_service_dependency can be provided as a module-native object, a direct protection policy map, or an autonomous_recovery_service_output.json file.
   ext_dep_recovery_service_protection_policies = var.recovery_service_dependency != null ? try(
     var.recovery_service_dependency.protection_policies,

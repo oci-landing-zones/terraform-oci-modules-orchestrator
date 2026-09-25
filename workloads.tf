@@ -56,10 +56,11 @@ module "oci_lz_autonomous_recovery_service" {
 module "oci_lz_cloud_exadata_database" {
   depends_on = [module.oci_lz_zpr] # cloud_exadata_database_configuration may have ZPR attributes that must exist up front.
   count      = var.cloud_exadata_database_configuration != null ? 1 : 0
-  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database?ref=release-1.2.0"
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database.git//exadata-database?ref=exascale-v1"
 
   cloud_exadata_infrastructures_configuration = try(var.cloud_exadata_database_configuration.cloud_exadata_infrastructures_configuration, null)
   cloud_vm_clusters_configuration             = try(var.cloud_exadata_database_configuration.cloud_vm_clusters_configuration, null)
+  exascale_db_storage_vaults_configuration    = try(var.cloud_exadata_database_configuration.exascale_db_storage_vaults_configuration, null)
   cloud_db_homes_configuration                = try(var.cloud_exadata_database_configuration.cloud_db_homes_configuration, null)
   databases_configuration                     = try(var.cloud_exadata_database_configuration.databases_configuration, null)
   pluggable_databases_configuration           = try(var.cloud_exadata_database_configuration.pluggable_databases_configuration, null)
@@ -72,6 +73,23 @@ module "oci_lz_cloud_exadata_database" {
   kms_dependency                              = local.kms_dependency
   exadata_database_dependency                 = local.exadata_database_dependency
   recovery_service_dependency                 = local.recovery_service_dependency
+}
+
+module "oci_lz_exadb_xs" {
+  depends_on = [module.oci_lz_zpr] # exadb_xs_configuration may have ZPR attributes that must exist up front.
+  count      = var.exadb_xs_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-oracle-database.git//exadb-xs?ref=exascale-v1"
+
+  exadb_xs_configuration            = var.exadb_xs_configuration
+  cloud_db_homes_configuration      = try(var.exadb_xs_configuration.cloud_db_homes_configuration, null)
+  databases_configuration           = try(var.exadb_xs_configuration.databases_configuration, null)
+  pluggable_databases_configuration = try(var.exadb_xs_configuration.pluggable_databases_configuration, null)
+  compartments_dependency           = local.compartments_dependency
+  subscription_dependency           = local.subscription_dependency
+  network_dependency                = local.network_dependency
+  exadb_xs_dependency               = local.exadb_xs_dependency
+  kms_dependency                    = local.kms_dependency
+  recovery_service_dependency       = local.recovery_service_dependency
 }
 
 module "oci_lz_autonomous_databases" {

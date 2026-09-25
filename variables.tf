@@ -186,6 +186,11 @@ variable "cloud_exadata_database_configuration" {
   default = null
 }
 
+variable "exadb_xs_configuration" {
+  type    = any
+  default = null
+}
+
 variable "autonomous_databases_configuration" {
   type    = any
   default = null
@@ -273,6 +278,12 @@ variable "databases_dependency" {
 
 variable "exadata_database_dependency" {
   description = "Module-native Exadata Database dependency object or path to cloud_exadata_database_output.json."
+  type        = any
+  default     = null
+}
+
+variable "exadb_xs_dependency" {
+  description = "Module-native ExaDB-XS dependency object or path to exadb_xs_output.json."
   type        = any
   default     = null
 }
