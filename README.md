@@ -14,8 +14,8 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 ### <a name="mod_versions">Modules Versions</a>
 
-For the OKE migration candidate, read the [adapter and migration notes](OKE-REFACTOR-MIGRATION.md)
-before using this branch, especially with existing Terraform state.
+The OKE migration candidate changes Terraform resource addresses. Existing
+deployments require reviewed state moves; do not upgrade by changing the version alone.
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
