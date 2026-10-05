@@ -20,6 +20,6 @@ module "oci_lz_nlb" {
   nlb_configuration       = var.nlb_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_foundation_dependency
-  instances_dependency    = local.instances_dependency
+  instances_dependency    = local.nlb_instances_dependency
   private_ips_dependency  = local.primary_private_ip_targets_dependency
 }

@@ -210,6 +210,13 @@ locals {
     local.provisioned_primary_private_ip_targets_dependency_map,
   )
 
+  # NLB backends require instance or private-IP OCIDs, not VNIC OCIDs.
+  nlb_instances_dependency = merge(local.instances_dependency, {
+    for key in keys(merge(coalesce(local.ext_dep_secondary_vnics_map, {}), local.provisioned_secondary_vnics_dependency_map)) :
+    key => merge(local.instances_dependency[key], { id = local.primary_private_ip_targets_dependency[key].id })
+    if contains(keys(local.primary_private_ip_targets_dependency), key)
+  })
+
   # var.ocvs_dependency
   ext_dep_ocvs_map = var.ocvs_dependency != null ? try(var.ocvs_dependency.clusters, jsondecode(file(var.ocvs_dependency)).clusters, null) : null
   ocvs_dependency  = merge({ for k, v in coalesce(local.ext_dep_ocvs_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_ocvs) > 0 ? module.oci_lz_ocvs[0].clusters : {}) : k => { "id" : v.id } })
