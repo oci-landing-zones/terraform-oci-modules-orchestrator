@@ -43,6 +43,10 @@ module "oci_lz_ocvs" {
 module "oci_lz_autonomous_recovery_service" {
   count  = var.autonomous_recovery_service_configuration != null ? 1 : 0
   source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-recovery-service?ref=release-1.2.0"
+  providers = {
+    oci      = oci
+    oci.home = oci.home
+  }
 
   autonomous_recovery_service_configuration = var.autonomous_recovery_service_configuration
   compartments_dependency                   = local.compartments_dependency
