@@ -1,4 +1,4 @@
-# Next release notes
+# October 13, 2026, Release Notes - 2.2.0
 
 ## Updates
 
@@ -11,6 +11,12 @@
 
 1. No orchestrator-level state moves are required. Networking v0.8.5 performs 11 internal whole-resource moves; review the first upgrade plan before applying.
 2. OCI Terraform Provider 7.27.0 or later is required by Networking v0.8.5. Existing literal backend IP addresses and private-IP OCIDs continue to work and do not require migration.
+3. Existing deployments that replace literal firewall private-IP references with managed symbolic targets must use two separate plan/apply cycles:
+   1. **Phase 1 — module upgrade:** upgrade the modules without changing any existing NLB backend selector or route target. Keep current `ip_address` values, symbolic instance keys and literal OCIDs in `target_id`, and literal private-IP OCIDs in route-rule `network_entity_id`. Require a plan with no backend, route-table, route-target, or attachment replacement, then apply it. This records the new Workloads private-IP lookups in state.
+   2. **Phase 2 — symbolic migration:** replace selected private-IP backend references with keys that resolve to their canonical private-IP OCIDs, such as `<instance-key>.<vnic-key>` for secondary VNICs. Any alias already present in `instances_dependency` retains its target; keep a literal private-IP OCID if the corresponding key would select an instance instead. When desired, replace literal NLB private-IP route targets with the NLB key in `network_entity_id`. Require every symbolic value to resolve during planning to the exact existing private-IP OCID, every NLB backend and traffic-path route to be `no-op`, and no route target to be unknown before applying. Keep existing instance-OCID targets unchanged; changing them to private-IP targets changes the backend identity and requires replacement.
+
+   Do not combine these phases for an existing deployment. Before Phase 1 has populated state, Terraform can defer the new private-IP lookups and conservatively plan backend replacement and unknown route updates. Literal `ip_address` and private-IP OCID configurations remain supported and do not have to be migrated. Keep the existing root networking module address and configuration keys. The Phase 1 plan should show state moves for ten route-table collections and one attachment collection, with no infrastructure replacement. Subnet associations continue to use `route_table_key`; without a key, the subnet retains its VCN default route table. A standalone subnet `route_table_id` does not change that association.
+3. Subnets are created on the VCN default route table and completed through an attachment. Fresh deployments can have a short default-route interval; route-table reassignment and NLB/private-IP or firewall replacement can interrupt traffic.
 
 # September 22, 2026 Release Notes - 2.1.4
 
