@@ -93,7 +93,8 @@ locals {
   } : null
   instances_output = length(module.oci_lz_orchestrator.compute_resources.instances) > 0 ? {
     "instances" : { for k, v in module.oci_lz_orchestrator.compute_resources.instances : k => { "id" : v.id, "private_ip" : v.create_vnic_details[0].private_ip } },
-    "secondary_vnics" : { for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } }
+    "secondary_vnics" : { for k, v in module.oci_lz_orchestrator.compute_resources.secondary_vnics : k => { "id" : v.id, "private_ip" : v.private_ip_address } },
+    "primary_private_ip_targets" : { for k, v in module.oci_lz_orchestrator.compute_resources.primary_private_ip_targets : k => { "id" : v.id } }
   } : null
   nlbs_output = length(module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips) > 0 ? {
     "nlbs_private_ips" : { for k, v in module.oci_lz_orchestrator.nlb_resources.nlbs_private_ips : k => { "id" : v.private_ips[0].id } },
