@@ -116,6 +116,7 @@ locals {
   # OKE
   oke_clusters_configuration = module.oke_inputs.configurations.clusters
   oke_workers_configuration  = module.oke_inputs.configurations.workers
+  oke_v2_configuration       = try(local.merged_input_configs.oke_v2_configuration, null)
 
   # OCVS
   ocvs_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "ocvs_configuration") ? local.merged_input_configs.ocvs_configuration : null : null

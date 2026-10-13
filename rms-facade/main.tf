@@ -52,6 +52,7 @@ module "oci_lz_orchestrator" {
   # OKE
   oke_clusters_configuration = local.oke_clusters_configuration
   oke_workers_configuration  = local.oke_workers_configuration
+  oke_v2_configuration       = local.oke_v2_configuration
   # OCVS
   ocvs_configuration = local.ocvs_configuration
   # Cloud Exadata Database

@@ -176,6 +176,21 @@ variable "oke_workers_configuration" {
   default = null
 }
 
+variable "oke_v2_configuration" {
+  description = "Opt-in map of OKE v2 deployments keyed by cluster identity. Each entry contains cluster_configuration and optional workers_configuration using the native cis-oke-v2 contract. Existing OKE inputs remain legacy."
+  type        = any
+  default     = null
+  validation {
+    condition = var.oke_v2_configuration == null ? true : try(can(keys(var.oke_v2_configuration)) && alltrue([
+      for key, deployment in var.oke_v2_configuration :
+      trimspace(key) != "" &&
+      can(keys(deployment.cluster_configuration)) &&
+      length(setsubtract(toset(keys(deployment)), toset(["cluster_configuration", "workers_configuration"]))) == 0
+    ]), false)
+    error_message = "oke_v2_configuration must be a map with nonempty keys; each deployment requires a cluster_configuration object and optionally workers_configuration."
+  }
+}
+
 variable "ocvs_configuration" {
   type    = any
   default = null

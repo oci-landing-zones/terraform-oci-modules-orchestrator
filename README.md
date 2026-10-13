@@ -14,8 +14,8 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 ### <a name="mod_versions">Modules Versions</a>
 
-The OKE migration candidate changes Terraform resource addresses. Existing
-deployments require reviewed state moves; do not upgrade by changing the version alone.
+Existing OKE inputs continue to use the legacy module without changing resource
+addresses. OKE v2 is a separate opt-in deployment path; see [OKE generations](#oke-generations).
 
 Repository | Referenced Tags/Branches
 -----------|--------------------
@@ -25,7 +25,8 @@ Repository | Referenced Tags/Branches
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
 [Compute Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.8 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.8)
-[OKE Workloads (migration candidate)](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [036b6ea](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/commit/036b6eac9e365535dddcdf382a888baaebe635ea)
+[OKE Legacy](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/v0.2.8/cis-oke) | v0.2.8
+[OKE v2 (opt-in candidate)](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/a7330f07d146e099f42185319e79e83a9a0770e7/cis-oke-v2) | a7330f0
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata & Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/releases/tag/v1.1.0)
 
@@ -233,6 +234,55 @@ Open an issue in this repository.
 ## Contributing
 
 This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md).
+
+## OKE generations
+
+`oke_clusters_configuration` and `oke_workers_configuration` continue to invoke
+legacy `cis-oke` v0.2.8 at `module.oci_lz_oke[0]`. Existing OKE-WE JSON requires
+no changes. The facade also accepts the older unprefixed aliases, but rejects
+both aliases being supplied for the same family.
+
+Use `oke_v2_configuration` explicitly for new-generation deployments. It is a
+map of cluster identities, each containing the native v2 `cluster_configuration`
+and optional `workers_configuration`. For example, a cluster-only input is:
+
+```hcl
+oke_v2_configuration = {
+  dev = {
+    cluster_configuration = {
+      name           = "oke-dev"
+      compartment_id = "OKE-COMPARTMENT-KEY"
+      cis_level      = "1"
+      networking = {
+        vcn_id                 = "OKE-VCN-KEY"
+        api_endpoint_subnet_id = "OKE-CP-SUBNET-KEY"
+        service_lb_subnet_ids  = ["OKE-LB-SUBNET-KEY"]
+      }
+    }
+  }
+}
+```
+
+Replace these dependency keys with those of your deployment. Add
+`workers_configuration.worker_pools` alongside `cluster_configuration` using
+the [v2 contract](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/a7330f07d146e099f42185319e79e83a9a0770e7/cis-oke-v2).
+In facade JSON, use the same top-level `oke_v2_configuration` key. Each map entry
+invokes `module.oci_lz_oke_v2["<key>"]`. V2 currently uses a pinned development
+commit, not a released version, and retains its private/enhanced-cluster and
+other documented restrictions.
+
+Legacy and v2 can coexist for distinct clusters. Cluster keys must be unique
+across generations; pool keys must be globally unique across all generations
+and managed/virtual pools. Both feed the existing `oke_resources` output and
+`oke_output.json` maps. Provider-specific object fields can differ by generation.
+Network, IAM and KMS dependencies are passed to both; the orchestrator does not
+translate legacy inputs into v2 or create missing prerequisites automatically.
+
+Moving an existing cluster from legacy to v2 is a separate opt-in migration:
+back up state, convert inputs, review explicit resource-level state moves and
+inspect a saved plan. Do not configure both generations to own the same cluster,
+even under different keys. There are no automatic migration moves. Testers using
+the earlier unpublished adapter must also review its changed v2 caller addresses.
 
 ## Security
 

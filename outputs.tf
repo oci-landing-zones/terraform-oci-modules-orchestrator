@@ -226,7 +226,7 @@ resource "local_file" "nlbs_output" {
 }
 
 resource "local_file" "oke_output" {
-  count = var.output_path != null && length(module.oci_lz_oke) > 0 ? 1 : 0
+  count = var.output_path != null && (length(module.oci_lz_oke) > 0 || length(module.oci_lz_oke_v2) > 0) ? 1 : 0
   content = jsonencode({ "clusters" : { for k, v in local.oke_clusters : k => { "id" : v.id } },
     "node_pools" : { for k, v in local.oke_node_pools : k => { "id" : v.id } },
     "nodes" : local.oke_nodes,
