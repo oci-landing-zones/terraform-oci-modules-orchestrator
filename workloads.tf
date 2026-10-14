@@ -22,7 +22,7 @@ module "oci_lz_compute" {
 module "oci_lz_oke" {
   depends_on              = [module.oci_lz_zpr]
   count                   = var.oke_clusters_configuration != null || var.oke_workers_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.8"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.9"
   clusters_configuration  = var.oke_clusters_configuration
   workers_configuration   = var.oke_workers_configuration
   compartments_dependency = local.compartments_dependency
@@ -33,7 +33,7 @@ module "oci_lz_oke" {
 module "oci_lz_oke_v2" {
   # Discovery must not depend on apply-time validation/ZPR resources.
   for_each                = local.oke_v2_deployments
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke-v2?ref=a7330f07d146e099f42185319e79e83a9a0770e7"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=0d2bbdbfdca0738c845ccae8146fb373803d827d"
   providers               = { oci = oci }
   cluster_configuration   = each.value.cluster_configuration
   workers_configuration   = try(each.value.workers_configuration, null)
@@ -43,7 +43,7 @@ module "oci_lz_oke_v2" {
 }
 
 locals {
-  oke_v2_deployments = { for k in try(keys(var.oke_v2_configuration), []) : k => var.oke_v2_configuration[k] }
+  oke_v2_deployments = { for k in try(keys(var.oke_configuration), []) : k => var.oke_configuration[k] }
   oke_cluster_keys   = concat(try(keys(var.oke_clusters_configuration.clusters), []), keys(local.oke_v2_deployments))
   oke_pool_keys = concat(
     try(keys(var.oke_workers_configuration.node_pools), []),
