@@ -1,3 +1,9 @@
+# Unreleased - 2.2.1
+
+## Updates
+
+1. IAM module sources now use the canonical `oci-landing-zones/terraform-oci-modules-iam` repository instead of the legacy `oracle-quickstart` URL. The pinned IAM version (`v0.3.5`), module addresses, inputs, and outputs are unchanged. Run `terraform init` after updating Orchestrator to refresh the module source locations.
+
 # October 13, 2026, Release Notes - 2.2.0
 
 ## Updates
