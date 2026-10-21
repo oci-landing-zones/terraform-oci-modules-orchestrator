@@ -1,3 +1,9 @@
+# Unreleased - 2.3.0
+
+## Updates
+
+1. Flow-log entries in `logging_configuration.service_logs` can reference configured VCN and subnet keys in `resource_id`, allowing compartments, network targets, log groups and explicit flow logs to be created in one apply. Existing literal OCIDs and other service-log inputs are preserved. Compartment-wide `flow_logs` discovery is unchanged; it does not provide same-apply discovery of newly created targets. See [Same-apply flow logs](./README.md#same-apply-flow-logs) for configuration and state-migration guidance when converting existing discovered logs.
+
 # October 13, 2026, Release Notes - 2.2.0
 
 ## Updates

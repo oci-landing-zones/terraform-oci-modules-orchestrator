@@ -236,6 +236,36 @@ cd rms-facade
 terraform apply -destroy -var-file ../examples/vision/iam/config/input-json.tfvars -state ../examples/vision/iam/runtime/terraform.tfstate
 ```
 
+## Same-apply flow logs
+
+Use `logging_configuration.service_logs` to create flow logs for VCNs and subnets managed in the same apply. Set `service` to `flowlogs`, `category` to `vcn` or `subnet`, and `resource_id` to the resource's logical key in the networking configuration. The Orchestrator resolves the key through its network foundation dependencies; a literal resource OCID is also accepted. The configured service-log keys remain known during planning even when the target OCIDs are not yet available.
+
+For example, with a subnet keyed `APPLICATION-SUBNET` and a compartment keyed `CMP-LOGGING`:
+
+```json
+{
+  "logging_configuration": {
+    "default_compartment_id": "CMP-LOGGING",
+    "log_groups": {
+      "FLOW-LOG-GROUP": { "name": "network-flow-logs" }
+    },
+    "service_logs": {
+      "APPLICATION-SUBNET-FLOW": {
+        "name": "application-subnet-flow",
+        "log_group_id": "FLOW-LOG-GROUP",
+        "service": "flowlogs",
+        "category": "subnet",
+        "resource_id": "APPLICATION-SUBNET"
+      }
+    }
+  }
+}
+```
+
+The same configuration is accepted by RMS Facade. Logical keys are resolved within the selected resource type; missing references fail planning. Existing literal OCIDs and service logs for other services retain their previous behavior.
+
+This path creates logs for explicitly configured targets. The `flow_logs` attribute retains compartment-wide discovery and its existing resource addresses. Do not configure both paths for the same resource and category: OCI permits only one such log. Converting an existing discovered log to a service-log entry requires moving its state from `oci_logging_log.flow_logs[<old-key>]` to `oci_logging_log.these[<service-log-key>]` inside the Logging module; verify the exact addresses and a plan with no replacement before applying.
+
 ## Help
 
 Open an issue in this repository.
