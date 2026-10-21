@@ -7,7 +7,11 @@ locals {
       for key, log in coalesce(lookup(var.logging_configuration, "service_logs", null), {}) : key => merge(log, {
         resource_id = log.service == "flowlogs" && contains(["vcn", "subnet"], log.category) ? coalesce(
           startswith(log.resource_id, "ocid1.") ? log.resource_id : null,
-          try(local.network_foundation_dependency[{ vcn = "vcns", subnet = "subnets" }[log.category]][log.resource_id].id, null)
+          lookup(
+            lookup(coalesce(local.network_foundation_dependency, {}), { vcn = "vcns", subnet = "subnets" }[log.category], {}),
+            log.resource_id,
+            { id = null }
+          ).id
         ) : log.resource_id
       })
     }
