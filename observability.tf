@@ -50,11 +50,28 @@ module "oci_lz_alarms" {
   topics_dependency       = local.topics_dependency  #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
 }
 
+locals {
+  logging_configuration = var.logging_configuration == null ? null : merge(var.logging_configuration, {
+    service_logs = {
+      for key, log in coalesce(lookup(var.logging_configuration, "service_logs", null), {}) : key => merge(log, {
+        resource_id = log.service == "flowlogs" && contains(["vcn", "subnet"], log.category) ? coalesce(
+          startswith(log.resource_id, "ocid1.") ? log.resource_id : null,
+          lookup(
+            lookup(coalesce(local.network_foundation_dependency, {}), { vcn = "vcns", subnet = "subnets" }[log.category], {}),
+            log.resource_id,
+            { id = null }
+          ).id
+        ) : log.resource_id
+      })
+    }
+  })
+}
+
 module "oci_lz_logging" {
   count                   = var.logging_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.2.8"
   tenancy_ocid            = var.tenancy_ocid
-  logging_configuration   = var.logging_configuration
+  logging_configuration   = local.logging_configuration
   compartments_dependency = local.compartments_dependency
 }
 
