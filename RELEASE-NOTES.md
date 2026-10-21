@@ -2,7 +2,9 @@
 
 ## Updates
 
-1. Flow-log entries in `logging_configuration.service_logs` can reference configured VCN and subnet keys in `resource_id`, allowing compartments, network targets, log groups and explicit flow logs to be created in one apply. Existing literal OCIDs and other service-log inputs are preserved. Compartment-wide `flow_logs` discovery is unchanged; it does not provide same-apply discovery of newly created targets. See [Same-apply flow logs](./README.md#same-apply-flow-logs) for configuration and state-migration guidance when converting existing discovered logs.
+1. Flow-log entries in `logging_configuration.service_logs` can reference configured VCN and subnet keys in `resource_id`, allowing compartments, network targets, log groups and explicit flow logs to be created in one apply. Existing literal OCIDs and other service-log inputs are preserved. Compartment-wide `flow_logs` discovery is unchanged; it does not provide same-apply discovery of newly created targets.
+
+2. Update the Logging module to `v0.2.8` to include the flow-log planning fix for pending compartment tag-default changes in [Observability PR #43](https://github.com/oci-landing-zones/terraform-oci-modules-observability/pull/43).
 
 # October 13, 2026, Release Notes - 2.2.0
 
