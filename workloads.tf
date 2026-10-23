@@ -20,7 +20,7 @@ module "oci_lz_compute" {
 }
 
 module "oci_lz_oke" {
-  depends_on              = [module.oci_lz_zpr] # clusters_configuration may have ZPR attributes that must exist up front.
+  depends_on              = [module.oci_lz_zpr]
   count                   = var.oke_clusters_configuration != null || var.oke_workers_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.9"
   clusters_configuration  = var.oke_clusters_configuration
@@ -28,6 +28,46 @@ module "oci_lz_oke" {
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
   kms_dependency          = local.kms_dependency
+}
+
+module "oci_lz_oke_v2" {
+  # Discovery must not depend on apply-time validation/ZPR resources.
+  for_each                = local.oke_v2_deployments
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=0d2bbdbfdca0738c845ccae8146fb373803d827d"
+  providers               = { oci = oci }
+  cluster_configuration   = each.value.cluster_configuration
+  workers_configuration   = try(each.value.workers_configuration, null)
+  compartments_dependency = local.compartments_dependency
+  network_dependency      = local.network_dependency
+  kms_dependency          = local.kms_dependency
+}
+
+locals {
+  oke_v2_deployments = { for k in try(keys(var.oke_configuration), []) : k => var.oke_configuration[k] }
+  oke_cluster_keys   = concat(try(keys(var.oke_clusters_configuration.clusters), []), keys(local.oke_v2_deployments))
+  oke_pool_keys = concat(
+    try(keys(var.oke_workers_configuration.node_pools), []),
+    try(keys(var.oke_workers_configuration.virtual_node_pools), []),
+    flatten([for d in values(local.oke_v2_deployments) : try(keys(d.workers_configuration.worker_pools), [])])
+  )
+  oke_clusters           = merge(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].clusters : {}, { for k, m in module.oci_lz_oke_v2 : k => m.cluster })
+  oke_node_pools         = merge(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].node_pools : {}, [for m in values(module.oci_lz_oke_v2) : m.node_pools]...)
+  oke_nodes              = merge(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].nodes : {}, [for m in values(module.oci_lz_oke_v2) : m.nodes]...)
+  oke_virtual_node_pools = merge(length(module.oci_lz_oke) > 0 ? module.oci_lz_oke[0].virtual_node_pools : {}, [for m in values(module.oci_lz_oke_v2) : m.virtual_node_pools]...)
+}
+
+resource "terraform_data" "oke_v2_validation" {
+  count = length(local.oke_v2_deployments) > 0 ? 1 : 0
+  lifecycle {
+    precondition {
+      condition     = length(local.oke_cluster_keys) == length(distinct(local.oke_cluster_keys))
+      error_message = "OKE cluster keys must be unique across legacy and v2 configurations."
+    }
+    precondition {
+      condition     = length(local.oke_pool_keys) == length(distinct(local.oke_pool_keys))
+      error_message = "OKE pool keys must be globally unique across legacy and all v2 managed/virtual pools."
+    }
+  }
 }
 
 module "oci_lz_ocvs" {
