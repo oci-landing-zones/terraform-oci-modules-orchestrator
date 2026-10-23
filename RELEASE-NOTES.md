@@ -1,3 +1,46 @@
+# October 13, 2026, Release Notes - 2.2.0
+
+## Updates
+
+1. Networking updated to [v0.8.5](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.5) and Workloads to [v0.2.9](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9). Network configuration, third-party firewall compute instances, and private NLBs can now be deployed in one Terraform apply; separate preliminary and final network configurations are no longer required.
+2. Compute and NLB modules use the Networking foundation output, while same-stack NLB private IPs are supplied to Networking for route-target resolution.
+3. NLB backends can refer to a workload private IP with `target_id`: use `<instance-key>` for a primary VNIC or `<instance-key>.<vnic-key>` for a secondary VNIC. Existing literal `ip_address` backends and OCID-based targets remain supported.
+4. `instances_output.json` retains its existing `instances` and `secondary_vnics` maps and additively includes `primary_private_ip_targets`. This map contains canonical private-IP OCIDs for primary VNICs keyed as `<instance-key>` and secondary VNICs keyed as `<instance-key>.<vnic-key>`; RMS Facade also reads both maps from dependency files.
+
+## Upgrade notes
+
+1. No orchestrator-level state moves are required. Networking v0.8.5 performs 11 internal whole-resource moves; review the first upgrade plan before applying.
+2. OCI Terraform Provider 7.27.0 or later is required by Networking v0.8.5. Existing literal backend IP addresses and private-IP OCIDs continue to work and do not require migration.
+3. Existing deployments that replace literal firewall private-IP references with managed symbolic targets must use two separate plan/apply cycles:
+   1. **Phase 1 — module upgrade:** upgrade the modules without changing any existing NLB backend selector or route target. Keep current `ip_address` values, symbolic instance keys and literal OCIDs in `target_id`, and literal private-IP OCIDs in route-rule `network_entity_id`. Require a plan with no backend, route-table, route-target, or attachment replacement, then apply it. This records the new Workloads private-IP lookups in state.
+   2. **Phase 2 — symbolic migration:** replace selected private-IP backend references with keys that resolve to their canonical private-IP OCIDs, such as `<instance-key>.<vnic-key>` for secondary VNICs. Any alias already present in `instances_dependency` retains its target; keep a literal private-IP OCID if the corresponding key would select an instance instead. When desired, replace literal NLB private-IP route targets with the NLB key in `network_entity_id`. Require every symbolic value to resolve during planning to the exact existing private-IP OCID, every NLB backend and traffic-path route to be `no-op`, and no route target to be unknown before applying. Keep existing instance-OCID targets unchanged; changing them to private-IP targets changes the backend identity and requires replacement.
+
+   Do not combine these phases for an existing deployment. Before Phase 1 has populated state, Terraform can defer the new private-IP lookups and conservatively plan backend replacement and unknown route updates. Literal `ip_address` and private-IP OCID configurations remain supported and do not have to be migrated. Keep the existing root networking module address and configuration keys. The Phase 1 plan should show state moves for ten route-table collections and one attachment collection, with no infrastructure replacement. Subnet associations continue to use `route_table_key`; without a key, the subnet retains its VCN default route table. A standalone subnet `route_table_id` does not change that association.
+3. Subnets are created on the VCN default route table and completed through an attachment. Fresh deployments can have a short default-route interval; route-table reassignment and NLB/private-IP or firewall replacement can interrupt traffic.
+
+# September 22, 2026 Release Notes - 2.1.4
+
+## Updates
+
+1. Exadata Database, Autonomous Database, and Autonomous Recovery Service now reference the `release-1.2.0` module branch. Workload-specific dependency resolution and validation remain owned by the backing modules.
+2. Added the root `exadata_database_dependency` input. It accepts the module-native dependency object or a `cloud_exadata_database_output.json` file path and passes the normalized object to Exadata Database.
+3. RMS Facade now loads the five Exadata Database dependency families from JSON or YAML dependency files for multi-stack VM Cluster, DB Home, CDB, and PDB chaining.
+4. Exadata Database now receives `kms_dependency`, allowing DB Home and CDB `kms_key_id` values to use logical keys from `keys_output.json` as well as literal key OCIDs.
+5. Autonomous Database now receives `vaults_dependency` as well as `kms_dependency`, including vaults created in the same Orchestrator stack.
+6. Root and RMS Exadata and Autonomous Database outputs now preserve the backing modules' native dependency shapes.
+7. Added the root `autonomous_recovery_service_configuration` and `recovery_service_dependency` inputs and the module-owned `autonomous_recovery_service_resources` output for Recovery Service subnets and protection policies.
+8. Exadata Database CDBs can resolve DBRS protection-policy keys from Autonomous Recovery Service resources created in the same stack or from a separate stack's canonical dependency artifact.
+9. RMS Facade loads Autonomous Recovery Service configuration and dependencies from JSON or YAML and persists `autonomous_recovery_service_output.json` or `.yaml` to the local file system, GitHub, or OCI Object Storage.
+10. IAM module references updated to [v0.3.5](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5). Requestable identity domain groups are now disabled by default. Existing landing-zone-managed groups that need to be updated must be changed manually in the OCI Console by disabling **User can request access** for each group.
+
+## Bug Fixes
+
+1. RMS output persistence no longer drops module-owned metadata such as `compartment_id` from Exadata DB Homes and VM Clusters or from Autonomous Databases.
+2. [Issue #67](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/67): Compartment creation now waits 10 seconds for newly created tags to propagate before applying `defined_tags`, preventing tag propagation timing failures.
+3. [Issue #66](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/66): Vault dependency output files from both the root module and RMS facade now include each vault's `id` alongside its `management_endpoint`, and the orchestrator translates that canonical shape for the security module when creating keys in existing vaults. Generated files can therefore be consumed by downstream stacks without an `Unsupported attribute` or vault dependency schema failure. Previously generated endpoint-only files must be regenerated.
+4. [Issue #63](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/63): Network dependency normalization now projects newly provisioned networking resources to stable dependency shapes before merging them with external dependencies. This prevents `Inconsistent conditional result types` failures when adding resources such as a spoke subnet to an existing network. Existing external-dependency validation, missing-output guards, merge precedence, RPC region fallback, and DNS view `ocid` compatibility are preserved.
+5. [Issue #60](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/60): The RMS facade now prefers the canonical OKE keys `oke_clusters_configuration` and `oke_workers_configuration`, while continuing to accept the legacy `clusters_configuration` and `workers_configuration` keys for backward compatibility. The legacy keys are deprecated and should be migrated before the next major release.
+
 # July 7, 2026 Release Notes - 2.1.3
 
 ## Breaking Changes

@@ -114,6 +114,9 @@ locals {
   storage_configuration   = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "storage_configuration") ? local.merged_input_configs.storage_configuration : null : null
 
   # OKE
+  # Validate legacy aliases before forwarding; the refactored contract is opt-in.
+  # TODO(next major release): after a documented deprecation period, remove the
+  # clusters_configuration and workers_configuration fallbacks.
   oke_clusters_configuration = module.oke_inputs.configurations.clusters
   oke_workers_configuration  = module.oke_inputs.configurations.workers
   oke_configuration          = try(local.merged_input_configs.oke_configuration, null)
@@ -126,4 +129,7 @@ locals {
 
   # Autonomous Database
   autonomous_databases_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "autonomous_databases_configuration") ? local.merged_input_configs.autonomous_databases_configuration : null : null
+
+  # Autonomous Recovery Service
+  autonomous_recovery_service_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "autonomous_recovery_service_configuration") ? local.merged_input_configs.autonomous_recovery_service_configuration : null : null
 }

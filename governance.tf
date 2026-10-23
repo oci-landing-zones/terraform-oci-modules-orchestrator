@@ -17,3 +17,12 @@ module "oci_lz_tags" {
   compartments_dependency = local.ext_dep_compartments_map
   #compartments_dependency = local.compartments_dependency
 }
+
+resource "time_sleep" "tag_propagation" {
+  count = var.tags_configuration != null ? 1 : 0
+
+  # Tags are cross-region resources, so allow time for their creation to complete before compartments that use them are created.
+  create_duration = "10s"
+
+  depends_on = [module.oci_lz_tags]
+}
