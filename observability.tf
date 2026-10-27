@@ -3,7 +3,7 @@
 
 module "oci_lz_streams" {
   count                   = var.streams_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams?ref=v0.3.0"
   streams_configuration   = var.streams_configuration
   compartments_dependency = local.compartments_dependency
   network_dependency      = local.network_dependency
@@ -12,14 +12,14 @@ module "oci_lz_streams" {
 
 module "oci_lz_notifications" {
   count                       = var.notifications_configuration != null ? 1 : 0
-  source                      = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications?ref=v0.2.6"
+  source                      = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications?ref=v0.3.0"
   notifications_configuration = var.notifications_configuration
   compartments_dependency     = local.compartments_dependency
 }
 
 module "oci_lz_events" {
   count                   = var.events_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
   events_configuration    = var.events_configuration
   compartments_dependency = local.compartments_dependency
@@ -30,7 +30,7 @@ module "oci_lz_events" {
 
 module "oci_lz_home_region_events" {
   count                   = var.home_region_events_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.3.0"
   providers               = { oci = oci.home }
   tenancy_ocid            = var.tenancy_ocid
   events_configuration    = var.home_region_events_configuration
@@ -42,7 +42,7 @@ module "oci_lz_home_region_events" {
 
 module "oci_lz_alarms" {
   count                   = var.alarms_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
   alarms_configuration    = var.alarms_configuration
   compartments_dependency = local.compartments_dependency
@@ -50,17 +50,34 @@ module "oci_lz_alarms" {
   topics_dependency       = local.topics_dependency  #merge({for k, v in coalesce(var.topics_dependency,{}) : k => {"id" : v.id}}, {for k, v in (length(module.oci_lz_notifications) > 0 ? module.oci_lz_notifications[0].topics : {}) : k => {"id" : v.id}})
 }
 
+locals {
+  logging_configuration = var.logging_configuration == null ? null : merge(var.logging_configuration, {
+    service_logs = {
+      for key, log in coalesce(lookup(var.logging_configuration, "service_logs", null), {}) : key => merge(log, {
+        resource_id = log.service == "flowlogs" && contains(["vcn", "subnet"], log.category) ? coalesce(
+          startswith(log.resource_id, "ocid1.") ? log.resource_id : null,
+          lookup(
+            lookup(coalesce(local.network_foundation_dependency, {}), { vcn = "vcns", subnet = "subnets" }[log.category], {}),
+            log.resource_id,
+            { id = null }
+          ).id
+        ) : log.resource_id
+      })
+    }
+  })
+}
+
 module "oci_lz_logging" {
   count                   = var.logging_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.2.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
-  logging_configuration   = var.logging_configuration
+  logging_configuration   = local.logging_configuration
   compartments_dependency = local.compartments_dependency
 }
 
 module "oci_lz_service_connectors" {
   count  = var.service_connectors_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors?ref=v0.2.6"
+  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors?ref=v0.3.0"
   providers = {
     oci                  = oci
     oci.home             = oci.home

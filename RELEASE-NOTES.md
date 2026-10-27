@@ -1,3 +1,32 @@
+# Unreleased - 2.4.0
+
+## Updates
+
+1. Added `oke_configuration` to deploy multiple independent clusters through the new OKE module, in the root module and RMS facade. Existing `oke_clusters_configuration` and `oke_workers_configuration` inputs retain legacy `cis-oke` v0.2.9.
+2. New cluster resources use the `oke_deployments` output and separate `oke_deployments_output.json` artifact, with JSON/YAML persistence in RMS facade. Legacy `oke_resources` and `oke_output.json` are unchanged.
+
+# October 26, 2026 Release Notes - 2.3.0
+
+## Breaking changes
+
+1. Upgrading from Orchestrator v2.2.0 changes two legacy Autonomous Database alarm presets through Observability v0.3.0. `adb-cpu-alarm` changes from `CpuUtilization[1m].mean() > 80` to `CpuUtilization[5m].mean() > 85`; `adb-storage-alarm` changes from `StorageUtilization[1m].mean() > 80` to `StorageUtilization[30m].mean() > 85`. Both presets also add the `provider = DBM` freeform tag. These changes affect existing alarms even when no new alarm settings are supplied. Review the longer evaluation windows and higher thresholds before applying.
+
+   To preserve the previous queries, keep each existing alarm key and its destinations, remove `preconfigured_alarm_type`, and configure `supplied_alarm` with `namespace = "oci_autonomous_database"`, `severity = "CRITICAL"`, and the corresponding original query above. Retain the alarm's other configured settings and review the plan before applying; no resource-key or state migration is required for this configuration change.
+
+## Updates
+
+1. Flow-log entries in `logging_configuration.service_logs` can reference configured VCN and subnet keys in `resource_id`, allowing compartments, network targets, log groups and explicit flow logs to be created in one apply. Existing literal OCIDs and other service-log inputs are preserved. Compartment-wide `flow_logs` discovery is unchanged; it does not provide same-apply discovery of newly created targets.
+
+2. All Observability modules now use the published [v0.3.0 release](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.3.0). This adds alarm settings, Streaming-to-Logging-Analytics connector fixes, and optional Logging Analytics custom-content imports.
+3. Networking updated to the published [v0.9.1 release](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.9.1), including DNS steering-policy and private-view RRset fixes, same-module remote-peering region inference, DNS resolver tag inheritance, reserved-public-IP NLB fixes, and optional private NLB IPv4 selection.
+4. IAM source URLs now use `oci-landing-zones/terraform-oci-modules-iam`, retaining `v0.3.5`. Security, Governance, OCVS, Workloads (`v0.2.9`), and Exadata references are unchanged. See [Modules Versions](./README.md#mod_versions).
+
+## Upgrade notes
+
+1. Review DNS resolver replacement actions before applying. Networking version-tag updates can defer resolver discovery until apply; provider replacement clears attached views, forwarding rules, and tags before restoring them. An interrupted apply can leave these properties cleared. Resolver tag inheritance can also change policies that use those tags for access control.
+2. Setting or changing `assigned_private_ipv4` on an existing NLB requires replacement; review the traffic impact before applying.
+3. Streaming-to-Logging-Analytics connectors require `target.log_source_identifier`. For external streams in another compartment whose dependency lacks compartment metadata, set `source.compartment_id`. Imported Logging Analytics custom content survives Terraform destroy; remove unused content through Logging Analytics.
+
 # October 13, 2026, Release Notes - 2.2.0
 
 ## Updates

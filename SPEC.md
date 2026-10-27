@@ -37,6 +37,7 @@
 | <a name="module_oci_lz_notifications"></a> [oci\_lz\_notifications](#module\_oci\_lz\_notifications) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications | v0.2.6 |
 | <a name="module_oci_lz_ocvs"></a> [oci\_lz\_ocvs](#module\_oci\_lz\_ocvs) | git::https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs.git//ocvs/modules/ocvs | v1.1.0 |
 | <a name="module_oci_lz_oke"></a> [oci\_lz\_oke](#module\_oci\_lz\_oke) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.2.9 |
+| <a name="module_oci_lz_oke_v2"></a> [oci\_lz\_oke\_v2](#module\_oci\_lz\_oke\_v2) | git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke | v0.3.0 |
 | <a name="module_oci_lz_policies"></a> [oci\_lz\_policies](#module\_oci\_lz\_policies) | git::https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam.git//policies | v0.3.5 |
 | <a name="module_oci_lz_scanning"></a> [oci\_lz\_scanning](#module\_oci\_lz\_scanning) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss | v0.2.3 |
 | <a name="module_oci_lz_security_zones"></a> [oci\_lz\_security\_zones](#module\_oci\_lz\_security\_zones) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones | v0.2.3 |
@@ -63,6 +64,7 @@
 | [local_file.nlbs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.ocvs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.oke_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.oke_v2_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.service_logs_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.streams_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [local_file.tags_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -115,6 +117,7 @@
 | <a name="input_ocvs_configuration"></a> [ocvs\_configuration](#input\_ocvs\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_ocvs_dependency"></a> [ocvs\_dependency](#input\_ocvs\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_oke_clusters_configuration"></a> [oke\_clusters\_configuration](#input\_oke\_clusters\_configuration) | n/a | `any` | `null` | no |
+| <a name="input_oke_configuration"></a> [oke\_configuration](#input\_oke\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_oke_workers_configuration"></a> [oke\_workers\_configuration](#input\_oke\_workers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_output_path"></a> [output\_path](#input\_output\_path) | n/a | `string` | `null` | no |
 | <a name="input_policies_configuration"></a> [policies\_configuration](#input\_policies\_configuration) | n/a | `any` | `null` | no |
@@ -152,6 +155,7 @@
 | <a name="output_nlb_resources"></a> [nlb\_resources](#output\_nlb\_resources) | Provisioned NLB resources |
 | <a name="output_observability_resources"></a> [observability\_resources](#output\_observability\_resources) | Provisioned streaming resources |
 | <a name="output_ocvs_resources"></a> [ocvs\_resources](#output\_ocvs\_resources) | Provisioned OCVS resources |
+| <a name="output_oke_deployments"></a> [oke\_deployments](#output\_oke\_deployments) | Provisioned OKE resources |
 | <a name="output_oke_resources"></a> [oke\_resources](#output\_oke\_resources) | Provisioned OKE resources |
 | <a name="output_security_resources"></a> [security\_resources](#output\_security\_resources) | Provisioned security resources |
 <!-- END_TF_DOCS -->

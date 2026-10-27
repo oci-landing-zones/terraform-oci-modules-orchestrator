@@ -14,19 +14,15 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 
 ### <a name="mod_versions">Modules Versions</a>
 
-Existing OKE inputs continue to use the legacy module without changing resource
-addresses. The refactored OKE contract is a separate opt-in deployment path; see [OKE generations](#oke-generations).
-
 Repository | Referenced Tags/Branches
 -----------|--------------------
-[Identity & Access Management](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam) | [v0.3.5 tag](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/releases/tag/v0.3.5)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.5)
+[Identity & Access Management](https://github.com/oci-landing-zones/terraform-oci-modules-iam) | [v0.3.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.9.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.9.1)
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
-[Compute Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9)
-[OKE Legacy](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/v0.2.9/cis-oke) | v0.2.9
-[OKE 0.3.0 (opt-in candidate)](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/0d2bbdbfdca0738c845ccae8146fb373803d827d/cis-oke) | 0d2bbdb
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.3.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.3.0)
+[Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9)
+[OKE Deployments](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/v0.3.0/cis-oke) | v0.3.0
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/exadata-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 [Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
@@ -46,7 +42,7 @@ The OCI Terraform Provider version must be 6.29.0 or greater.
 
 ### IAM Permissions
 
-The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oracle-quickstart/terraform-oci-cis-landing-zone-iam/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
+The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oci-landing-zones/terraform-oci-modules-iam/tree/v0.3.5/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
 
 ## External Dependencies
 
@@ -91,6 +87,7 @@ vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
+oke_configuration | oke_deployments_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
@@ -248,60 +245,6 @@ Open an issue in this repository.
 ## Contributing
 
 This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md).
-
-## OKE generations
-
-`oke_clusters_configuration` and `oke_workers_configuration` continue to invoke
-legacy `cis-oke` v0.2.9 at `module.oci_lz_oke[0]`. Existing OKE-WE JSON requires
-no changes. The facade also accepts the older unprefixed aliases, but rejects
-both aliases being supplied for the same family.
-
-Use `oke_configuration` explicitly for new-generation deployments. It is a
-map of cluster identities, each containing the refactored `cluster_configuration`
-and optional `workers_configuration`. For example, a cluster-only input is:
-
-```hcl
-oke_configuration = {
-  dev = {
-    cluster_configuration = {
-      name           = "oke-dev"
-      compartment_id = "OKE-COMPARTMENT-KEY"
-      cis_level      = "1"
-      networking = {
-        vcn_id                 = "OKE-VCN-KEY"
-        api_endpoint_subnet_id = "OKE-CP-SUBNET-KEY"
-        service_lb_subnet_ids  = ["OKE-LB-SUBNET-KEY"]
-      }
-    }
-  }
-}
-```
-
-Replace these dependency keys with those of your deployment. Add
-`workers_configuration.worker_pools` alongside `cluster_configuration` using
-the [0.3.0 contract](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/0d2bbdbfdca0738c845ccae8146fb373803d827d/cis-oke).
-In facade JSON, use the same top-level `oke_configuration` key. Each map entry
-invokes `module.oci_lz_oke_v2["<key>"]`; this internal address is retained for
-state continuity, not a module-directory or release name. Both generations use
-`cis-oke/`, selected by Git ref. The refactor currently uses a pinned development
-commit, not a released version, and retains its private/enhanced-cluster and
-other documented restrictions.
-
-Legacy and refactored deployments can coexist for distinct clusters. Cluster keys must be unique
-across generations; pool keys must be globally unique across all generations
-and managed/virtual pools. Both feed the existing `oke_resources` output and
-`oke_output.json` maps. Provider-specific object fields can differ by generation.
-Network, IAM and KMS dependencies are passed to both; the orchestrator does not
-translate legacy inputs into the new contract or create missing prerequisites automatically.
-
-Moving an existing cluster to the refactored contract is a separate opt-in migration:
-back up state, convert inputs, review explicit resource-level state moves and
-inspect a saved plan. Do not configure both generations to own the same cluster,
-even under different keys. There are no automatic migration moves. Testers using
-the earlier unpublished adapter must also review its changed caller addresses.
-Users of the unpublished `oke_v2_configuration` input must rename it to
-`oke_configuration`; the internal refactored module address is unchanged by
-this input rename. There is no alias for the unpublished name.
 
 ## Security
 

@@ -16,5 +16,4 @@ test/**
 **/*auto.tfvars
 **/tf-facade-*
 **/*-example.json
-**/__pycache__/
 **/*.ignore
