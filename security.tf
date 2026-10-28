@@ -2,6 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 module "oci_lz_scanning" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.scanning_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vss?ref=v0.2.3"
   scanning_configuration  = var.scanning_configuration
@@ -9,6 +10,7 @@ module "oci_lz_scanning" {
 }
 
 module "oci_lz_cloud_guard" {
+  depends_on                = [time_sleep.tag_defaults_propagation]
   count                     = var.cloud_guard_configuration != null ? 1 : 0
   source                    = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//cloud-guard?ref=v0.2.3"
   tenancy_ocid              = var.tenancy_ocid
@@ -17,6 +19,7 @@ module "oci_lz_cloud_guard" {
 }
 
 module "oci_lz_security_zones" {
+  depends_on                   = [time_sleep.tag_defaults_propagation]
   count                        = var.security_zones_configuration != null ? 1 : 0
   source                       = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones?ref=v0.2.3"
   tenancy_ocid                 = var.tenancy_ocid
@@ -25,8 +28,9 @@ module "oci_lz_security_zones" {
 }
 
 module "oci_lz_vaults" {
-  count  = var.vaults_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults?ref=v0.2.3"
+  depends_on = [time_sleep.tag_defaults_propagation]
+  count      = var.vaults_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults?ref=v0.2.3"
   providers = {
     oci      = oci
     oci.home = oci.home
@@ -37,8 +41,9 @@ module "oci_lz_vaults" {
 }
 
 module "oci_lz_zpr" {
-  count  = var.zpr_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr?ref=v0.2.3"
+  depends_on = [time_sleep.tag_defaults_propagation]
+  count      = var.zpr_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr?ref=v0.2.3"
   providers = {
     oci = oci.home
   }
@@ -48,6 +53,7 @@ module "oci_lz_zpr" {
 }
 
 module "oci_lz_bastions" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.bastions_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//bastion?ref=v0.2.3"
   bastions_configuration  = var.bastions_configuration

@@ -24,6 +24,40 @@ We'll differentiate between different versions of the orchestrator. You should b
 
 ## **2. Upgrading configuration**
 
+### Tag-default state migration
+
+Explicit tag defaults are now managed by `oci_identity_tag_default.these` in the orchestrator
+instead of inside `module.oci_lz_tags[0]`. Namespace/tag addresses, default instance keys
+(`${default_key}.${compartment_reference}`), and input configuration remain unchanged.
+Automatic CIS `CreatedBy`/`CreatedOn` defaults remain inside the governance module and must
+not be moved.
+
+For a new deployment, no state migration is needed. For an existing deployment, back up
+the state using the backend's normal procedure, identify the explicitly configured tag
+defaults with `terraform state list`, and move each instance before planning with the new
+orchestrator. For example:
+
+```shell
+terraform state mv \
+  'module.oci_lz_tags[0].oci_identity_tag_default.these["TAG-LZ-OWNER-KEY-REQUIRED.CMP-LANDINGZONE-KEY"]' \
+  'oci_identity_tag_default.these["TAG-LZ-OWNER-KEY-REQUIRED.CMP-LANDINGZONE-KEY"]'
+```
+
+If the orchestrator itself is called from a parent module, prepend its full module path
+to both addresses. Repeat for every explicitly configured default and every compartment
+reference; use the exact keys from state, including any compartment OCIDs. Do not run a
+second apply against an old orchestrator after moving these addresses.
+
+Review the subsequent plan: tag defaults must not be destroyed/recreated as part of this
+migration. The new propagation wait, and replacement of the existing wait to track tag
+changes, are expected. Without state migration Terraform will plan to destroy the old
+defaults and create new ones, which can cause conflicts or a gap in enforcement.
+
+Keep namespaces/definitions outside the required-default scope and avoid self-tagging
+them with newly created governance tags (`default_defined_tags = {}`). Explicitly tag
+compartments and services that require user-supplied values. Creating required defaults
+does not tag existing resources retroactively.
+
 ## **2.1. Upgrade from versions <2.0.0**
 
 #### **2.1.1. Changes in credentials file**

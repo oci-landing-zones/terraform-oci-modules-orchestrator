@@ -2,6 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 module "oci_lz_streams" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.streams_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams?ref=v0.3.0"
   streams_configuration   = var.streams_configuration
@@ -11,6 +12,7 @@ module "oci_lz_streams" {
 }
 
 module "oci_lz_notifications" {
+  depends_on                  = [time_sleep.tag_defaults_propagation]
   count                       = var.notifications_configuration != null ? 1 : 0
   source                      = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//notifications?ref=v0.3.0"
   notifications_configuration = var.notifications_configuration
@@ -18,6 +20,7 @@ module "oci_lz_notifications" {
 }
 
 module "oci_lz_events" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.events_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
@@ -29,6 +32,7 @@ module "oci_lz_events" {
 }
 
 module "oci_lz_home_region_events" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.home_region_events_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//events?ref=v0.3.0"
   providers               = { oci = oci.home }
@@ -41,6 +45,7 @@ module "oci_lz_home_region_events" {
 }
 
 module "oci_lz_alarms" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.alarms_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//alarms?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
@@ -68,6 +73,7 @@ locals {
 }
 
 module "oci_lz_logging" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.logging_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//logging?ref=v0.3.0"
   tenancy_ocid            = var.tenancy_ocid
@@ -76,8 +82,9 @@ module "oci_lz_logging" {
 }
 
 module "oci_lz_service_connectors" {
-  count  = var.service_connectors_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors?ref=v0.3.0"
+  depends_on = [time_sleep.tag_defaults_propagation]
+  count      = var.service_connectors_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors?ref=v0.3.0"
   providers = {
     oci                  = oci
     oci.home             = oci.home

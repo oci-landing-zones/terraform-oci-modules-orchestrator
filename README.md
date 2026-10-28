@@ -45,6 +45,34 @@ The permissions to execute the Orchestrator are determined by the configurations
 
 ## External Dependencies
 
+### Tags and compartment creation order
+
+The orchestrator creates configured tag namespaces and definitions first, waits 10 seconds
+for propagation, and then creates compartments. Tag defaults explicitly declared under
+`tags_configuration.namespaces[*].tags[*].tag_defaults` are created next, using either
+compartment OCIDs, `TENANCY-ROOT`, external compartment keys, or keys created by this stack.
+IAM, networking, security, observability, workload modules and object storage buckets wait
+another 10 seconds after these defaults are created. Existing service dependencies remain
+in effect. Both propagation waits repeat when their tracked tags/defaults change.
+
+The input format is unchanged. Required defaults (`is_user_required = true`) still require
+explicit values on resources created in their scope. Supply the applicable `defined_tags`
+on compartments and services; the orchestrator does not invent business tag values.
+Object storage buckets accept per-bucket `defined_tags`, falling back to
+`object_storage_configuration.default_defined_tags` when omitted or null.
+
+For a namespace that defines its own governance tags, use `default_compartment_id =
+"TENANCY-ROOT"` and `default_defined_tags = {}` to avoid applying not-yet-created tags to
+the namespace and definitions themselves. Scope required defaults to the landing-zone
+compartment. Its namespaces then remain outside that scope, provided no ancestor default
+requires the same tags.
+
+The governance module's automatic CIS `CreatedBy`/`CreatedOn` defaults, when enabled through
+`cis_namespace_name`, retain their existing creation order and state addresses. Only
+explicitly configured tag defaults move to the orchestrator. Existing deployments must
+follow the [tag-default state migration](./UPGRADE.md#tag-default-state-migration) before
+applying this change.
+
 Landing Zones can be expressed in a single configuration or split in multiple separate configurations potentially managed by different teams. Separate configurations require the usage of the output of one configuration as the input of another. The classic example is consuming compartments in other configurations, like networking. Other examples are consuming networking resources in Compute instances, or consuming encryption keys in Block volumes. There are many other dependencies examples.
 
 To account for these scenarios, the Orchestrator can generate and intake dependency files. The required dependencies for a given Orchestrator instance depends on what is expressed in its input configurations. For example, if you refer to a compartment key (instead of an OCID) in the *compartment_id* attribute of *network_configuration*, the *compartments_dependency* variable is required. If you refer to a subnet key (instead of an OCID) in the *subnet_id* attribute of *instances_configuration*, the *network_dependency* variable is required. Each underlying module specifies its supported dependencies, and the Orchestrator figures out the dependency files to generate for further consumption by other Orchestrator instances.

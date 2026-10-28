@@ -8,8 +8,10 @@ data "oci_objectstorage_namespace" "this" {
 
 ### Creating config bucket
 resource "oci_objectstorage_bucket" "these" {
+  depends_on     = [time_sleep.tag_defaults_propagation]
   for_each       = var.object_storage_configuration != null ? (var.object_storage_configuration.buckets != null ? var.object_storage_configuration.buckets : {}) : {}
   compartment_id = each.value.compartment_id != null ? (length(regexall("^ocid1.*$", each.value.compartment_id)) > 0 ? each.value.compartment_id : local.compartments_dependency[each.value.compartment_id].id) : (length(regexall("^ocid1.*$", var.object_storage_configuration.default_compartment_id)) > 0 ? var.object_storage_configuration.default_compartment_id : local.compartments_dependency[var.object_storage_configuration.default_compartment_id].id)
   name           = each.value.name
   namespace      = data.oci_objectstorage_namespace.this[0].namespace
+  defined_tags   = try(each.value.defined_tags, null) != null ? each.value.defined_tags : try(var.object_storage_configuration.default_defined_tags, null)
 }

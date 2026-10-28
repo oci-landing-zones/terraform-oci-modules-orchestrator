@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 module "oci_lz_compute" {
-  depends_on = [module.oci_lz_zpr] # instances_configuration may have ZPR attributes that must exist up front.
+  depends_on = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # instances_configuration may have ZPR attributes that must exist up front.
   count      = var.instances_configuration != null ? 1 : 0
   source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-compute-storage?ref=v0.2.9"
   providers = {
@@ -20,7 +20,7 @@ module "oci_lz_compute" {
 }
 
 module "oci_lz_oke" {
-  depends_on              = [module.oci_lz_zpr] # clusters_configuration may have ZPR attributes that must exist up front.
+  depends_on              = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # clusters_configuration may have ZPR attributes that must exist up front.
   count                   = var.oke_clusters_configuration != null || var.oke_workers_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.2.9"
   clusters_configuration  = var.oke_clusters_configuration
@@ -31,7 +31,7 @@ module "oci_lz_oke" {
 }
 
 module "oci_lz_ocvs" {
-  depends_on              = [module.oci_lz_zpr] # ocvs_configuration may have ZPR attributes that must exist up front.
+  depends_on              = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # ocvs_configuration may have ZPR attributes that must exist up front.
   count                   = var.ocvs_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs.git//ocvs/modules/ocvs?ref=v1.1.0"
   tenancy_ocid            = var.tenancy_ocid
@@ -41,8 +41,9 @@ module "oci_lz_ocvs" {
 }
 
 module "oci_lz_autonomous_recovery_service" {
-  count  = var.autonomous_recovery_service_configuration != null ? 1 : 0
-  source = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-recovery-service?ref=release-1.2.0"
+  depends_on = [time_sleep.tag_defaults_propagation]
+  count      = var.autonomous_recovery_service_configuration != null ? 1 : 0
+  source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-recovery-service?ref=release-1.2.0"
   providers = {
     oci      = oci
     oci.home = oci.home
@@ -54,7 +55,7 @@ module "oci_lz_autonomous_recovery_service" {
 }
 
 module "oci_lz_cloud_exadata_database" {
-  depends_on = [module.oci_lz_zpr] # cloud_exadata_database_configuration may have ZPR attributes that must exist up front.
+  depends_on = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # cloud_exadata_database_configuration may have ZPR attributes that must exist up front.
   count      = var.cloud_exadata_database_configuration != null ? 1 : 0
   source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//exadata-database?ref=release-1.2.0"
 
@@ -75,7 +76,7 @@ module "oci_lz_cloud_exadata_database" {
 }
 
 module "oci_lz_autonomous_databases" {
-  depends_on = [module.oci_lz_zpr] # autonomous_databases_configuration may have ZPR attributes that must exist up front.
+  depends_on = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # autonomous_databases_configuration may have ZPR attributes that must exist up front.
   count      = var.autonomous_databases_configuration != null ? 1 : 0
   source     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-exadata.git//autonomous-database?ref=release-1.2.0"
   providers = {

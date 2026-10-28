@@ -3,7 +3,7 @@
 
 # Core networking
 module "oci_lz_network" {
-  depends_on              = [module.oci_lz_zpr] # network_configuration may have ZPR attributes that must exist up front.
+  depends_on              = [module.oci_lz_zpr, time_sleep.tag_defaults_propagation] # network_configuration may have ZPR attributes that must exist up front.
   count                   = var.network_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git?ref=v0.9.1"
   network_configuration   = var.network_configuration
@@ -15,6 +15,7 @@ module "oci_lz_network" {
 
 # Network Load Balancers
 module "oci_lz_nlb" {
+  depends_on              = [time_sleep.tag_defaults_propagation]
   count                   = var.nlb_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-networking.git//modules/nlb?ref=v0.9.1"
   nlb_configuration       = var.nlb_configuration

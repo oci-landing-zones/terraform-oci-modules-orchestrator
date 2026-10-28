@@ -15,6 +15,7 @@ module "oci_lz_compartments" {
 }
 
 module "oci_lz_groups" {
+  depends_on           = [time_sleep.tag_defaults_propagation]
   count                = var.groups_configuration != null ? 1 : 0
   source               = "git::https://github.com/oci-landing-zones/terraform-oci-modules-iam.git//groups?ref=v0.3.5"
   providers            = { oci = oci.home }
@@ -23,6 +24,7 @@ module "oci_lz_groups" {
 }
 
 module "oci_lz_dynamic_groups" {
+  depends_on                   = [time_sleep.tag_defaults_propagation]
   count                        = var.dynamic_groups_configuration != null ? 1 : 0
   source                       = "git::https://github.com/oci-landing-zones/terraform-oci-modules-iam.git//dynamic-groups?ref=v0.3.5"
   providers                    = { oci = oci.home }
@@ -46,7 +48,7 @@ resource "time_sleep" "iam_policy_group_propagation" {
 
 module "oci_lz_policies" {
   count                   = var.policies_configuration != null ? 1 : 0
-  depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups, module.oci_lz_identity_domains, time_sleep.iam_policy_group_propagation]
+  depends_on              = [module.oci_lz_compartments, module.oci_lz_groups, module.oci_lz_dynamic_groups, module.oci_lz_identity_domains, time_sleep.iam_policy_group_propagation, time_sleep.tag_defaults_propagation]
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-iam.git//policies?ref=v0.3.5"
   providers               = { oci = oci.home }
   tenancy_ocid            = var.tenancy_ocid
@@ -55,6 +57,7 @@ module "oci_lz_policies" {
 }
 
 module "oci_lz_identity_domains" {
+  depends_on = [time_sleep.tag_defaults_propagation]
   count = (
     var.identity_domains_configuration != null ||
     var.identity_domain_groups_configuration != null ||
