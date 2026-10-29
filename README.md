@@ -17,11 +17,12 @@ The OCI Landing Zones Orchestrator is a generic Terraform module that orchestrat
 Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oci-landing-zones/terraform-oci-modules-iam) | [v0.3.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5)
-[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.8.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.8.5)
+[Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.9.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.9.1)
 [Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
-[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.2.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.2.6)
+[Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.3.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.3.0)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9)
+[OKE Deployments](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/v0.3.0/cis-oke) | v0.3.0
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/exadata-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 [Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
@@ -41,7 +42,7 @@ The OCI Terraform Provider version must be 6.29.0 or greater.
 
 ### IAM Permissions
 
-The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oci-landing-zones/terraform-oci-modules-iam/tree/main/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
+The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oci-landing-zones/terraform-oci-modules-iam/tree/v0.3.5/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
 
 ## External Dependencies
 
@@ -86,6 +87,7 @@ vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
+oke_configuration | oke_deployments_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json
