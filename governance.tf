@@ -12,6 +12,7 @@ module "oci_lz_budgets" {
 module "oci_lz_tags" {
   count                   = var.tags_configuration != null ? 1 : 0
   source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags?ref=v0.1.6"
+  providers               = { oci = oci.home }
   tenancy_ocid            = var.tenancy_ocid
   tags_configuration      = var.tags_configuration
   compartments_dependency = local.ext_dep_compartments_map

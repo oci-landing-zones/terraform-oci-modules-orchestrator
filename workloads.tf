@@ -30,6 +30,18 @@ module "oci_lz_oke" {
   kms_dependency          = local.kms_dependency
 }
 
+module "oci_lz_oke_v2" {
+  for_each                = { for k in(var.oke_configuration == null ? [] : keys(var.oke_configuration)) : k => var.oke_configuration[k] }
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-workloads.git//cis-oke?ref=v0.3.0"
+  providers               = { oci = oci }
+  tenancy_id              = var.tenancy_ocid
+  cluster_configuration   = each.value.cluster_configuration
+  workers_configuration   = try(each.value.workers_configuration, null)
+  compartments_dependency = local.compartments_dependency
+  network_dependency      = local.network_dependency
+  kms_dependency          = local.kms_dependency
+}
+
 module "oci_lz_ocvs" {
   depends_on              = [module.oci_lz_zpr] # ocvs_configuration may have ZPR attributes that must exist up front.
   count                   = var.ocvs_configuration != null ? 1 : 0
