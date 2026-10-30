@@ -29,7 +29,7 @@ Repository | Referenced Tags/Branches
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
 
-Tag namespaces and definitions precede compartments. Tag defaults are created after compartments, but other resources do not wait for defaults or their propagation. Resources created in the same apply may therefore miss default tags. Later applies do not automatically backfill them; configure required tags explicitly through each resource module's tag inputs.
+Tag namespaces and definitions precede compartments. Each tag default uses its target compartment ID to establish its creation dependency; there is no dependency on the entire compartments module. Other resources do not wait for defaults or their propagation. Resources created in the same apply may therefore miss default tags. Later applies do not automatically backfill them; configure required tags explicitly through each resource module's tag inputs.
 
 **Note:** users of the [legacy Orchestrator](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/orchestrator) please check [UPGRADE.md](./UPGRADE.md) for upgrading your stack to this new Orchestrator version.
 

@@ -1,13 +1,17 @@
 # Unreleased - 2.4.0
 
+## Breaking changes
+
+1. Tag defaults now resolve logical compartment keys through the combined managed and external compartment map. Managed compartments take precedence when both maps contain the same key; previously tag defaults used only the external map. A collision can retarget an existing default and require its replacement. A literal compartment OCID or distinct external alias selects the external target, but changing a `compartment_ids` reference also changes the default's resource key. Preserving an existing default in that case requires a reviewed `moved` block or `terraform state mv` migration and a plan confirming no replacement.
+
 ## Updates
 
-1. Tag defaults in `tags_configuration` can target logical compartments created in the same apply. Governance v0.2.0 separates namespaces and tag definitions from defaults, retaining the existing configuration format. Namespaces and definitions precede compartments; defaults follow compartments.
+1. Tag defaults in `tags_configuration` can target logical compartments created in the same apply. Governance v0.2.0 separates namespaces and tag definitions from defaults, retaining the existing configuration format. Namespaces and definitions precede compartments; each default depends on its target compartment ID instead of the entire compartments module.
 2. Downstream resources do not wait for tag defaults or their propagation. No default-tag propagation timer or downstream default-tag dependencies are added. Other module versions and existing dependencies are unchanged.
 
 ## Upgrade notes
 
-1. A built-in `moved` block transfers existing tag defaults from `module.oci_lz_tags[0]` to `module.oci_lz_tag_defaults[0]`, preserving resource keys and OCI identities without manual state commands. Namespace and tag addresses remain unchanged. External compartment aliases retain their default targets when a managed compartment uses the same key.
+1. A built-in `moved` block transfers existing tag defaults from `module.oci_lz_tags[0]` to `module.oci_lz_tag_defaults[0]`, preserving OCI identities without manual state commands when their configuration keys and target compartments are unchanged. Namespace and tag addresses remain unchanged. Review logical-key collisions and reference-key migrations as described under Breaking changes.
 2. Resources created before tag defaults take effect may miss those tags, including during the first apply. Defaults do not backfill existing resources on later applies. Configure required tags explicitly through each resource module's tag inputs. Inherited tags absent from a module's configured `defined_tags` can be removed on a later apply.
 3. Tag modules reference Governance's `refactor/composable-tags` branch; budgets retain v0.1.6. Review the upgrade plan for unrelated changes; this change does not resolve existing replacement risks from other dependencies or module updates.
 

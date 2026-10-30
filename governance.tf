@@ -22,13 +22,7 @@ module "oci_lz_tag_defaults" {
   source                     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags/defaults?ref=refactor/composable-tags"
   tenancy_ocid               = var.tenancy_ocid
   tag_defaults_configuration = module.oci_lz_tags[0].tag_defaults_configuration
-  # Preserve existing external aliases when a managed compartment uses the same key.
-  compartments_dependency = merge(
-    local.compartments_dependency,
-    { for key, compartment in coalesce(local.ext_dep_compartments_map, {}) : key => { id = compartment.id } }
-  )
-
-  depends_on = [module.oci_lz_compartments]
+  compartments_dependency    = local.compartments_dependency
 }
 
 moved {
