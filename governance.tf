@@ -11,11 +11,29 @@ module "oci_lz_budgets" {
 
 module "oci_lz_tags" {
   count                   = var.tags_configuration != null ? 1 : 0
-  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags?ref=v0.1.6"
+  source                  = "git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags/namespaces-and-tags?ref=refactor/composable-tags"
   tenancy_ocid            = var.tenancy_ocid
   tags_configuration      = var.tags_configuration
   compartments_dependency = local.ext_dep_compartments_map
-  #compartments_dependency = local.compartments_dependency
+}
+
+module "oci_lz_tag_defaults" {
+  count                      = var.tags_configuration != null ? 1 : 0
+  source                     = "git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags/defaults?ref=refactor/composable-tags"
+  tenancy_ocid               = var.tenancy_ocid
+  tag_defaults_configuration = module.oci_lz_tags[0].tag_defaults_configuration
+  # Preserve existing external aliases when a managed compartment uses the same key.
+  compartments_dependency = merge(
+    local.compartments_dependency,
+    { for key, compartment in coalesce(local.ext_dep_compartments_map, {}) : key => { id = compartment.id } }
+  )
+
+  depends_on = [module.oci_lz_compartments]
+}
+
+moved {
+  from = module.oci_lz_tags[0].oci_identity_tag_default.these
+  to   = module.oci_lz_tag_defaults[0].oci_identity_tag_default.these
 }
 
 resource "time_sleep" "tag_propagation" {

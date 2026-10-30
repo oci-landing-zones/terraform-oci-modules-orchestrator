@@ -1,3 +1,16 @@
+# Unreleased - 2.4.0
+
+## Updates
+
+1. Tag defaults in `tags_configuration` can target logical compartments created in the same apply. Governance v0.2.0 separates namespaces and tag definitions from defaults, retaining the existing configuration format. Namespaces and definitions precede compartments; defaults follow compartments.
+2. Downstream resources do not wait for tag defaults or their propagation. No default-tag propagation timer or downstream default-tag dependencies are added. Other module versions and existing dependencies are unchanged.
+
+## Upgrade notes
+
+1. A built-in `moved` block transfers existing tag defaults from `module.oci_lz_tags[0]` to `module.oci_lz_tag_defaults[0]`, preserving resource keys and OCI identities without manual state commands. Namespace and tag addresses remain unchanged. External compartment aliases retain their default targets when a managed compartment uses the same key.
+2. Resources created before tag defaults take effect may miss those tags, including during the first apply. Defaults do not backfill existing resources on later applies. Configure required tags explicitly through each resource module's tag inputs. Inherited tags absent from a module's configured `defined_tags` can be removed on a later apply.
+3. Tag modules reference Governance's `refactor/composable-tags` branch; budgets retain v0.1.6. Review the upgrade plan for unrelated changes; this change does not resolve existing replacement risks from other dependencies or module updates.
+
 # October 26, 2026 Release Notes - 2.3.0
 
 ## Breaking changes

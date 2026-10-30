@@ -42,7 +42,8 @@
 | <a name="module_oci_lz_security_zones"></a> [oci\_lz\_security\_zones](#module\_oci\_lz\_security\_zones) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//security-zones | v0.2.3 |
 | <a name="module_oci_lz_service_connectors"></a> [oci\_lz\_service\_connectors](#module\_oci\_lz\_service\_connectors) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//service-connectors | v0.2.6 |
 | <a name="module_oci_lz_streams"></a> [oci\_lz\_streams](#module\_oci\_lz\_streams) | git::https://github.com/oci-landing-zones/terraform-oci-modules-observability.git//streams | v0.2.6 |
-| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags | v0.1.6 |
+| <a name="module_oci_lz_tag_defaults"></a> [oci\_lz\_tag\_defaults](#module\_oci\_lz\_tag\_defaults) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags/defaults | refactor/composable-tags |
+| <a name="module_oci_lz_tags"></a> [oci\_lz\_tags](#module\_oci\_lz\_tags) | git::https://github.com/oci-landing-zones/terraform-oci-modules-governance.git//tags/namespaces-and-tags | refactor/composable-tags |
 | <a name="module_oci_lz_vaults"></a> [oci\_lz\_vaults](#module\_oci\_lz\_vaults) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//vaults | v0.2.3 |
 | <a name="module_oci_lz_zpr"></a> [oci\_lz\_zpr](#module\_oci\_lz\_zpr) | git::https://github.com/oci-landing-zones/terraform-oci-modules-security.git//zpr | v0.2.3 |
 
@@ -70,6 +71,7 @@
 | [local_file.vaults_output](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [oci_objectstorage_bucket.these](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/objectstorage_bucket) | resource |
 | [time_sleep.iam_policy_group_propagation](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.tag_propagation](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [oci_identity_regions.these](https://registry.terraform.io/providers/oracle/oci/latest/docs/data-sources/identity_regions) | data source |
 | [oci_identity_tenancy.this](https://registry.terraform.io/providers/oracle/oci/latest/docs/data-sources/identity_tenancy) | data source |
 | [oci_objectstorage_namespace.this](https://registry.terraform.io/providers/oracle/oci/latest/docs/data-sources/objectstorage_namespace) | data source |
