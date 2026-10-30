@@ -1,3 +1,9 @@
+# Unreleased
+
+## Fixes
+
+1. Tag namespaces, tag definitions, and tag defaults now use the tenancy home-region provider. Deployments in other regions previously failed to create tag namespaces with `403-NotAllowed` because requests used the deployment region. Inputs and resource addresses are unchanged; no state migration is required.
+
 # October 26, 2026 Release Notes - 2.3.0
 
 ## Breaking changes
