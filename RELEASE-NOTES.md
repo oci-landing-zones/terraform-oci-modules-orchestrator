@@ -1,4 +1,4 @@
-# Unreleased - 2.4.0
+# October 30, 2026 Release Notes - 2.4.0
 
 ## Fixes
 
