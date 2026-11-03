@@ -25,6 +25,13 @@ variable "region" {
   type    = string
   default = null
 }
+
+variable "ignore_defined_tags" {
+  description = "Additional defined tag keys (<namespace>.<key>) ignored by all OCI providers. Oracle-Tags.CreatedBy and Oracle-Tags.CreatedOn are always ignored."
+  type        = list(string)
+  default     = []
+  nullable    = false
+}
 variable "github_token" {
   type    = string
   default = null

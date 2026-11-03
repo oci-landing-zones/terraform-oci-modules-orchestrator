@@ -27,6 +27,13 @@ variable "region" {
   default = null
 }
 
+variable "ignore_defined_tags" {
+  description = "Additional defined tag keys (<namespace>.<key>) ignored by all OCI providers. Oracle-Tags.CreatedBy and Oracle-Tags.CreatedOn are always ignored."
+  type        = list(string)
+  default     = []
+  nullable    = false
+}
+
 variable "compartments_configuration" {
   type    = any
   default = null
@@ -172,6 +179,11 @@ variable "oke_clusters_configuration" {
 }
 
 variable "oke_workers_configuration" {
+  type    = any
+  default = null
+}
+
+variable "oke_configuration" {
   type    = any
   default = null
 }
