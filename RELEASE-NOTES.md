@@ -1,4 +1,4 @@
-# Unreleased - 2.4.0
+# November 3, 2026 Release Notes - 2.4.0
 
 ## Fixes
 
@@ -8,7 +8,8 @@
 
 1. Added `oke_configuration` to deploy multiple independent clusters through the new OKE module, in the root module and RMS facade. Existing `oke_clusters_configuration` and `oke_workers_configuration` inputs retain legacy `cis-oke` v0.2.9.
 2. New cluster resources use the `oke_deployments` output and separate `oke_deployments_output.json` artifact, with JSON/YAML persistence in RMS facade. Legacy `oke_resources` and `oke_output.json` are unchanged.
-3. Added `ignore_defined_tags` to Orchestrator and RMS facade so callers can ignore defined tags applied by OCI tag defaults in all three provider configurations. Existing Oracle-Tags exclusions and default behavior are preserved. See [issue #84](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/84).
+3. Security modules now use [v0.2.4](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.4), fixing same-stack vault references with empty or mixed external dependencies and planning with external vault OCIDs known only after apply.
+4. Added `ignore_defined_tags` to Orchestrator and RMS facade so callers can ignore defined tags applied by OCI tag defaults in all three provider configurations. Existing Oracle-Tags exclusions and default behavior are preserved. See [issue #84](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/84).
 
 ## Breaking change
 1. `cis-oke` v0.2.9 module was deprecated and will remain available through Orchestrator under existing `oke_clusters_configuration` and `oke_workers_configuration` inputs and will be removed October 29, 2027. Customers are encouraged to update to the new OKE module version that uses `oke_configuration`.
