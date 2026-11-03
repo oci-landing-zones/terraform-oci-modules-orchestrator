@@ -1,3 +1,9 @@
+# Unreleased - 2.4.0
+
+## Updates
+
+1. Added `ignore_defined_tags` to Orchestrator and RMS facade so callers can ignore defined tags applied by OCI tag defaults in all three provider configurations. Existing Oracle-Tags exclusions and default behavior are preserved. See [issue #84](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/84).
+
 # October 26, 2026 Release Notes - 2.3.0
 
 ## Breaking changes

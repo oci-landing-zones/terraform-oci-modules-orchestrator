@@ -43,6 +43,16 @@ The OCI Terraform Provider version must be 6.29.0 or greater.
 
 The permissions to execute the Orchestrator are determined by the configurations that are given as inputs. Therefore each Orchestrator instance may require different IAM policies. Refer to the policy requirements of each module that backs up the provided configurations. For example, if the configurations contains *compartments_configuration* and *network_configuration*, the Orchestrator instance requires the permissions required by [Compartments](https://github.com/oci-landing-zones/terraform-oci-modules-iam/tree/v0.3.5/compartments) and [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) modules.
 
+## Defined tags managed outside Terraform
+
+Set `ignore_defined_tags` in the Orchestrator module or RMS facade to ignore additional defined tag keys applied by OCI tag defaults:
+
+```hcl
+ignore_defined_tags = ["example-tags.env", "example-tags.region"]
+```
+
+All three OCI provider configurations use this list in addition to `Oracle-Tags.CreatedBy` and `Oracle-Tags.CreatedOn`. The default is `[]`; omitted or null inputs preserve the existing behavior. Ignored keys are managed outside Terraform, so their value changes are not reconciled by these providers.
+
 ## External Dependencies
 
 Landing Zones can be expressed in a single configuration or split in multiple separate configurations potentially managed by different teams. Separate configurations require the usage of the output of one configuration as the input of another. The classic example is consuming compartments in other configurations, like networking. Other examples are consuming networking resources in Compute instances, or consuming encryption keys in Block volumes. There are many other dependencies examples.

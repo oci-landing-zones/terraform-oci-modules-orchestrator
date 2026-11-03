@@ -101,6 +101,7 @@
 | <a name="input_identity_domain_identity_providers_configuration"></a> [identity\_domain\_identity\_providers\_configuration](#input\_identity\_domain\_identity\_providers\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_identity_domains_configuration"></a> [identity\_domains\_configuration](#input\_identity\_domains\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_identity_domains_dependency"></a> [identity\_domains\_dependency](#input\_identity\_domains\_dependency) | n/a | `any` | `null` | no |
+| <a name="input_ignore_defined_tags"></a> [ignore\_defined\_tags](#input\_ignore\_defined\_tags) | Additional defined tag keys ignored by all OCI providers, alongside Oracle-Tags.CreatedBy and Oracle-Tags.CreatedOn. | `list(string)` | `[]` | no |
 | <a name="input_instances_configuration"></a> [instances\_configuration](#input\_instances\_configuration) | n/a | `any` | `null` | no |
 | <a name="input_instances_dependency"></a> [instances\_dependency](#input\_instances\_dependency) | n/a | `any` | `null` | no |
 | <a name="input_kms_dependency"></a> [kms\_dependency](#input\_kms\_dependency) | n/a | `any` | `null` | no |
