@@ -5,6 +5,7 @@ module "oci_lz_orchestrator" {
   source = "../"
 
   tenancy_ocid         = var.tenancy_ocid
+  ignore_defined_tags  = var.ignore_defined_tags
   region               = var.region
   user_ocid            = var.user_ocid
   fingerprint          = var.fingerprint

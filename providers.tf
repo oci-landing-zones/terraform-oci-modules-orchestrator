@@ -8,6 +8,7 @@ data "oci_identity_tenancy" "this" {
 }
 
 locals {
+  ignore_defined_tags = distinct(concat(["Oracle-Tags.CreatedBy", "Oracle-Tags.CreatedOn"], var.ignore_defined_tags))
   regions_map         = { for r in data.oci_identity_regions.these.regions : r.key => r.name } # All regions indexed by region key.
   regions_map_reverse = { for r in data.oci_identity_regions.these.regions : r.name => r.key } # All regions indexed by region name.
   home_region_key     = data.oci_identity_tenancy.this.home_region_key                         # Home region key obtained from the tenancy data source
@@ -21,7 +22,7 @@ provider "oci" {
   fingerprint          = var.fingerprint
   private_key_path     = var.private_key_path
   private_key_password = var.private_key_password
-  ignore_defined_tags  = ["Oracle-Tags.CreatedBy", "Oracle-Tags.CreatedOn"]
+  ignore_defined_tags  = local.ignore_defined_tags
 }
 
 provider "oci" {
@@ -32,7 +33,7 @@ provider "oci" {
   fingerprint          = var.fingerprint
   private_key_path     = var.private_key_path
   private_key_password = var.private_key_password
-  ignore_defined_tags  = ["Oracle-Tags.CreatedBy", "Oracle-Tags.CreatedOn"]
+  ignore_defined_tags  = local.ignore_defined_tags
 }
 
 provider "oci" {
@@ -43,7 +44,7 @@ provider "oci" {
   fingerprint          = var.fingerprint
   private_key_path     = var.private_key_path
   private_key_password = var.private_key_password
-  ignore_defined_tags  = ["Oracle-Tags.CreatedBy", "Oracle-Tags.CreatedOn"]
+  ignore_defined_tags  = local.ignore_defined_tags
 }
 
 terraform {

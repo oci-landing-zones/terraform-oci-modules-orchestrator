@@ -105,6 +105,7 @@
 | <a name="input_github_dependency_files"></a> [github\_dependency\_files](#input\_github\_dependency\_files) | The GitHub files containing stack dependencies. | `list(string)` | `null` | no |
 | <a name="input_github_file_prefix"></a> [github\_file\_prefix](#input\_github\_file\_prefix) | n/a | `string` | `null` | no |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | n/a | `string` | `null` | no |
+| <a name="input_ignore_defined_tags"></a> [ignore\_defined\_tags](#input\_ignore\_defined\_tags) | Additional defined tag keys (`<namespace>.<key>`) ignored by all OCI providers, alongside Oracle-Tags.CreatedBy and Oracle-Tags.CreatedOn. Ignored values are managed outside Terraform. | `list(string)` | `[]` | no |
 | <a name="input_input_config_files_urls"></a> [input\_config\_files\_urls](#input\_input\_config\_files\_urls) | List of URLs that point to the JSON configuration files. | `list(string)` | `null` | no |
 | <a name="input_local_config_file_paths"></a> [local\_config\_file\_paths](#input\_local\_config\_file\_paths) | List of local configuration files in JSON or YAML format. | `list(string)` | `[]` | no |
 | <a name="input_local_dependency_file_paths"></a> [local\_dependency\_file\_paths](#input\_local\_dependency\_file\_paths) | List of local dependency files in JSON or YAML format. | `list(string)` | `[]` | no |
