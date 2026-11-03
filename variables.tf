@@ -183,6 +183,11 @@ variable "oke_workers_configuration" {
   default = null
 }
 
+variable "oke_configuration" {
+  type    = any
+  default = null
+}
+
 variable "ocvs_configuration" {
   type    = any
   default = null

@@ -119,6 +119,7 @@ locals {
   # workers_configuration fallbacks and accept only oke_clusters_configuration and oke_workers_configuration.
   oke_clusters_configuration = local.merged_input_configs != null ? try(local.merged_input_configs.oke_clusters_configuration, local.merged_input_configs.clusters_configuration, null) : null
   oke_workers_configuration  = local.merged_input_configs != null ? try(local.merged_input_configs.oke_workers_configuration, local.merged_input_configs.workers_configuration, null) : null
+  oke_configuration          = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "oke_configuration") ? local.merged_input_configs.oke_configuration : null : null
 
   # OCVS
   ocvs_configuration = local.merged_input_configs != null ? contains(keys(local.merged_input_configs), "ocvs_configuration") ? local.merged_input_configs.ocvs_configuration : null : null

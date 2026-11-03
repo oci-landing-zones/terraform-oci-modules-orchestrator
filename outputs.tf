@@ -90,6 +90,11 @@ output "oke_resources" {
   }
 }
 
+output "oke_deployments" {
+  description = "Provisioned OKE resources"
+  value       = module.oci_lz_oke_v2
+}
+
 output "ocvs_resources" {
   description = "Provisioned OCVS resources"
   value = {
@@ -246,6 +251,21 @@ resource "local_file" "oke_output" {
     "nodes" : module.oci_lz_oke[0].nodes,
   "virtual_node_pools" : { for k, v in module.oci_lz_oke[0].virtual_node_pools : k => { "id" : v.id } } })
   filename = "${var.output_path}/oke_output.json"
+}
+
+resource "local_file" "oke_v2_output" {
+  count = var.output_path != null && length(module.oci_lz_oke_v2) > 0 ? 1 : 0
+  content = jsonencode({
+    deployments = {
+      for key, deployment in module.oci_lz_oke_v2 : key => {
+        cluster            = { id = deployment.cluster.id }
+        node_pools         = { for k, v in deployment.node_pools : k => { id = v.id } }
+        nodes              = deployment.nodes
+        virtual_node_pools = { for k, v in deployment.virtual_node_pools : k => { id = v.id } }
+      }
+    }
+  })
+  filename = "${var.output_path}/oke_deployments_output.json"
 }
 
 resource "local_file" "ocvs_output" {
