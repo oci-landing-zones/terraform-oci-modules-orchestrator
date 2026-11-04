@@ -1,4 +1,4 @@
-# Unreleased - 2.4.1
+# November 4, 2026 Release Notes - 2.4.1
 
 ## Fixes
 
