@@ -1,3 +1,10 @@
+# Unreleased - 2.4.1
+
+## Fixes
+
+1. Tag namespaces, tag definitions, and tag defaults now reference the published Governance v0.2.0 tag. Orchestrator v2.4.0 referenced the deleted `refactor/composable-tags` branch, causing `terraform init` to fail even when tags were not configured. Inputs, outputs, and resource addresses are unchanged; the existing tag-default state move is retained.
+2. Corrected the module versions listed in `SPEC.md` to match the existing Networking v0.9.1 and Observability v0.3.0 sources.
+
 # November 4, 2026 Release Notes - 2.4.0
 
 ## Fixes

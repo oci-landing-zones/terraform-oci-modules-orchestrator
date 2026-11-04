@@ -18,7 +18,7 @@ Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oci-landing-zones/terraform-oci-modules-iam) | [v0.3.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5)
 [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.9.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.9.1)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [refactor/composable-tags branch](https://github.com/oci-landing-zones/terraform-oci-modules-governance/tree/refactor/composable-tags) (tags); v0.1.6 (budgets)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.2.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.2.0) (tags); [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6) (budgets)
 [Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.4)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.3.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.3.0)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9)
