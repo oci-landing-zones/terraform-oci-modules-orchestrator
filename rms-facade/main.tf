@@ -5,6 +5,7 @@ module "oci_lz_orchestrator" {
   source = "../"
 
   tenancy_ocid         = var.tenancy_ocid
+  ignore_defined_tags  = var.ignore_defined_tags
   region               = var.region
   user_ocid            = var.user_ocid
   fingerprint          = var.fingerprint
@@ -52,6 +53,7 @@ module "oci_lz_orchestrator" {
   # OKE
   oke_clusters_configuration = local.oke_clusters_configuration
   oke_workers_configuration  = local.oke_workers_configuration
+  oke_configuration          = local.oke_configuration
   # OCVS
   ocvs_configuration = local.ocvs_configuration
   # Cloud Exadata Database

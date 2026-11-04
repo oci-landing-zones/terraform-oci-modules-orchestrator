@@ -9,7 +9,7 @@ locals {
   # var.compartments_dependency can be provided either as an HCL map or as an JSON file. 
   ext_dep_compartments_map = var.compartments_dependency != null ? try(var.compartments_dependency.compartments, jsondecode(file(var.compartments_dependency)).compartments, null) : null
   # compartments_dependency includes the compartments provided by the user as an external dependency (computed in ext_dep_compartments_map) and the compartments provisioned by this module itself. The line below merges these two maps together.
-  compartments_dependency = merge({ for k, v in coalesce(local.ext_dep_compartments_map, {}) : k => { "id" : v.id } }, { for k, v in(length(module.oci_lz_compartments) > 0 ? module.oci_lz_compartments[0].compartments : {}) : k => { "id" : v.id } })
+  compartments_dependency = merge({ for k, v in coalesce(local.ext_dep_compartments_map, {}) : k => { "id" : v.id } }, { for k, v in(var.compartments_configuration != null ? module.oci_lz_compartments[0].compartments : {}) : k => { "id" : v.id } })
 
   # var.identity_domains_dependency can be provided either as an HCL map or as a JSON file.
   ext_dep_identity_domains_map = var.identity_domains_dependency != null ? try(var.identity_domains_dependency.identity_domains, jsondecode(file(var.identity_domains_dependency)).identity_domains, null) : null

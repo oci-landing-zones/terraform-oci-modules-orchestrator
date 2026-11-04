@@ -18,16 +18,19 @@ Repository | Referenced Tags/Branches
 -----------|--------------------
 [Identity & Access Management](https://github.com/oci-landing-zones/terraform-oci-modules-iam) | [v0.3.5 tag](https://github.com/oci-landing-zones/terraform-oci-modules-iam/releases/tag/v0.3.5)
 [Networking](https://github.com/oci-landing-zones/terraform-oci-modules-networking) | [v0.9.1 tag](https://github.com/oci-landing-zones/terraform-oci-modules-networking/releases/tag/v0.9.1)
-[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [v0.1.6 tag](https://github.com/oci-landing-zones/terraform-oci-modules-governance/releases/tag/v0.1.6)
-[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.3 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.3)
+[Governance](https://github.com/oci-landing-zones/terraform-oci-modules-governance) | [refactor/composable-tags branch](https://github.com/oci-landing-zones/terraform-oci-modules-governance/tree/refactor/composable-tags) (tags); v0.1.6 (budgets)
+[Security](https://github.com/oci-landing-zones/terraform-oci-modules-security) | [v0.2.4 tag](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.4)
 [Observability & Monitoring](https://github.com/oci-landing-zones/terraform-oci-modules-observability) | [v0.3.0 tag](https://github.com/oci-landing-zones/terraform-oci-modules-observability/releases/tag/v0.3.0)
 [Workloads](https://github.com/oci-landing-zones/terraform-oci-modules-workloads) | [v0.2.9 tag](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/releases/tag/v0.2.9)
+[OKE Deployments](https://github.com/oci-landing-zones/terraform-oci-modules-workloads/tree/v0.3.0/cis-oke) | v0.3.0
 [OCVS Workloads](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs) | [v1.1.0 tag](https://github.com/oci-landing-zones/terraform-oci-workloads-ocvs/releases/tag/v1.1.0)
 [Exadata Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/exadata-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 [Autonomous Database](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-database) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 [Autonomous Recovery Service](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0/autonomous-recovery-service) | [release-1.2.0 branch](https://github.com/oci-landing-zones/terraform-oci-modules-exadata/tree/release-1.2.0)
 
 Such approach allows for the build out of custom Landing Zones in a declarative fashion, without any Terraform coding knowledge.
+
+Tag namespaces and definitions precede compartments. Each tag default uses its target compartment ID to establish its creation dependency; there is no dependency on the entire compartments module. Other resources do not wait for defaults or their propagation. Resources created in the same apply may therefore miss default tags. Later applies do not automatically backfill them; configure required tags explicitly through each resource module's tag inputs.
 
 **Note:** users of the [legacy Orchestrator](https://github.com/oracle-quickstart/terraform-oci-open-lz/tree/master/orchestrator) please check [UPGRADE.md](./UPGRADE.md) for upgrading your stack to this new Orchestrator version.
 
@@ -86,6 +89,7 @@ vaults_configuration | vaults_output.json and keys_output.json
 tags_configuration | tags_output.json
 instances_configuration | instances_output.json
 oke_clusters_configuration | oke_clusters_output.json
+oke_configuration | oke_deployments_output.json
 bastions_configuration | bastions_output.json
 ocvs_configuration | ocvs_output.json
 cloud_exadata_database_configuration | cloud_exadata_database_output.json

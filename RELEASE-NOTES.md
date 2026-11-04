@@ -1,3 +1,29 @@
+# November 4, 2026 Release Notes - 2.4.0
+
+## Fixes
+
+1. Tag namespaces, tag definitions, and tag defaults now use the tenancy home-region provider. Deployments in other regions previously failed to create tag namespaces with `403-NotAllowed` because requests used the deployment region. Inputs and resource addresses are unchanged; no state migration is required.
+
+## Updates
+
+1. Added `oke_configuration` to deploy multiple independent clusters through the new OKE module, in the root module and RMS facade. Existing `oke_clusters_configuration` and `oke_workers_configuration` inputs retain legacy `cis-oke` v0.2.9.
+2. New cluster resources use the `oke_deployments` output and separate `oke_deployments_output.json` artifact, with JSON/YAML persistence in RMS facade. Legacy `oke_resources` and `oke_output.json` are unchanged.
+3. Security modules now use [v0.2.4](https://github.com/oci-landing-zones/terraform-oci-modules-security/releases/tag/v0.2.4), fixing same-stack vault references with empty or mixed external dependencies and planning with external vault OCIDs known only after apply.
+4. Added `ignore_defined_tags` to Orchestrator and RMS facade so callers can ignore defined tags applied by OCI tag defaults in all three provider configurations. Existing Oracle-Tags exclusions and default behavior are preserved. See [issue #84](https://github.com/oci-landing-zones/terraform-oci-modules-orchestrator/issues/84).
+5. Tag defaults in `tags_configuration` can target logical compartments created in the same apply. Governance v0.2.0 separates namespaces and tag definitions from defaults, retaining the existing configuration format. Namespaces and definitions precede compartments; each default depends on its target compartment ID instead of the entire compartments module.
+6. Downstream resources do not wait for tag defaults or their propagation. No default-tag propagation timer or downstream default-tag dependencies are added.
+
+## Breaking changes
+
+1. `cis-oke` v0.2.9 module was deprecated and will remain available through Orchestrator under existing `oke_clusters_configuration` and `oke_workers_configuration` inputs and will be removed October 29, 2027. Customers are encouraged to update to the new OKE module version that uses `oke_configuration`.
+2. Tag defaults now resolve logical compartment keys through the combined managed and external compartment map. Managed compartments take precedence when both maps contain the same key; previously tag defaults used only the external map. A collision can retarget an existing default and require its replacement. A literal compartment OCID or distinct external alias selects the external target, but changing a `compartment_ids` reference also changes the default's resource key. Preserving an existing default in that case requires a reviewed `moved` block or `terraform state mv` migration and a plan confirming no replacement.
+
+## Upgrade notes
+
+1. A built-in `moved` block transfers existing tag defaults from `module.oci_lz_tags[0]` to `module.oci_lz_tag_defaults[0]`, preserving OCI identities without manual state commands when their configuration keys and target compartments are unchanged. Namespace and tag addresses remain unchanged. Review logical-key collisions and reference-key migrations as described under Breaking changes.
+2. Resources created before tag defaults take effect may miss those tags, including during the first apply. Defaults do not backfill existing resources on later applies. Configure required tags explicitly through each resource module's tag inputs. Inherited tags absent from a module's configured `defined_tags` can be removed on a later apply.
+3. Tag modules reference Governance's `refactor/composable-tags` branch; budgets retain v0.1.6. Review the upgrade plan for unrelated changes; this change does not resolve existing replacement risks from other dependencies or module updates.
+
 # October 26, 2026 Release Notes - 2.3.0
 
 ## Breaking changes
